@@ -53,7 +53,11 @@ namespace moss
 
     void Cpu::push_stack(uint32_t value)
     {
-        _memory->data()
+        _memory->data(_regs.stack_pointer_push(), value);
+    }
+    uint32_t Cpu::pop_stack()
+    {
+        return _memory->data(_regs.stack_pointer_pop());
     }
 
     void Cpu::do_run()

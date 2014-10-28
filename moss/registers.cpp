@@ -55,7 +55,7 @@ namespace moss
     }
     uint32_t Registers::stack_pointer_push()
     {
-        return ++_stack_pointer;
+        return _stack_pointer++;
     }
     uint32_t Registers::stack_pointer_pop()
     {
