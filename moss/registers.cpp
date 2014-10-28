@@ -5,7 +5,9 @@ namespace moss
     Registers::Registers() :
         _flags(0),
         _stack_pointer(0),
-        _program_counter(0)
+        _program_counter(0),
+        _data_pointer(0),
+        _code_pointer(0)
     {
 
     }

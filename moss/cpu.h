@@ -25,16 +25,22 @@ namespace moss
             enum Opcodes
             {
                 HALT,
+            
                 MOV_R_R,
                 MOV_I_R,
                 MOV_M_R,
                 MOV_R_M,
                 MOV_I_M,
                 MOV_M_M,
+                
                 ADD_R_R,
                 ADD_R_R_R,
+                
                 PUSH_R,
-                POP_R
+                PUSH_I,
+                POP_R,
+                
+                PRINT_R
             };
 
             void to_stream(std::ostream &os) const;

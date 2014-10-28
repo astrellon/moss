@@ -130,9 +130,20 @@ namespace moss
                     ar1 = next_int();
                     push_stack(_regs.int_reg(ar1));
                     break;
+                case PUSH_I:
+                    ar1 = next_int();
+                    push_stack(ar1);
+                    break;
                 case POP_R:
                     ar1 = next_int();
                     _regs.int_reg(ar1, pop_stack());
+                    break;
+                // }}}
+
+                // Debug commands {{{
+                case PRINT_R:
+                    ar1 = next_int();
+                    std::cout << "Reg " << ar1 << ": " << _regs.int_reg(ar1);
                     break;
                 // }}}
 

@@ -8,16 +8,15 @@ int main(int argc, char **argv)
 {
     moss::Memory mem(1024u);
     mem.zero();
-    mem.data(0, moss::Cpu::MOV_I_R);
-    mem.data(1, 40);
-    mem.data(2, 0);
-    mem.data(3, moss::Cpu::MOV_I_R);
-    mem.data(4, 55);
-    mem.data(5, 1);
-    mem.data(6, moss::Cpu::ADD_R_R_R);
-    mem.data(7, 0);
-    mem.data(8, 1);
-    mem.data(9, 2);
+    uint32_t index = mem.add_command(0, moss::Cpu::MOV_I_R, 40, 0);
+    index = mem.add_command(index, moss::Cpu::MOV_I_R, 55, 1);
+    index = mem.add_command(index, moss::Cpu::ADD_R_R_R, 0, 1, 2);
+    index = mem.add_command(index, moss::Cpu::PUSH_R, 2);
+    index = mem.add_command(index, moss::Cpu::PUSH_I, 78);
+    index = mem.add_command(index, moss::Cpu::POP_R, 5);
+    index = mem.add_command(index, moss::Cpu::POP_R, 6);
+
+    mem.to_stream(std::cout, 0, 16);
 
     moss::Cpu cpu;
     cpu.memory(&mem);
