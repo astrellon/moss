@@ -51,6 +51,11 @@ namespace moss
         return _memory->data(_regs.code_pointer() + _regs.program_counter_inc());
     }
 
+    void Cpu::push_stack(uint32_t value)
+    {
+        _memory->data()
+    }
+
     void Cpu::do_run()
     {
         while (_running)
