@@ -14,9 +14,10 @@ int main(int argc, char **argv)
     mem.data(3, moss::Cpu::MOV_I_R);
     mem.data(4, 55);
     mem.data(5, 1);
-    mem.data(6, moss::Cpu::ADD_R_R);
+    mem.data(6, moss::Cpu::ADD_R_R_R);
     mem.data(7, 0);
     mem.data(8, 1);
+    mem.data(9, 2);
 
     moss::Cpu cpu;
     cpu.memory(&mem);

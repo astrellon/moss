@@ -1,8 +1,9 @@
 #pragma once
 
 #include <stdint.h>
+#include <vector>
 
-#include "thread.h"
+#include "registers.h"
 
 namespace moss
 {
@@ -13,9 +14,6 @@ namespace moss
         public:
             Cpu();
             ~Cpu();
-
-            Thread thread() const;
-            void thread(const Thread &thread);
 
             Memory *memory() const;
             void memory(Memory *memory);
@@ -33,18 +31,24 @@ namespace moss
                 MOV_R_M,
                 MOV_I_M,
                 MOV_M_M,
-                ADD_R_R
+                ADD_R_R,
+                ADD_R_R_R,
+                PUSH_R,
+                POP_R
             };
 
             void to_stream(std::ostream &os) const;
 
         private:
             bool _running;
-            Thread _thread;
+            Registers _regs;
             Memory *_memory;
 
             uint32_t next_int();
 
             void do_run();
+
+            void push_stack(uint32_t value);
+            uint32_t pop_stack();
     };
 }

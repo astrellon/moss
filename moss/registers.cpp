@@ -3,7 +3,9 @@
 namespace moss
 {
     Registers::Registers() :
-        _flags(0)
+        _flags(0),
+        _stack_pointer(0),
+        _program_counter(0)
     {
 
     }
@@ -33,10 +35,62 @@ namespace moss
     {
         _int_regs[index] = value;
     }
+
+    uint32_t Registers::program_counter() const
+    {
+        return _program_counter;
+    }
+    uint32_t Registers::program_counter_inc()
+    {
+        return _program_counter++;
+    }
+    void Registers::program_counter(uint32_t value)
+    {
+        _program_counter = value;
+    }
+
+    uint32_t Registers::stack_pointer() const
+    {
+        return _stack_pointer;
+    }
+    uint32_t Registers::stack_pointer_push()
+    {
+        return ++_stack_pointer;
+    }
+    uint32_t Registers::stack_pointer_pop()
+    {
+        return --_stack_pointer;
+    }
+    void Registers::stack_pointer(uint32_t value)
+    {
+        _stack_pointer = value;
+    }
+
+    uint32_t Registers::data_pointer() const
+    {
+        return _data_pointer;
+    }
+    void Registers::data_pointer(uint32_t value)
+    {
+        _data_pointer = value;
+    }
+    
+    uint32_t Registers::code_pointer() const
+    {
+        return _code_pointer;
+    }
+    void Registers::code_pointer(uint32_t value)
+    {
+        _code_pointer = value;
+    }
     
     void Registers::to_stream(std::ostream &os) const
     {
-        os << "Flags: " << flags() << "\n";
+        os << "Register: \n"
+            "- PC: " << program_counter() << "\n"
+            "- SP: " << stack_pointer() << "\n"
+            "- Flags: " << flags() << "\n"
+            ;
         for (auto i = 0; i < num_int_reg(); i++)
         {
             os << "- " << i << ": " << int_reg(i) << "\n";
