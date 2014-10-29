@@ -48,7 +48,7 @@ namespace moss
 
     uint32_t Cpu::next_int()
     {
-        return _memory->data(_regs.code_pointer() + _regs.program_counter_inc());
+        return _memory->data(_regs.program_counter_inc());
     }
 
     void Cpu::push_stack(uint32_t value)

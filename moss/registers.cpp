@@ -5,9 +5,7 @@ namespace moss
     Registers::Registers() :
         _flags(0),
         _stack_pointer(0),
-        _program_counter(0),
-        _data_pointer(0),
-        _code_pointer(0)
+        _program_counter(0)
     {
 
     }
@@ -66,24 +64,6 @@ namespace moss
     void Registers::stack_pointer(uint32_t value)
     {
         _stack_pointer = value;
-    }
-
-    uint32_t Registers::data_pointer() const
-    {
-        return _data_pointer;
-    }
-    void Registers::data_pointer(uint32_t value)
-    {
-        _data_pointer = value;
-    }
-    
-    uint32_t Registers::code_pointer() const
-    {
-        return _code_pointer;
-    }
-    void Registers::code_pointer(uint32_t value)
-    {
-        _code_pointer = value;
     }
     
     void Registers::to_stream(std::ostream &os) const
