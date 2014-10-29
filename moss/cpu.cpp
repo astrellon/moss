@@ -140,6 +140,17 @@ namespace moss
                     break;
                 // }}}
 
+                // JMP Commands {{{
+                case JMP_R:
+                    ar1 = next_int();
+                    _regs.program_counter(_regs.int_reg(ar1));
+                    break;
+                case JMP_I:
+                    ar1 = next_int();
+                    _regs.program_counter(ar1);
+                    break;
+                // }}}
+
                 // Debug commands {{{
                 case PRINT_R:
                     ar1 = next_int();

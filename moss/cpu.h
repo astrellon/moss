@@ -39,6 +39,9 @@ namespace moss
                 PUSH_R,
                 PUSH_I,
                 POP_R,
+
+                JMP_R,
+                JMP_I,
                 
                 PRINT_R
             };
