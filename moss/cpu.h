@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "registers.h"
+#include "mmu.h"
 
 namespace moss
 {
@@ -12,8 +13,13 @@ namespace moss
     class Cpu
     {
         public:
-            Cpu();
+            Cpu(uint32_t page_bit_size);
             ~Cpu();
+
+            Registers &registers();
+            const Registers &registers() const;
+
+            const Mmu &mmu() const;
 
             Memory *memory() const;
             void memory(Memory *memory);
@@ -51,6 +57,7 @@ namespace moss
         private:
             bool _running;
             Registers _regs;
+            Mmu _mmu;
             Memory *_memory;
 
             uint32_t next_int();

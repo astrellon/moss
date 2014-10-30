@@ -6,15 +6,30 @@
 
 namespace moss
 {
-    Cpu::Cpu() :
-        _memory(nullptr),
-        _running(false)
+    Cpu::Cpu(uint32_t page_bit_size) :
+        _running(false),
+        _mmu(page_bit_size),
+        _memory(nullptr)
     {
         _regs.zero();
     }
     Cpu::~Cpu()
     {
         stop();
+    }
+
+    Registers &Cpu::registers()
+    {
+        return _regs;
+    }
+    const Registers &Cpu::registers() const
+    {
+        return _regs;
+    }
+
+    const Mmu &Cpu::mmu() const
+    {
+        return _mmu;
     }
 
     Memory *Cpu::memory() const
@@ -24,6 +39,7 @@ namespace moss
     void Cpu::memory(Memory *memory)
     {
         _memory = memory;
+        _mmu.memory(memory);
     }
 
     void Cpu::run()
@@ -48,16 +64,16 @@ namespace moss
 
     uint32_t Cpu::next_int()
     {
-        return _memory->data(_regs.program_counter_inc());
+        return _mmu.data(_regs.program_counter_inc());
     }
 
     void Cpu::push_stack(uint32_t value)
     {
-        _memory->data(_regs.stack_pointer_push(), value);
+        _mmu.data(_regs.stack_pointer_push(), value);
     }
     uint32_t Cpu::pop_stack()
     {
-        return _memory->data(_regs.stack_pointer_pop());
+        return _mmu.data(_regs.stack_pointer_pop());
     }
 
     void Cpu::do_run()
@@ -92,22 +108,22 @@ namespace moss
                 case MOV_M_R:
                     ar1 = next_int();
                     ar2 = next_int();
-                    _regs.int_reg(ar2, _memory->data(_regs.int_reg(ar1)));
+                    _regs.int_reg(ar2, _mmu.data(_regs.int_reg(ar1)));
                     break;
                 case MOV_R_M:
                     ar1 = next_int();
                     ar2 = next_int();
-                    _memory->data(_regs.int_reg(ar2), _regs.int_reg(ar1));
+                    _mmu.data(_regs.int_reg(ar2), _regs.int_reg(ar1));
                     break;
                 case MOV_I_M:
                     ar1 = next_int();
                     ar2 = next_int();
-                    _memory->data(ar2, ar1);
+                    _mmu.data(ar2, ar1);
                     break;
                 case MOV_M_M:
                     ar1 = next_int();
                     ar2 = next_int();
-                    _memory->data(ar2, _memory->data(ar1));
+                    _mmu.data(ar2, _mmu.data(ar1));
                     break;
                 // }}}
 
