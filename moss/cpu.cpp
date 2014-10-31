@@ -27,6 +27,10 @@ namespace moss
         return _regs;
     }
 
+    Mmu &Cpu::mmu()
+    {
+        return _mmu;
+    }
     const Mmu &Cpu::mmu() const
     {
         return _mmu;

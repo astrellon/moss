@@ -19,6 +19,7 @@ namespace moss
             Registers &registers();
             const Registers &registers() const;
 
+            Mmu &mmu();
             const Mmu &mmu() const;
 
             Memory *memory() const;

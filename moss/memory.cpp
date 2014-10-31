@@ -62,7 +62,7 @@ namespace moss
         return index + 4;
     }
 
-    void Memory::to_stream(std::ostream &os, uint32_t start, uint32_t end)
+    void Memory::to_stream(std::ostream &os, uint32_t start, uint32_t end) const
     {
         if (end > size())
         {
@@ -73,7 +73,7 @@ namespace moss
         auto j = 0;
         for (auto i = start; i < end; i++)
         {
-            os << std::setw(4) <<_data[i] << ' ';
+            os << std::setw(4) << _data[i] << ' ';
             j++;
             if (j >= 8)
             {
