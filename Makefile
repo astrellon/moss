@@ -57,13 +57,13 @@
 ##==========================================================================
 
 # The pre-processor and compiler options.
-MY_CFLAGS = -D_FREEGLUT_SYS=1 
+MY_CFLAGS = 
 
 # The linker options.
 MY_LIBS   = 
 
 # The pre-processor options used by the cpp (man cpp for more).
-CPPFLAGS  = -I./ -std=c++11
+CPPFLAGS  = -I./ -std=c++0x
 
 # The options used in linking as well as in any direct use of ld.
 LDFLAGS   =
@@ -106,7 +106,7 @@ endif
 #CC     = gcc
 
 # The C++ program compiler.
-#CXX    = g++
+#CXX    = clang
 
 # Un-comment the following line to compile C programs as C++ ones.
 #CC     = $(CXX)
