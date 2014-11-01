@@ -40,9 +40,23 @@ namespace moss
                 MOV_M_I,
                 MOV_M_M,
                 
+                MOVF_R_R,
+                MOVF_R_I,
+                MOVF_M_R,
+                MOVF_R_M,
+                MOVF_M_I,
+                MOVF_M_M,
+                
+                UINT_FLOAT_R_R,
+                FLOAT_UINT_R_R,
+                
                 ADD_R_R,
                 ADD_R_R_R,
                 ADD_R_I,
+
+                ADDF_R_R,
+                ADDF_R_R_R,
+                ADDF_R_I,
                 
                 SUB_R_R,
                 SUB_R_R_R,
@@ -82,7 +96,7 @@ namespace moss
             Mmu _mmu;
             Memory *_memory;
 
-            uint32_t next_int();
+            uint32_t next_pc();
 
             void do_run();
 

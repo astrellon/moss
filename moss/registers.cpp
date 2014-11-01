@@ -1,5 +1,7 @@
 #include "registers.h"
 
+#include <iomanip>
+
 namespace moss
 {
     Registers::Registers() :
@@ -15,6 +17,10 @@ namespace moss
         for (auto i = 0u; i < _int_regs.size(); i++)
         {
             _int_regs[i] = 0u;
+        }
+        for (auto i = 0u; i < _float_regs.size(); i++)
+        {
+            _float_regs[i] = 0.0f;
         }
     }
 
@@ -51,6 +57,19 @@ namespace moss
     void Registers::int_reg(uint32_t index, uint32_t value)
     {
         _int_regs[index] = value;
+    }
+
+    uint32_t Registers::num_float_reg() const
+    {
+        return static_cast<uint32_t>(_float_regs.size());
+    }
+    float Registers::float_reg(uint32_t index) const
+    {
+        return _float_regs[index];
+    }
+    void Registers::float_reg(uint32_t index, float value)
+    {
+        _float_regs[index] = value;
     }
 
     uint32_t Registers::program_counter() const
@@ -92,7 +111,7 @@ namespace moss
             ;
         for (auto i = 0; i < num_int_reg(); i++)
         {
-            os << "- " << i << ": " << int_reg(i) << "\n";
+            os << "- " << i << ": " << std::setw(8) << int_reg(i) << std::setw(14) << float_reg(i) << "\n";
         }
     }
 }

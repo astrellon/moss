@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "memory.h"
+#include "common.h"
 
 namespace moss
 {
@@ -66,7 +67,7 @@ namespace moss
         _regs.to_stream(os);
     }
 
-    uint32_t Cpu::next_int()
+    uint32_t Cpu::next_pc()
     {
         return _mmu.data(_regs.program_counter_inc());
     }
@@ -82,12 +83,12 @@ namespace moss
 
     void Cpu::do_run()
     {
+        uint32_t arg1 = 0u;
+        uint32_t arg2 = 0u;
+        uint32_t arg3 = 0u;
         while (_running)
         {
-            uint32_t opcode = next_int();
-            uint32_t arg1 = 0u;
-            uint32_t arg2 = 0u;
-            uint32_t arg3 = 0u;
+            uint32_t opcode = next_pc();
             switch (opcode)
             {
                 // Error or Halt {{{
@@ -101,82 +102,162 @@ namespace moss
                 // MOV Commands {{{
                 case MOV_R_R:
                     // reg[arg1] = reg[arg2]
-                    arg1 = next_int();
-                    arg2 = next_int();
+                    arg1 = next_pc();
+                    arg2 = next_pc();
                     _regs.int_reg(arg1, _regs.int_reg(arg2));
                     break;
                 case MOV_R_I:
                     // reg[arg1] = arg2
-                    arg1 = next_int();
-                    arg2 = next_int();
+                    arg1 = next_pc();
+                    arg2 = next_pc();
                     _regs.int_reg(arg1, arg2);
                     break;
                 case MOV_M_R:
                     // mem[reg[arg1]] = reg[arg2]
-                    arg1 = next_int();
-                    arg2 = next_int();
+                    arg1 = next_pc();
+                    arg2 = next_pc();
                     _mmu.data(_regs.int_reg(arg1), _regs.int_reg(arg2));
                     break;
                 case MOV_R_M:
                     // reg[arg1] = mem[reg[arg2]]
-                    arg1 = next_int();
-                    arg2 = next_int();
+                    arg1 = next_pc();
+                    arg2 = next_pc();
                     _regs.int_reg(arg1, _mmu.data(_regs.int_reg(arg2)));
                     break;
                 case MOV_M_I:
                     // mem[reg[arg1]] = arg2
-                    arg1 = next_int();
-                    arg2 = next_int();
+                    arg1 = next_pc();
+                    arg2 = next_pc();
                     _mmu.data(_regs.int_reg(arg1), arg2);
                     break;
                 case MOV_M_M:
                     // mem[reg[arg1]] = mem[reg[arg2]]
-                    arg1 = next_int();
-                    arg2 = next_int();
+                    arg1 = next_pc();
+                    arg2 = next_pc();
                     _mmu.data(_regs.int_reg(arg1), _mmu.data(_regs.int_reg(arg2)));
+                    break;
+                // }}}
+                
+                // MOVF Commands {{{
+                case MOVF_R_R:
+                    // reg[arg1] = reg[arg2]
+                    arg1 = next_pc();
+                    arg2 = next_pc();
+                    _regs.float_reg(arg1, _regs.float_reg(arg2));
+                    break;
+                case MOVF_R_I:
+                    // reg[arg1] = arg2
+                    arg1 = next_pc();
+                    arg2 = next_pc();
+                    _regs.float_reg(arg1, TO_FLOAT(arg2));
+                    break;
+                case MOVF_M_R:
+                    // mem[reg[arg1]] = reg[arg2]
+                    arg1 = next_pc();
+                    arg2 = next_pc();
+                    _mmu.data(_regs.float_reg(arg1), _regs.float_reg(arg2));
+                    break;
+                case MOVF_R_M:
+                    // reg[arg1] = mem[reg[arg2]]
+                    arg1 = next_pc();
+                    arg2 = next_pc();
+                    _regs.float_reg(arg1, _mmu.data(_regs.float_reg(arg2)));
+                    break;
+                case MOVF_M_I:
+                    // mem[reg[arg1]] = arg2
+                    arg1 = next_pc();
+                    arg2 = next_pc();
+                    _mmu.data(_regs.float_reg(arg1), TO_FLOAT(arg2));
+                    break;
+                case MOVF_M_M:
+                    // mem[reg[arg1]] = mem[reg[arg2]]
+                    arg1 = next_pc();
+                    arg2 = next_pc();
+                    _mmu.data(_regs.float_reg(arg1), _mmu.data(_regs.float_reg(arg2)));
+                    break;
+                // }}}
+
+                // Unit Converstions {{{
+                case UINT_FLOAT_R_R:
+                    arg1 = next_pc();
+                    arg2 = next_pc();
+                    {
+                        uint32_t value = _regs.int_reg(arg1);
+                        _regs.float_reg(arg2, static_cast<float>(value));
+                    }
+                    break;
+                case FLOAT_UINT_R_R:
+                    arg1 = next_pc();
+                    arg2 = next_pc();
+                    {
+                        float value = _regs.float_reg(arg1);
+                        _regs.int_reg(arg2, static_cast<uint32_t>(value));
+                    }
                     break;
                 // }}}
 
                 // ADD Commands {{{
                 case ADD_R_R:
                     // reg[arg1] += reg[arg2]
-                    arg1 = next_int();
-                    arg2 = next_int();
+                    arg1 = next_pc();
+                    arg2 = next_pc();
                     _regs.int_reg(arg1, _regs.int_reg(arg1) + _regs.int_reg(arg2));
                     break;
                 case ADD_R_R_R:
                     // reg[arg1] = reg[arg2] + reg[arg3]
-                    arg1 = next_int();
-                    arg2 = next_int();
-                    arg3 = next_int();
+                    arg1 = next_pc();
+                    arg2 = next_pc();
+                    arg3 = next_pc();
                     _regs.int_reg(arg1, _regs.int_reg(arg2) + _regs.int_reg(arg3));
                     break;
                 case ADD_R_I:
                     // reg[arg1] += arg2
-                    arg1 = next_int();
-                    arg2 = next_int();
+                    arg1 = next_pc();
+                    arg2 = next_pc();
                     _regs.int_reg(arg1, _regs.int_reg(arg1) + arg2);
+                    break;
+                // }}}
+                
+                // ADDF Commands {{{
+                case ADDF_R_R:
+                    // reg[arg1] += reg[arg2]
+                    arg1 = next_pc();
+                    arg2 = next_pc();
+                    _regs.float_reg(arg1, _regs.float_reg(arg1) + _regs.float_reg(arg2));
+                    break;
+                case ADDF_R_R_R:
+                    // reg[arg1] = reg[arg2] + reg[arg3]
+                    arg1 = next_pc();
+                    arg2 = next_pc();
+                    arg3 = next_pc();
+                    _regs.float_reg(arg1, _regs.float_reg(arg2) + _regs.float_reg(arg3));
+                    break;
+                case ADDF_R_I:
+                    // reg[arg1] += arg2
+                    arg1 = next_pc();
+                    arg2 = next_pc();
+                    _regs.float_reg(arg1, _regs.float_reg(arg1) + TO_FLOAT(arg2));
                     break;
                 // }}}
                 
                 // SUB Commands {{{
                 case SUB_R_R:
                     // reg[arg1] -= reg[arg2]
-                    arg1 = next_int();
-                    arg2 = next_int();
+                    arg1 = next_pc();
+                    arg2 = next_pc();
                     _regs.int_reg(arg1, _regs.int_reg(arg1) - _regs.int_reg(arg2));
                     break;
                 case SUB_R_R_R:
                     // reg[arg1] = reg[arg2] - reg[arg3]
-                    arg1 = next_int();
-                    arg2 = next_int();
-                    arg3 = next_int();
+                    arg1 = next_pc();
+                    arg2 = next_pc();
+                    arg3 = next_pc();
                     _regs.int_reg(arg1, _regs.int_reg(arg2) - _regs.int_reg(arg3));
                     break;
                 case SUB_R_I:
                     // reg[arg1] -= arg2
-                    arg1 = next_int();
-                    arg2 = next_int();
+                    arg1 = next_pc();
+                    arg2 = next_pc();
                     _regs.int_reg(arg1, _regs.int_reg(arg1) - arg2);
                     break;
                 // }}}
@@ -184,22 +265,22 @@ namespace moss
                 // Stack commands {{{
                 case PUSH_R:
                     // push reg[arg1]
-                    push_stack(_regs.int_reg(next_int()));
+                    push_stack(_regs.int_reg(next_pc()));
                     break;
                 case PUSH_I:
                     // push arg1
-                    push_stack(next_int());
+                    push_stack(next_pc());
                     break;
                 case POP_R:
                     // reg[arg1] = pop
-                    _regs.int_reg(next_int(), pop_stack());
+                    _regs.int_reg(next_pc(), pop_stack());
                     break;
                 // }}}
 
                 // CMP commands {{{
                 case CMP_R_R:
-                    arg1 = next_int();
-                    arg2 = next_int();
+                    arg1 = next_pc();
+                    arg2 = next_pc();
                     {
                         uint32_t value = _regs.int_reg(arg1) - _regs.int_reg(arg2);
                         _regs.zero_flag(value == 0);
@@ -207,8 +288,8 @@ namespace moss
                     }
                     break;
                 case CMP_R_I:
-                    arg1 = next_int();
-                    arg2 = next_int();
+                    arg1 = next_pc();
+                    arg2 = next_pc();
                     {
                         uint32_t value = _regs.int_reg(arg1) - arg2;
                         _regs.zero_flag(value == 0);
@@ -216,8 +297,8 @@ namespace moss
                     }
                     break;
                 case CMP_I_R:
-                    arg1 = next_int();
-                    arg2 = next_int();
+                    arg1 = next_pc();
+                    arg2 = next_pc();
                     {
                         uint32_t value = arg1 - _regs.int_reg(arg2);
                         _regs.zero_flag(value == 0);
@@ -231,18 +312,18 @@ namespace moss
                 // JMP commands {{{
                 case JMP_R:
                     // pc = reg[arg1]
-                    _regs.program_counter(_regs.int_reg(next_int()));
+                    _regs.program_counter(_regs.int_reg(next_pc()));
                     break;
                 case JMP_I:
                     // pc = arg1
-                    _regs.program_counter(next_int());
+                    _regs.program_counter(next_pc());
                     break;
                 // }}}
                 
                 // JNE commands {{{
                 case JNE_R:
                     // pc = reg[arg1] if !zero_flag
-                    arg1 = next_int();
+                    arg1 = next_pc();
                     if (!_regs.zero_flag())
                     {
                         _regs.program_counter(_regs.int_reg(arg1));
@@ -250,7 +331,7 @@ namespace moss
                     break;
                 case JNE_I:
                     // pc = arg1 if !zero_flag
-                    arg1 = next_int();
+                    arg1 = next_pc();
                     if (!_regs.zero_flag())
                     {
                         _regs.program_counter(arg1);
@@ -261,7 +342,7 @@ namespace moss
                 // JEQ commands {{{
                 case JEQ_R:
                     // pc = reg[arg1] if !zero_flag
-                    arg1 = next_int();
+                    arg1 = next_pc();
                     if (_regs.zero_flag())
                     {
                         _regs.program_counter(_regs.int_reg(arg1));
@@ -269,7 +350,7 @@ namespace moss
                     break;
                 case JEQ_I:
                     // pc = arg1 if zero_flag
-                    arg1 = next_int();
+                    arg1 = next_pc();
                     if (_regs.zero_flag())
                     {
                         _regs.program_counter(arg1);
@@ -280,7 +361,7 @@ namespace moss
                 // JLT commands {{{
                 case JLT_R:
                     // pc = reg[arg1] if !zero_flag && neg_flag
-                    arg1 = next_int();
+                    arg1 = next_pc();
                     if (!_regs.zero_flag() && _regs.neg_flag())
                     {
                         _regs.program_counter(_regs.int_reg(arg1));
@@ -288,7 +369,7 @@ namespace moss
                     break;
                 case JLT_I:
                     // pc = arg1 if !zero_flag && neg_flag
-                    arg1 = next_int();
+                    arg1 = next_pc();
                     if (!_regs.zero_flag() && _regs.neg_flag())
                     {
                         _regs.program_counter(arg1);
@@ -299,7 +380,7 @@ namespace moss
                 // JLE commands {{{
                 case JLE_R:
                     // pc = reg[arg1] if zero_flag || neg_flag
-                    arg1 = next_int();
+                    arg1 = next_pc();
                     if (_regs.zero_flag() || _regs.neg_flag())
                     {
                         _regs.program_counter(_regs.int_reg(arg1));
@@ -307,7 +388,7 @@ namespace moss
                     break;
                 case JLE_I:
                     // pc = arg1 if zero_flag || neg_flag
-                    arg1 = next_int();
+                    arg1 = next_pc();
                     if (_regs.zero_flag() || _regs.neg_flag())
                     {
                         _regs.program_counter(arg1);
@@ -318,7 +399,7 @@ namespace moss
                 // JGT commands {{{
                 case JGT_R:
                     // pc = reg[arg1] if !zero_flag && !neg_flag
-                    arg1 = next_int();
+                    arg1 = next_pc();
                     if (!_regs.zero_flag() && !_regs.neg_flag())
                     {
                         _regs.program_counter(_regs.int_reg(arg1));
@@ -326,7 +407,7 @@ namespace moss
                     break;
                 case JGT_I:
                     // pc = reg[arg1] if !zero_flag && !neg_flag
-                    arg1 = next_int();
+                    arg1 = next_pc();
                     if (!_regs.zero_flag() && !_regs.neg_flag())
                     {
                         _regs.program_counter(arg1);
@@ -337,7 +418,7 @@ namespace moss
                 // JGE commands {{{
                 case JGE_R:
                     // pc = reg[arg1] if zero_flag || !neg_flag
-                    arg1 = next_int();
+                    arg1 = next_pc();
                     if (_regs.zero_flag() || !_regs.neg_flag())
                     {
                         _regs.program_counter(_regs.int_reg(arg1));
@@ -345,7 +426,7 @@ namespace moss
                     break;
                 case JGE_I:
                     // pc = reg[arg1] if zero_flag || !neg_flag
-                    arg1 = next_int();
+                    arg1 = next_pc();
                     if (_regs.zero_flag() || !_regs.neg_flag())
                     {
                         _regs.program_counter(arg1);
@@ -357,7 +438,7 @@ namespace moss
 
                 // Debug commands {{{
                 case PRINT_R:
-                    arg1 = next_int();
+                    arg1 = next_pc();
                     std::cout << "Reg " << arg1 << ": " << _regs.int_reg(arg1) << std::endl;
                     break;
                 // }}}

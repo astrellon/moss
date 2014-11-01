@@ -4,8 +4,6 @@
 #include "moss/memory.h"
 #include "moss/memory_writer.h"
 
-#include <stdint.h>
-
 int main(int argc, char **argv)
 {
     moss::Memory mem(1024u);
@@ -32,6 +30,7 @@ int main(int argc, char **argv)
     }
 
     moss::MemoryWriter<moss::Mmu> codeWriter(64, &cpu.mmu());
+    codeWriter.writeF(moss::Cpu::MOVF_R_I, 0, 34.5f);
     codeWriter.write(moss::Cpu::MOV_R_I, 0, 0);
     codeWriter.write(moss::Cpu::MOV_R_I, 1, 32u);
     codeWriter.add_label("start"); 

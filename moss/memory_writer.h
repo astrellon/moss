@@ -6,6 +6,8 @@
 #include <string>
 #include <map>
 
+#include "common.h"
+
 namespace moss
 {
     template <class T>
@@ -77,6 +79,25 @@ namespace moss
                 _memory->data(_index++, v2);
                 _memory->data(_index++, v3);
                 _memory->data(_index++, v4);
+            }
+            
+            void writeF(uint32_t v1, float v2)
+            {
+                _memory->data(_index++, v1);
+                _memory->data(_index++, TO_UINT(v2));
+            }
+            void writeF(uint32_t v1, float v2, float v3)
+            {
+                _memory->data(_index++, v1);
+                _memory->data(_index++, TO_UINT(v2));
+                _memory->data(_index++, TO_UINT(v3));
+            }
+            void writeF(uint32_t v1, float v2, float v3, float v4)
+            {
+                _memory->data(_index++, v1);
+                _memory->data(_index++, TO_UINT(v2));
+                _memory->data(_index++, TO_UINT(v3));
+                _memory->data(_index++, TO_UINT(v4));
             }
 
         private:
