@@ -103,14 +103,6 @@ namespace moss
                 JGE_R,
                 JGE_I,
                 
-                JMPF_R,
-                JNEF_R,
-                JEQF_R,
-                JLTF_R,
-                JLEF_R,
-                JGTF_R,
-                JGEF_R,
-                
                 PRINT_R
             };
 
