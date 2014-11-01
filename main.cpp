@@ -42,6 +42,8 @@ int main(int argc, char **argv)
     codeWriter.write(moss::Cpu::PRINT_R, 2u);
     codeWriter.write(moss::Cpu::JMP_I, "start");
     codeWriter.add_label("end");
+    codeWriter.write(moss::Cpu::UINT_FLOAT_R_R, 1, 2);
+    codeWriter.write(moss::Cpu::ADDF_R_R_R, 2, 1, 0);
     codeWriter.write(moss::Cpu::MOV_R_I, 6, 1337);
     codeWriter.finalise();
 

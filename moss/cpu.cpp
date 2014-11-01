@@ -182,16 +182,16 @@ namespace moss
                     arg1 = next_pc();
                     arg2 = next_pc();
                     {
-                        uint32_t value = _regs.int_reg(arg1);
-                        _regs.float_reg(arg2, static_cast<float>(value));
+                        uint32_t value = _regs.int_reg(arg2);
+                        _regs.float_reg(arg1, static_cast<float>(value));
                     }
                     break;
                 case FLOAT_UINT_R_R:
                     arg1 = next_pc();
                     arg2 = next_pc();
                     {
-                        float value = _regs.float_reg(arg1);
-                        _regs.int_reg(arg2, static_cast<uint32_t>(value));
+                        float value = _regs.float_reg(arg2);
+                        _regs.int_reg(arg1, static_cast<uint32_t>(value));
                     }
                     break;
                 // }}}
