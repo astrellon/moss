@@ -210,6 +210,13 @@ namespace moss
                     arg3 = next_pc();
                     _regs.int_reg(arg1, _regs.int_reg(arg2) + _regs.int_reg(arg3));
                     break;
+                case ADD_R_R_I:
+                    // reg[arg1] = reg[arg2] + arg3
+                    arg1 = next_pc();
+                    arg2 = next_pc();
+                    arg3 = next_pc();
+                    _regs.int_reg(arg1, _regs.int_reg(arg2) + arg3);
+                    break;
                 case ADD_R_I:
                     // reg[arg1] += arg2
                     arg1 = next_pc();
@@ -231,6 +238,13 @@ namespace moss
                     arg2 = next_pc();
                     arg3 = next_pc();
                     _regs.float_reg(arg1, _regs.float_reg(arg2) + _regs.float_reg(arg3));
+                    break;
+                case ADDF_R_R_I:
+                    // reg[arg1] = reg[arg2] + arg3
+                    arg1 = next_pc();
+                    arg2 = next_pc();
+                    arg3 = next_pc();
+                    _regs.float_reg(arg1, _regs.float_reg(arg2) + arg3);
                     break;
                 case ADDF_R_I:
                     // reg[arg1] += arg2
@@ -254,6 +268,20 @@ namespace moss
                     arg3 = next_pc();
                     _regs.int_reg(arg1, _regs.int_reg(arg2) - _regs.int_reg(arg3));
                     break;
+                case SUB_R_I_R:
+                    // reg[arg1] = arg2 - reg[arg3]
+                    arg1 = next_pc();
+                    arg2 = next_pc();
+                    arg3 = next_pc();
+                    _regs.int_reg(arg1, arg2 - _regs.int_reg(arg3));
+                    break;
+                case SUB_R_R_I:
+                    // reg[arg1] = reg[arg2] - arg3
+                    arg1 = next_pc();
+                    arg2 = next_pc();
+                    arg3 = next_pc();
+                    _regs.int_reg(arg1, _regs.int_reg(arg2) - arg3);
+                    break;
                 case SUB_R_I:
                     // reg[arg1] -= arg2
                     arg1 = next_pc();
@@ -262,6 +290,42 @@ namespace moss
                     break;
                 // }}}
 
+                // SUBF Commands {{{
+                case SUBF_R_R:
+                    // reg[arg1] -= reg[arg2]
+                    arg1 = next_pc();
+                    arg2 = next_pc();
+                    _regs.float_reg(arg1, _regs.float_reg(arg1) - _regs.float_reg(arg2));
+                    break;
+                case SUBF_R_R_R:
+                    // reg[arg1] = reg[arg2] - reg[arg3]
+                    arg1 = next_pc();
+                    arg2 = next_pc();
+                    arg3 = next_pc();
+                    _regs.float_reg(arg1, _regs.float_reg(arg2) - _regs.float_reg(arg3));
+                    break;
+                case SUBF_R_I_R:
+                    // reg[arg1] = arg2 - reg[arg3]
+                    arg1 = next_pc();
+                    arg2 = next_pc();
+                    arg3 = next_pc();
+                    _regs.float_reg(arg1, arg2 - _regs.float_reg(arg3));
+                    break;
+                case SUBF_R_R_I:
+                    // reg[arg1] = reg[arg2] - arg3
+                    arg1 = next_pc();
+                    arg2 = next_pc();
+                    arg3 = next_pc();
+                    _regs.float_reg(arg1, _regs.float_reg(arg2) - arg3);
+                    break;
+                case SUBF_R_I:
+                    // reg[arg1] -= arg2
+                    arg1 = next_pc();
+                    arg2 = next_pc();
+                    _regs.float_reg(arg1, _regs.float_reg(arg1) - TO_FLOAT(arg2));
+                    break;
+                // }}}
+                
                 // Stack commands {{{
                 case PUSH_R:
                     // push reg[arg1]
@@ -275,34 +339,76 @@ namespace moss
                     // reg[arg1] = pop
                     _regs.int_reg(next_pc(), pop_stack());
                     break;
+                
+                case PUSHF_R:
+                    // push reg[arg1]
+                    {
+                        float temp = _regs.float_reg(next_pc());
+                        push_stack(TO_UINT(temp));
+                    }
+                    break;
+                case PUSHF_I:
+                    // push arg1
+                    arg2 = next_pc();
+                    push_stack(TO_UINT(arg2));
+                    break;
+                case POPF_R:
+                    // reg[arg1] = pop
+                    arg2 = pop_stack();
+                    _regs.float_reg(next_pc(), TO_FLOAT(arg2));
+                    break;
                 // }}}
 
                 // CMP commands {{{
                 case CMP_R_R:
                     arg1 = next_pc();
                     arg2 = next_pc();
-                    {
-                        uint32_t value = _regs.int_reg(arg1) - _regs.int_reg(arg2);
-                        _regs.zero_flag(value == 0);
-                        _regs.neg_flag(value & 0x80000000);
-                    }
+                    arg3 = _regs.int_reg(arg1) - _regs.int_reg(arg2);
+                    _regs.zero_flag(arg3 == 0);
+                    _regs.neg_flag(arg3 & 0x80000000);
                     break;
                 case CMP_R_I:
                     arg1 = next_pc();
                     arg2 = next_pc();
-                    {
-                        uint32_t value = _regs.int_reg(arg1) - arg2;
-                        _regs.zero_flag(value == 0);
-                        _regs.neg_flag(value & 0x80000000);
-                    }
+                    arg3 = _regs.int_reg(arg1) - arg2;
+                    _regs.zero_flag(arg3 == 0);
+                    _regs.neg_flag(arg3 & 0x80000000);
                     break;
                 case CMP_I_R:
                     arg1 = next_pc();
                     arg2 = next_pc();
+                    arg3 = arg1 - _regs.int_reg(arg2);
+                    _regs.zero_flag(arg3 == 0);
+                    _regs.neg_flag(arg3 & 0x80000000);
+                    break;
+                // }}}
+
+                // CMPF commands {{{
+                case CMPF_R_R:
+                    arg1 = next_pc();
+                    arg2 = next_pc();
                     {
-                        uint32_t value = arg1 - _regs.int_reg(arg2);
-                        _regs.zero_flag(value == 0);
-                        _regs.neg_flag(value & 0x80000000);
+                        float value = _regs.float_reg(arg1) - _regs.float_reg(arg2);
+                        _regs.zero_flag(value == 0.0f);
+                        _regs.neg_flag(value < 0.0f);
+                    }
+                    break;
+                case CMPF_R_I:
+                    arg1 = next_pc();
+                    arg2 = next_pc();
+                    {
+                        float value = _regs.float_reg(arg1) - TO_FLOAT(arg2);
+                        _regs.zero_flag(value == 0.0f);
+                        _regs.neg_flag(value < 0.0f);
+                    }
+                    break;
+                case CMPF_I_R:
+                    arg1 = next_pc();
+                    arg2 = next_pc();
+                    {
+                        float value = TO_FLOAT(arg1) - _regs.float_reg(arg2);
+                        _regs.zero_flag(value == 0.0f);
+                        _regs.neg_flag(value < 0.0f);
                     }
                     break;
                 // }}}
@@ -430,6 +536,83 @@ namespace moss
                     if (_regs.zero_flag() || !_regs.neg_flag())
                     {
                         _regs.program_counter(arg1);
+                    }
+                    break;
+                // }}}
+                
+                // }}}
+
+                // Float Branching {{{
+                
+                // JMPF commands {{{
+                case JMPF_R:
+                    // pc = reg[arg1]
+                    _regs.program_counter(_regs.float_reg(next_pc()));
+                    break;
+                // }}}
+                
+                // JNEF commands {{{
+                case JNEF_R:
+                    // pc = reg[arg1] if !zero_flag
+                    arg1 = next_pc();
+                    if (!_regs.zero_flag())
+                    {
+                        _regs.program_counter(_regs.float_reg(arg1));
+                    }
+                    break;
+                // }}}
+                
+                // JEQF commands {{{
+                case JEQF_R:
+                    // pc = reg[arg1] if !zero_flag
+                    arg1 = next_pc();
+                    if (_regs.zero_flag())
+                    {
+                        _regs.program_counter(_regs.float_reg(arg1));
+                    }
+                    break;
+                // }}}
+                
+                // JLTF commands {{{
+                case JLTF_R:
+                    // pc = reg[arg1] if !zero_flag && neg_flag
+                    arg1 = next_pc();
+                    if (!_regs.zero_flag() && _regs.neg_flag())
+                    {
+                        _regs.program_counter(_regs.float_reg(arg1));
+                    }
+                    break;
+                // }}}
+                
+                // JLEF commands {{{
+                case JLEF_R:
+                    // pc = reg[arg1] if zero_flag || neg_flag
+                    arg1 = next_pc();
+                    if (_regs.zero_flag() || _regs.neg_flag())
+                    {
+                        _regs.program_counter(_regs.float_reg(arg1));
+                    }
+                    break;
+                // }}}
+                
+                // JGTF commands {{{
+                case JGTF_R:
+                    // pc = reg[arg1] if !zero_flag && !neg_flag
+                    arg1 = next_pc();
+                    if (!_regs.zero_flag() && !_regs.neg_flag())
+                    {
+                        _regs.program_counter(_regs.float_reg(arg1));
+                    }
+                    break;
+                // }}}
+                
+                // JGEF commands {{{
+                case JGEF_R:
+                    // pc = reg[arg1] if zero_flag || !neg_flag
+                    arg1 = next_pc();
+                    if (_regs.zero_flag() || !_regs.neg_flag())
+                    {
+                        _regs.program_counter(_regs.float_reg(arg1));
                     }
                     break;
                 // }}}

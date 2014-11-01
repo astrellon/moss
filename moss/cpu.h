@@ -52,23 +52,41 @@ namespace moss
                 
                 ADD_R_R,
                 ADD_R_R_R,
+                ADD_R_R_I,
                 ADD_R_I,
 
                 ADDF_R_R,
                 ADDF_R_R_R,
+                ADDF_R_R_I,
                 ADDF_R_I,
                 
                 SUB_R_R,
                 SUB_R_R_R,
+                SUB_R_I_R,
+                SUB_R_R_I,
                 SUB_R_I,
+
+                SUBF_R_R,
+                SUBF_R_R_R,
+                SUBF_R_I_R,
+                SUBF_R_R_I,
+                SUBF_R_I,
                 
                 PUSH_R,
                 PUSH_I,
                 POP_R,
 
+                PUSHF_R,
+                PUSHF_I,
+                POPF_R,
+
                 CMP_R_R,
                 CMP_R_I,
                 CMP_I_R,
+
+                CMPF_R_R,
+                CMPF_R_I,
+                CMPF_I_R,
 
                 JMP_R,
                 JMP_I,
@@ -84,6 +102,14 @@ namespace moss
                 JGT_I,
                 JGE_R,
                 JGE_I,
+                
+                JMPF_R,
+                JNEF_R,
+                JEQF_R,
+                JLTF_R,
+                JLEF_R,
+                JGTF_R,
+                JGEF_R,
                 
                 PRINT_R
             };
