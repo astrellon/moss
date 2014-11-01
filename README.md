@@ -13,10 +13,12 @@ Building
 ========
 
 Should build fine with any g++ version that supports c++0x
+
     make
     ./Moss
 
 Defaults to building in debug mode, to build for release:
+
     make RELEASE=yes
     ./Moss
 
