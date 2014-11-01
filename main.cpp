@@ -1,8 +1,8 @@
 #include <iostream>
 
-#include "cpu.h"
-#include "memory.h"
-#include "memory_writer.h"
+#include "moss/cpu.h"
+#include "moss/memory.h"
+#include "moss/memory_writer.h"
 
 int main(int argc, char **argv)
 {
