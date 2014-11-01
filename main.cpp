@@ -4,6 +4,8 @@
 #include "moss/memory.h"
 #include "moss/memory_writer.h"
 
+#include <stdint.h>
+
 int main(int argc, char **argv)
 {
     moss::Memory mem(1024u);
@@ -28,14 +30,24 @@ int main(int argc, char **argv)
     {
         dataWriter.write(i * 4);
     }
-    
+
     moss::MemoryWriter<moss::Mmu> codeWriter(64, &cpu.mmu());
-    codeWriter.write(moss::Cpu::MOV_I_R, 40, 0);
-    codeWriter.write(moss::Cpu::MOV_I_R, 55, 1);
-    codeWriter.write(moss::Cpu::ADD_R_R_R, 0, 1, 2);
-    
+    codeWriter.write(moss::Cpu::MOV_R_I, 0, 0);
+    codeWriter.write(moss::Cpu::MOV_R_I, 1, 32u);
+    codeWriter.add_label("start"); 
+    codeWriter.write(moss::Cpu::CMP_R_I, 0, 32);
+    codeWriter.write(moss::Cpu::JGE_I, "end");
+    codeWriter.write(moss::Cpu::MOV_R_M, 2, 1);
+    codeWriter.write(moss::Cpu::ADD_R_I, 0, 1);
+    codeWriter.write(moss::Cpu::ADD_R_I, 1, 1);
+    codeWriter.write(moss::Cpu::PRINT_R, 2u);
+    codeWriter.write(moss::Cpu::JMP_I, "start");
+    codeWriter.add_label("end");
+    codeWriter.write(moss::Cpu::MOV_R_I, 6, 1337);
+    codeWriter.finalise();
+
     cpu.mmu().to_stream(std::cout, true, 0, 128);
-   
+
     cpu.run();
     cpu.to_stream(std::cout);
 

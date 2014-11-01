@@ -34,21 +34,42 @@ namespace moss
                 HALT,
             
                 MOV_R_R,
-                MOV_I_R,
+                MOV_R_I,
                 MOV_M_R,
                 MOV_R_M,
-                MOV_I_M,
+                MOV_M_I,
                 MOV_M_M,
                 
                 ADD_R_R,
                 ADD_R_R_R,
+                ADD_R_I,
+                
+                SUB_R_R,
+                SUB_R_R_R,
+                SUB_R_I,
                 
                 PUSH_R,
                 PUSH_I,
                 POP_R,
 
+                CMP_R_R,
+                CMP_R_I,
+                CMP_I_R,
+
                 JMP_R,
                 JMP_I,
+                JNE_R,
+                JNE_I,
+                JEQ_R,
+                JEQ_I,
+                JLT_R,
+                JLT_I,
+                JLE_R,
+                JLE_I,
+                JGT_R,
+                JGT_I,
+                JGE_R,
+                JGE_I,
                 
                 PRINT_R
             };

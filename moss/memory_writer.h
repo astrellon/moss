@@ -1,6 +1,10 @@
 #pragma once
 
 #include <stdint.h>
+#include <iostream>
+#include <vector>
+#include <string>
+#include <map>
 
 namespace moss
 {
@@ -13,6 +17,43 @@ namespace moss
                 _memory(memory)
             {
 
+            }
+            ~MemoryWriter()
+            {
+                finalise();
+            }
+
+            bool finalise()
+            {
+                for (auto iter = _label_temp.begin(); iter != _label_temp.end(); ++iter)
+                {
+                    auto find = _label_locations.find(iter->first);
+                    if (find == _label_locations.end())
+                    {
+                        std::cout << "Error finalising! No label defined for: " << iter->first << std::endl;
+                        return false;
+                    }
+
+                    for (auto iter2 = iter->second.begin(); iter2 != iter->second.end(); ++iter2)
+                    {
+                        _memory->data(*iter2, find->second);
+                    }
+                }
+
+                _label_temp.clear();
+                return true;
+            }
+
+            void add_label(const char *label)
+            {
+                _label_locations[std::string(label)] = _index;
+            }
+
+            void write(uint32_t v1, const char *label)
+            {
+                _memory->data(_index++, v1);
+                _label_temp[std::string(label)].push_back(_index);
+                _memory->data(_index++, 0u);
             }
 
             void write(uint32_t v1)
@@ -41,5 +82,7 @@ namespace moss
         private:
             uint32_t _index;
             T *_memory;
+            std::map< std::string, uint32_t > _label_locations;
+            std::map< std::string, std::vector<uint32_t> > _label_temp;
     };
 }

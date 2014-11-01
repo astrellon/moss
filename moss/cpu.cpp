@@ -85,9 +85,9 @@ namespace moss
         while (_running)
         {
             uint32_t opcode = next_int();
-            uint32_t ar1 = 0u;
-            uint32_t ar2 = 0u;
-            uint32_t ar3 = 0u;
+            uint32_t arg1 = 0u;
+            uint32_t arg2 = 0u;
+            uint32_t arg3 = 0u;
             switch (opcode)
             {
                 // Error or Halt {{{
@@ -99,82 +99,266 @@ namespace moss
                 // }}}
 
                 // MOV Commands {{{
-                    case MOV_R_R:
-                    ar1 = next_int();
-                    ar2 = next_int();
-                    _regs.int_reg(ar2, _regs.int_reg(ar1));
+                case MOV_R_R:
+                    // reg[arg1] = reg[arg2]
+                    arg1 = next_int();
+                    arg2 = next_int();
+                    _regs.int_reg(arg1, _regs.int_reg(arg2));
                     break;
-                case MOV_I_R:
-                    ar1 = next_int();
-                    ar2 = next_int();
-                    _regs.int_reg(ar2, ar1);
+                case MOV_R_I:
+                    // reg[arg1] = arg2
+                    arg1 = next_int();
+                    arg2 = next_int();
+                    _regs.int_reg(arg1, arg2);
                     break;
                 case MOV_M_R:
-                    ar1 = next_int();
-                    ar2 = next_int();
-                    _regs.int_reg(ar2, _mmu.data(_regs.int_reg(ar1)));
+                    // mem[reg[arg1]] = reg[arg2]
+                    arg1 = next_int();
+                    arg2 = next_int();
+                    _mmu.data(_regs.int_reg(arg1), _regs.int_reg(arg2));
                     break;
                 case MOV_R_M:
-                    ar1 = next_int();
-                    ar2 = next_int();
-                    _mmu.data(_regs.int_reg(ar2), _regs.int_reg(ar1));
+                    // reg[arg1] = mem[reg[arg2]]
+                    arg1 = next_int();
+                    arg2 = next_int();
+                    _regs.int_reg(arg1, _mmu.data(_regs.int_reg(arg2)));
                     break;
-                case MOV_I_M:
-                    ar1 = next_int();
-                    ar2 = next_int();
-                    _mmu.data(ar2, ar1);
+                case MOV_M_I:
+                    // mem[reg[arg1]] = arg2
+                    arg1 = next_int();
+                    arg2 = next_int();
+                    _mmu.data(_regs.int_reg(arg1), arg2);
                     break;
                 case MOV_M_M:
-                    ar1 = next_int();
-                    ar2 = next_int();
-                    _mmu.data(ar2, _mmu.data(ar1));
+                    // mem[reg[arg1]] = mem[reg[arg2]]
+                    arg1 = next_int();
+                    arg2 = next_int();
+                    _mmu.data(_regs.int_reg(arg1), _mmu.data(_regs.int_reg(arg2)));
                     break;
                 // }}}
 
                 // ADD Commands {{{
                 case ADD_R_R:
-                    ar1 = next_int();
-                    ar2 = next_int();
-                    _regs.int_reg(ar2, _regs.int_reg(ar1) + _regs.int_reg(ar2));
+                    // reg[arg1] += reg[arg2]
+                    arg1 = next_int();
+                    arg2 = next_int();
+                    _regs.int_reg(arg1, _regs.int_reg(arg1) + _regs.int_reg(arg2));
                     break;
                 case ADD_R_R_R:
-                    ar1 = next_int();
-                    ar2 = next_int();
-                    ar3 = next_int();
-                    _regs.int_reg(ar3, _regs.int_reg(ar1) + _regs.int_reg(ar2));
+                    // reg[arg1] = reg[arg2] + reg[arg3]
+                    arg1 = next_int();
+                    arg2 = next_int();
+                    arg3 = next_int();
+                    _regs.int_reg(arg1, _regs.int_reg(arg2) + _regs.int_reg(arg3));
+                    break;
+                case ADD_R_I:
+                    // reg[arg1] += arg2
+                    arg1 = next_int();
+                    arg2 = next_int();
+                    _regs.int_reg(arg1, _regs.int_reg(arg1) + arg2);
+                    break;
+                // }}}
+                
+                // SUB Commands {{{
+                case SUB_R_R:
+                    // reg[arg1] -= reg[arg2]
+                    arg1 = next_int();
+                    arg2 = next_int();
+                    _regs.int_reg(arg1, _regs.int_reg(arg1) - _regs.int_reg(arg2));
+                    break;
+                case SUB_R_R_R:
+                    // reg[arg1] = reg[arg2] - reg[arg3]
+                    arg1 = next_int();
+                    arg2 = next_int();
+                    arg3 = next_int();
+                    _regs.int_reg(arg1, _regs.int_reg(arg2) - _regs.int_reg(arg3));
+                    break;
+                case SUB_R_I:
+                    // reg[arg1] -= arg2
+                    arg1 = next_int();
+                    arg2 = next_int();
+                    _regs.int_reg(arg1, _regs.int_reg(arg1) - arg2);
                     break;
                 // }}}
 
                 // Stack commands {{{
                 case PUSH_R:
-                    ar1 = next_int();
-                    push_stack(_regs.int_reg(ar1));
+                    // push reg[arg1]
+                    push_stack(_regs.int_reg(next_int()));
                     break;
                 case PUSH_I:
-                    ar1 = next_int();
-                    push_stack(ar1);
+                    // push arg1
+                    push_stack(next_int());
                     break;
                 case POP_R:
-                    ar1 = next_int();
-                    _regs.int_reg(ar1, pop_stack());
+                    // reg[arg1] = pop
+                    _regs.int_reg(next_int(), pop_stack());
                     break;
                 // }}}
 
-                // JMP Commands {{{
+                // CMP commands {{{
+                case CMP_R_R:
+                    arg1 = next_int();
+                    arg2 = next_int();
+                    {
+                        uint32_t value = _regs.int_reg(arg1) - _regs.int_reg(arg2);
+                        _regs.zero_flag(value == 0);
+                        _regs.neg_flag(value & 0x80000000);
+                    }
+                    break;
+                case CMP_R_I:
+                    arg1 = next_int();
+                    arg2 = next_int();
+                    {
+                        uint32_t value = _regs.int_reg(arg1) - arg2;
+                        _regs.zero_flag(value == 0);
+                        _regs.neg_flag(value & 0x80000000);
+                    }
+                    break;
+                case CMP_I_R:
+                    arg1 = next_int();
+                    arg2 = next_int();
+                    {
+                        uint32_t value = arg1 - _regs.int_reg(arg2);
+                        _regs.zero_flag(value == 0);
+                        _regs.neg_flag(value & 0x80000000);
+                    }
+                    break;
+                // }}}
+
+                // Branching {{{
+                
+                // JMP commands {{{
                 case JMP_R:
-                    ar1 = next_int();
-                    _regs.program_counter(_regs.int_reg(ar1));
+                    // pc = reg[arg1]
+                    _regs.program_counter(_regs.int_reg(next_int()));
                     break;
                 case JMP_I:
-                    ar1 = next_int();
-                    _regs.program_counter(ar1);
+                    // pc = arg1
+                    _regs.program_counter(next_int());
                     break;
+                // }}}
+                
+                // JNE commands {{{
+                case JNE_R:
+                    // pc = reg[arg1] if !zero_flag
+                    arg1 = next_int();
+                    if (!_regs.zero_flag())
+                    {
+                        _regs.program_counter(_regs.int_reg(arg1));
+                    }
+                    break;
+                case JNE_I:
+                    // pc = arg1 if !zero_flag
+                    arg1 = next_int();
+                    if (!_regs.zero_flag())
+                    {
+                        _regs.program_counter(arg1);
+                    }
+                    break;
+                // }}}
+                
+                // JEQ commands {{{
+                case JEQ_R:
+                    // pc = reg[arg1] if !zero_flag
+                    arg1 = next_int();
+                    if (_regs.zero_flag())
+                    {
+                        _regs.program_counter(_regs.int_reg(arg1));
+                    }
+                    break;
+                case JEQ_I:
+                    // pc = arg1 if zero_flag
+                    arg1 = next_int();
+                    if (_regs.zero_flag())
+                    {
+                        _regs.program_counter(arg1);
+                    }
+                    break;
+                // }}}
+                
+                // JLT commands {{{
+                case JLT_R:
+                    // pc = reg[arg1] if !zero_flag && neg_flag
+                    arg1 = next_int();
+                    if (!_regs.zero_flag() && _regs.neg_flag())
+                    {
+                        _regs.program_counter(_regs.int_reg(arg1));
+                    }
+                    break;
+                case JLT_I:
+                    // pc = arg1 if !zero_flag && neg_flag
+                    arg1 = next_int();
+                    if (!_regs.zero_flag() && _regs.neg_flag())
+                    {
+                        _regs.program_counter(arg1);
+                    }
+                    break;
+                // }}}
+                
+                // JLE commands {{{
+                case JLE_R:
+                    // pc = reg[arg1] if zero_flag || neg_flag
+                    arg1 = next_int();
+                    if (_regs.zero_flag() || _regs.neg_flag())
+                    {
+                        _regs.program_counter(_regs.int_reg(arg1));
+                    }
+                    break;
+                case JLE_I:
+                    // pc = arg1 if zero_flag || neg_flag
+                    arg1 = next_int();
+                    if (_regs.zero_flag() || _regs.neg_flag())
+                    {
+                        _regs.program_counter(arg1);
+                    }
+                    break;
+                // }}}
+                
+                // JGT commands {{{
+                case JGT_R:
+                    // pc = reg[arg1] if !zero_flag && !neg_flag
+                    arg1 = next_int();
+                    if (!_regs.zero_flag() && !_regs.neg_flag())
+                    {
+                        _regs.program_counter(_regs.int_reg(arg1));
+                    }
+                    break;
+                case JGT_I:
+                    // pc = reg[arg1] if !zero_flag && !neg_flag
+                    arg1 = next_int();
+                    if (!_regs.zero_flag() && !_regs.neg_flag())
+                    {
+                        _regs.program_counter(arg1);
+                    }
+                    break;
+                // }}}
+                
+                // JGE commands {{{
+                case JGE_R:
+                    // pc = reg[arg1] if zero_flag || !neg_flag
+                    arg1 = next_int();
+                    if (_regs.zero_flag() || !_regs.neg_flag())
+                    {
+                        _regs.program_counter(_regs.int_reg(arg1));
+                    }
+                    break;
+                case JGE_I:
+                    // pc = reg[arg1] if zero_flag || !neg_flag
+                    arg1 = next_int();
+                    if (_regs.zero_flag() || !_regs.neg_flag())
+                    {
+                        _regs.program_counter(arg1);
+                    }
+                    break;
+                // }}}
+                
                 // }}}
 
                 // Debug commands {{{
                 case PRINT_R:
-                    ar1 = next_int();
-                    std::cout << "Reg " << ar1 << ": " << _regs.int_reg(ar1);
+                    arg1 = next_int();
+                    std::cout << "Reg " << arg1 << ": " << _regs.int_reg(arg1) << std::endl;
                     break;
                 // }}}
 
