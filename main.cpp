@@ -3,6 +3,10 @@
 #include "moss/cpu.h"
 #include "moss/memory.h"
 #include "moss/memory_writer.h"
+#include "moss/tokeniser.h"
+
+#include <string>
+#include <sstream>
 
 int main(int argc, char **argv)
 {
@@ -52,6 +56,26 @@ int main(int argc, char **argv)
 
     cpu.run();
     cpu.to_stream(std::cout);
+
+    std::stringstream ss;
+    ss << "\tMOV r1 r2\nADD r1 r2 r3\n";
+    moss::Tokeniser tokens(ss);
+    while (tokens.has_tokens())
+    {
+        std::string token = tokens.next_token();
+        std::cout << "Token: >" << token << "<\n";
+        if (token.size() == 0)
+        {
+            if (tokens.end_of_stream())
+            {
+                std::cout << "- End of stream!\n";
+            }
+            else
+            {
+                std::cout << "- Still more\n";
+            }
+        }
+    }
 
     return 0;
 }
