@@ -1,5 +1,7 @@
 #include "tokeniser.h"
 
+#include "utils.h"
+
 namespace moss
 {
     Tokeniser::Tokeniser(std::istream &input) :
@@ -48,7 +50,7 @@ namespace moss
                 return;
             }
 
-            trim_str(line);
+            Utils::trim_str(line);
         } while (line.size() == 0);
 
         _has_tokens = true;
@@ -69,32 +71,9 @@ namespace moss
         } while (!_in_comment && start < line.size());
     }
 
-    void Tokeniser::trim_str(std::string &str)
-    {
-        auto start = 0u;
-        auto end = str.size() - 1;
-
-        while (start <= end && is_whitespace(str, start))
-        {
-            ++start;
-        }
-        while (end > 0 && is_whitespace(str, end))
-        {
-            --end;
-        }
-
-        str = str.substr(start, end - start + 1);
-    }
-    
-    bool Tokeniser::is_whitespace(const std::string &str, std::size_t index)
-    {
-        auto c = str[index];
-        return c == ' ' || c == '\t' || c == '\n' || c == '\r';
-    }
-
     std::size_t Tokeniser::next_whitespace(const std::string &str, std::size_t index)
     {
-        while (index < str.size() && !is_whitespace(str, index))
+        while (index < str.size() && !Utils::is_whitespace(str[index]))
         {
             if (str[index] == ';')
             {
@@ -107,7 +86,7 @@ namespace moss
     }
     std::size_t Tokeniser::next_non_whitespace(const std::string &str, std::size_t index)
     {
-        while (index < str.size() && is_whitespace(str, index))
+        while (index < str.size() && Utils::is_whitespace(str[index]))
         {
             if (str[index] == ';')
             {

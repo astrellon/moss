@@ -16,9 +16,6 @@ namespace moss
             bool end_of_stream() const;
             //std::string next_token();
             std::vector<std::string> next_token_line();
-            
-            static void trim_str(std::string &str);
-            static bool is_whitespace(const std::string &str, std::size_t index);
 
         private:
             bool _has_tokens;

@@ -42,12 +42,14 @@ namespace moss
             {
                 UNKNOWN,
                 COMMAND,
-                INT_REG,
-                FLOAT_REG,
+                NUMBER,
                 MEMORY,
                 CONSTANT,
                 LABEL
             };
+
+            static TokenType get_token_type(const std::string &token, bool is_first_token);
+
 
 
     };

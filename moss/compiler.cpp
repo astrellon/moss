@@ -1,6 +1,7 @@
 #include "compiler.h"
 
 #include "common.h"
+#include "utils.h"
 
 namespace moss
 {
@@ -115,5 +116,32 @@ namespace moss
         _label_temp[std::string(label)].push_back(_index + 1);
         _data.push_back(DataWord(0u));
         _index += 2;
+    }
+
+    Compiler::TokenType Compiler::get_token_type(const std::string &token, bool is_first_token)
+    {
+        if (token.size() == 0u)
+        {
+            return UNKNOWN;
+        }
+        if (token.back() == ':')
+        {
+            return LABEL;
+        }
+        if (Utils::is_digit(token[0], true))
+        {
+            for (auto i = 1u; i < token.size(); ++i)
+            {
+                if (!Utils::is_digit(token[i], true))
+                {
+                    return NUMBER;
+                }
+            }
+        }
+        if (token[0] == 'r' && Utils::is_digit(token[1], false))
+        {
+            
+        }
+
     }
 }
