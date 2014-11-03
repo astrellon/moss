@@ -8,6 +8,7 @@
 
 #include "tokeniser.h"
 #include "cpu.h"
+#include "common.h"
 
 namespace moss
 {
@@ -23,7 +24,7 @@ namespace moss
         private:
             uint32_t _index;
             Tokeniser *_tokens;
-            std::vector<uint32_t> _data;
+            std::vector<DataWord> _data;
             std::map< std::string, uint32_t > _label_locations;
             std::map< std::string, std::vector<uint32_t> > _label_temp;
 

@@ -6,6 +6,7 @@
 #include "moss/tokeniser.h"
 #include "moss/registers.h"
 #include "moss/common.h"
+#include "moss/compiler.h"
 
 #include <string>
 #include <sstream>
@@ -68,6 +69,11 @@ int main(int argc, char **argv)
         std::cout << "Error running CPU!\n";
     }
     cpu.to_stream(std::cout);
+
+    moss::Compiler compiler;
+    std::ifstream input_ss("test.asm");
+    compiler.process_stream(std::string("test.asm"), input_ss);
+
 
     /*
     std::ifstream input_ss("test.asm");

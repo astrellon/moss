@@ -117,10 +117,13 @@ namespace moss
             Memory *_memory;
 
             uint32_t next_pc();
+            float next_pc_float();
 
             void do_run();
 
             void push_stack(uint32_t value);
+            void push_stack_float(float value);
             uint32_t pop_stack();
+            float pop_stack_float();
     };
 }

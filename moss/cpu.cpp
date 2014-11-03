@@ -71,6 +71,10 @@ namespace moss
     {
         return _mmu.uint_data(_regs.program_counter_inc());
     }
+    float Cpu::next_pc_float()
+    {
+        return _mmu.float_data(_regs.program_counter_inc());
+    }
 
     void Cpu::push_stack(uint32_t value)
     {
@@ -80,9 +84,19 @@ namespace moss
     {
         return _mmu.uint_data(_regs.stack_pointer_pop());
     }
+    void Cpu::push_stack_float(float value)
+    {
+        _mmu.float_data(_regs.stack_pointer_push(), value);
+    }
+    float Cpu::pop_stack_float()
+    {
+        return _mmu.float_data(_regs.stack_pointer_pop());
+    }
 
     void Cpu::do_run()
     {
+        float farg1 = 0.0f;
+        float farg2 = 0.0f;
         uint32_t arg1 = 0u;
         uint32_t arg2 = 0u;
         uint32_t arg3 = 0u;
@@ -148,8 +162,8 @@ namespace moss
                 case MOVF_R_I:
                     // reg[arg1] = arg2
                     arg1 = next_pc();
-                    arg2 = next_pc();
-                    _regs.float_reg(arg1, TO_FLOAT(arg2));
+                    farg2 = next_pc_float();
+                    _regs.float_reg(arg1, farg2);
                     break;
                 case MOVF_M_R:
                     // mem[reg[arg1]] = reg[arg2]
@@ -263,8 +277,8 @@ namespace moss
                 case ADDF_R_I:
                     // reg[arg1] += arg2
                     arg1 = next_pc();
-                    arg2 = next_pc();
-                    _regs.float_reg(arg1, _regs.float_reg(arg1) + TO_FLOAT(arg2));
+                    farg2 = next_pc_float();
+                    _regs.float_reg(arg1, _regs.float_reg(arg1) + arg2);
                     break;
                 // }}}
                 
@@ -335,8 +349,8 @@ namespace moss
                 case SUBF_R_I:
                     // reg[arg1] -= arg2
                     arg1 = next_pc();
-                    arg2 = next_pc();
-                    _regs.float_reg(arg1, _regs.float_reg(arg1) - TO_FLOAT(arg2));
+                    farg2 = next_pc_float();
+                    _regs.float_reg(arg1, _regs.float_reg(arg1) - arg2);
                     break;
                 // }}}
                 
@@ -356,20 +370,16 @@ namespace moss
                 
                 case PUSHF_R:
                     // push reg[arg1]
-                    {
-                        float temp = _regs.float_reg(next_pc());
-                        push_stack(TO_UINT(temp));
-                    }
+                    push_stack_float(_regs.float_reg(next_pc()));
                     break;
                 case PUSHF_I:
                     // push arg1
-                    arg2 = next_pc();
-                    push_stack(TO_UINT(arg2));
+                    push_stack_float(next_pc_float());
                     break;
                 case POPF_R:
                     // reg[arg1] = pop
-                    arg2 = pop_stack();
-                    _regs.float_reg(next_pc(), TO_FLOAT(arg2));
+                    farg2 = pop_stack_float();
+                    _regs.float_reg(next_pc(), arg2);
                     break;
                 // }}}
 
@@ -409,18 +419,18 @@ namespace moss
                     break;
                 case CMPF_R_I:
                     arg1 = next_pc();
-                    arg2 = next_pc();
+                    farg2 = next_pc_float();
                     {
-                        float value = _regs.float_reg(arg1) - TO_FLOAT(arg2);
+                        float value = _regs.float_reg(arg1) - farg2;
                         _regs.zero_flag(value == 0.0f);
                         _regs.neg_flag(value < 0.0f);
                     }
                     break;
                 case CMPF_I_R:
-                    arg1 = next_pc();
+                    farg1 = next_pc_float();
                     arg2 = next_pc();
                     {
-                        float value = TO_FLOAT(arg1) - _regs.float_reg(arg2);
+                        float value = farg1 - _regs.float_reg(arg2);
                         _regs.zero_flag(value == 0.0f);
                         _regs.neg_flag(value < 0.0f);
                     }

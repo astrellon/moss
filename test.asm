@@ -1,5 +1,5 @@
 ; Test file
-    MOVF fr0 34.5
+    MOVF r8 34.5
     MOV r0 0
     MOV r1 32
 start:
@@ -10,9 +10,8 @@ start:
     ADD r1 1
     JMP start
 end:
-    UINT_FLOAT fr1 r2
-    ADDF fr2 fr1 fr0
-    FLOAT_UINT r5 fr2
+    UINT_FLOAT r9 r2
+    ADDF r10 r8 r9
+    FLOAT_UINT r5 r10
     MOV r6 1337
-
 
