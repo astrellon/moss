@@ -69,16 +69,16 @@ namespace moss
 
     uint32_t Cpu::next_pc()
     {
-        return _mmu.data(_regs.program_counter_inc());
+        return _mmu.uint_data(_regs.program_counter_inc());
     }
 
     void Cpu::push_stack(uint32_t value)
     {
-        _mmu.data(_regs.stack_pointer_push(), value);
+        _mmu.uint_data(_regs.stack_pointer_push(), value);
     }
     uint32_t Cpu::pop_stack()
     {
-        return _mmu.data(_regs.stack_pointer_pop());
+        return _mmu.uint_data(_regs.stack_pointer_pop());
     }
 
     void Cpu::do_run()
@@ -116,25 +116,25 @@ namespace moss
                     // mem[reg[arg1]] = reg[arg2]
                     arg1 = next_pc();
                     arg2 = next_pc();
-                    _mmu.data(_regs.uint_reg(arg1), _regs.uint_reg(arg2));
+                    _mmu.uint_data(_regs.uint_reg(arg1), _regs.uint_reg(arg2));
                     break;
                 case MOV_R_M:
                     // reg[arg1] = mem[reg[arg2]]
                     arg1 = next_pc();
                     arg2 = next_pc();
-                    _regs.uint_reg(arg1, _mmu.data(_regs.uint_reg(arg2)));
+                    _regs.uint_reg(arg1, _mmu.uint_data(_regs.uint_reg(arg2)));
                     break;
                 case MOV_M_I:
                     // mem[reg[arg1]] = arg2
                     arg1 = next_pc();
                     arg2 = next_pc();
-                    _mmu.data(_regs.uint_reg(arg1), arg2);
+                    _mmu.uint_data(_regs.uint_reg(arg1), arg2);
                     break;
                 case MOV_M_M:
                     // mem[reg[arg1]] = mem[reg[arg2]]
                     arg1 = next_pc();
                     arg2 = next_pc();
-                    _mmu.data(_regs.uint_reg(arg1), _mmu.data(_regs.uint_reg(arg2)));
+                    _mmu.uint_data(_regs.uint_reg(arg1), _mmu.uint_data(_regs.uint_reg(arg2)));
                     break;
                 // }}}
                 
@@ -155,35 +155,49 @@ namespace moss
                     // mem[reg[arg1]] = reg[arg2]
                     arg1 = next_pc();
                     arg2 = next_pc();
-                    _mmu.data(_regs.float_reg(arg1), _regs.float_reg(arg2));
+                    _mmu.float_data(_regs.float_reg(arg1), _regs.float_reg(arg2));
                     break;
                 case MOVF_R_M:
                     // reg[arg1] = mem[reg[arg2]]
                     arg1 = next_pc();
                     arg2 = next_pc();
-                    _regs.float_reg(arg1, _mmu.data(_regs.float_reg(arg2)));
+                    _regs.float_reg(arg1, _mmu.float_data(_regs.float_reg(arg2)));
                     break;
                 case MOVF_M_I:
                     // mem[reg[arg1]] = arg2
                     arg1 = next_pc();
                     arg2 = next_pc();
-                    _mmu.data(_regs.float_reg(arg1), TO_FLOAT(arg2));
+                    _mmu.float_data(_regs.float_reg(arg1), arg2);
                     break;
                 case MOVF_M_M:
                     // mem[reg[arg1]] = mem[reg[arg2]]
                     arg1 = next_pc();
                     arg2 = next_pc();
-                    _mmu.data(_regs.float_reg(arg1), _mmu.data(_regs.float_reg(arg2)));
+                    _mmu.float_data(_regs.float_reg(arg1), _mmu.float_data(_regs.float_reg(arg2)));
                     break;
                 // }}}
 
                 // Unit Converstions {{{
+                case UINT_FLOAT_R:
+                    arg1 = next_pc();
+                    {
+                        uint32_t value = _regs.uint_reg(arg1);
+                        _regs.float_reg(arg1, static_cast<float>(value));
+                    }
+                    break;
                 case UINT_FLOAT_R_R:
                     arg1 = next_pc();
                     arg2 = next_pc();
                     {
                         uint32_t value = _regs.uint_reg(arg2);
                         _regs.float_reg(arg1, static_cast<float>(value));
+                    }
+                    break;
+                case FLOAT_UINT_R:
+                    arg1 = next_pc();
+                    {
+                        float value = _regs.float_reg(arg1);
+                        _regs.uint_reg(arg1, static_cast<uint32_t>(value));
                     }
                     break;
                 case FLOAT_UINT_R_R:

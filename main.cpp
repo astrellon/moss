@@ -10,6 +10,7 @@
 #include <string>
 #include <sstream>
 #include <fstream>
+#include <exception>
 
 int main(int argc, char **argv)
 {
@@ -18,12 +19,12 @@ int main(int argc, char **argv)
 
     for (int i = 0; i < 32; i++)
     {
-        mem.data(i, i);
+        mem.uint_data(i, i);
     }
-    mem.data(2, 5);
-    mem.data(5, 2);
-    mem.data(3, 8);
-    mem.data(8, 3);
+    mem.uint_data(2, 5);
+    mem.uint_data(5, 2);
+    mem.uint_data(3, 8);
+    mem.uint_data(8, 3);
 
     moss::Cpu cpu(4u);
 
@@ -37,7 +38,8 @@ int main(int argc, char **argv)
     }
 
     moss::MemoryWriter<moss::Mmu> codeWriter(64, &cpu.mmu());
-    codeWriter.writeF(moss::Cpu::MOVF_R_I, 0, 34.5f);
+    codeWriter.write(moss::Cpu::MOVF_R_I, 8);
+    codeWriter.writeF(34.5f);
     codeWriter.write(moss::Cpu::MOV_R_I, 0, 0);
     codeWriter.write(moss::Cpu::MOV_R_I, 1, 32u);
     codeWriter.add_label("start"); 
@@ -49,22 +51,23 @@ int main(int argc, char **argv)
     codeWriter.write(moss::Cpu::PRINT_R, 2u);
     codeWriter.write(moss::Cpu::JMP_I, "start");
     codeWriter.add_label("end");
-    codeWriter.write(moss::Cpu::UINT_FLOAT_R_R, 1, 2);
-    codeWriter.write(moss::Cpu::ADDF_R_R_R, 2, 1, 0);
-    codeWriter.write(moss::Cpu::FLOAT_UINT_R_R, 5, 2);
+    codeWriter.write(moss::Cpu::UINT_FLOAT_R_R, 9, 2);
+    codeWriter.write(moss::Cpu::ADDF_R_R_R, 10, 8, 9);
+    codeWriter.write(moss::Cpu::FLOAT_UINT_R_R, 5, 10);
     codeWriter.write(moss::Cpu::MOV_R_I, 6, 1337);
     codeWriter.finalise();
 
     cpu.mmu().to_stream(std::cout, true, 0, 128);
 
-    cpu.run();
+    try
+    {
+        cpu.run();
+    }
+    catch (std::exception e)
+    {
+        std::cout << "Error running CPU!\n";
+    }
     cpu.to_stream(std::cout);
-
-    moss::Registers regs;
-    moss::DataWord word;
-    word.i = 34;
-    regs.word_reg(0, word);
-    std::cout << "Word: " <<  regs.word_reg(0).i << "\n";
 
     /*
     std::ifstream input_ss("test.asm");

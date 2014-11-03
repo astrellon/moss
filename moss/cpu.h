@@ -47,7 +47,9 @@ namespace moss
                 MOVF_M_I,
                 MOVF_M_M,
                 
+                UINT_FLOAT_R,
                 UINT_FLOAT_R_R,
+                FLOAT_UINT_R,
                 FLOAT_UINT_R_R,
                 
                 ADD_R_R,

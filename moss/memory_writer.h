@@ -38,7 +38,7 @@ namespace moss
 
                     for (auto iter2 = iter->second.begin(); iter2 != iter->second.end(); ++iter2)
                     {
-                        _memory->data(*iter2, find->second);
+                        _memory->uint_data(*iter2, find->second);
                     }
                 }
 
@@ -53,51 +53,55 @@ namespace moss
 
             void write(uint32_t v1, const char *label)
             {
-                _memory->data(_index++, v1);
+                _memory->uint_data(_index++, v1);
                 _label_temp[std::string(label)].push_back(_index);
-                _memory->data(_index++, 0u);
+                _memory->uint_data(_index++, 0u);
             }
 
             void write(uint32_t v1)
             {
-                _memory->data(_index++, v1);
+                _memory->uint_data(_index++, v1);
             }
             void write(uint32_t v1, uint32_t v2)
             {
-                _memory->data(_index++, v1);
-                _memory->data(_index++, v2);
+                _memory->uint_data(_index++, v1);
+                _memory->uint_data(_index++, v2);
             }
             void write(uint32_t v1, uint32_t v2, uint32_t v3)
             {
-                _memory->data(_index++, v1);
-                _memory->data(_index++, v2);
-                _memory->data(_index++, v3);
+                _memory->uint_data(_index++, v1);
+                _memory->uint_data(_index++, v2);
+                _memory->uint_data(_index++, v3);
             }
             void write(uint32_t v1, uint32_t v2, uint32_t v3, uint32_t v4)
             {
-                _memory->data(_index++, v1);
-                _memory->data(_index++, v2);
-                _memory->data(_index++, v3);
-                _memory->data(_index++, v4);
+                _memory->uint_data(_index++, v1);
+                _memory->uint_data(_index++, v2);
+                _memory->uint_data(_index++, v3);
+                _memory->uint_data(_index++, v4);
             }
             
+            void writeF(float v1)
+            {
+                _memory->float_data(_index++, v1);
+            }
             void writeF(uint32_t v1, float v2)
             {
-                _memory->data(_index++, v1);
-                _memory->data(_index++, TO_UINT(v2));
+                _memory->uint_data(_index++, v1);
+                _memory->float_data(_index++, v2);
             }
             void writeF(uint32_t v1, float v2, float v3)
             {
-                _memory->data(_index++, v1);
-                _memory->data(_index++, TO_UINT(v2));
-                _memory->data(_index++, TO_UINT(v3));
+                _memory->uint_data(_index++, v1);
+                _memory->float_data(_index++, v2);
+                _memory->float_data(_index++, v3);
             }
             void writeF(uint32_t v1, float v2, float v3, float v4)
             {
-                _memory->data(_index++, v1);
-                _memory->data(_index++, TO_UINT(v2));
-                _memory->data(_index++, TO_UINT(v3));
-                _memory->data(_index++, TO_UINT(v4));
+                _memory->uint_data(_index++, v1);
+                _memory->float_data(_index++, v2);
+                _memory->float_data(_index++, v3);
+                _memory->float_data(_index++, v4);
             }
 
         private:

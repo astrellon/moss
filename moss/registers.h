@@ -21,16 +21,6 @@ namespace moss
             bool neg_flag() const;
             void neg_flag(bool flag);
 
-            /*
-            uint32_t num_int_reg() const;
-            uint32_t int_reg(uint32_t index) const;
-            void int_reg(uint32_t index, uint32_t value);
-            
-            uint32_t num_float_reg() const;
-            float float_reg(uint32_t index) const;
-            void float_reg(uint32_t index, float value);
-            */
-
             uint32_t num_word_reg() const;
             int32_t int_reg(uint32_t index) const;
             void int_reg(uint32_t index, int32_t value);
@@ -60,8 +50,6 @@ namespace moss
             uint32_t _flags;
             uint32_t _stack_pointer;
             uint32_t _program_counter;
-            //std::array<uint32_t, 8> _int_regs;
-            //std::array<float, 8> _float_regs;
             std::array<DataWord, 16> _word_regs;
     };
 }

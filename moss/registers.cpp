@@ -1,6 +1,7 @@
 #include "registers.h"
 
 #include <iomanip>
+#include <stdexcept>
 
 namespace moss
 {
@@ -14,13 +15,9 @@ namespace moss
 
     void Registers::zero()
     {
-        for (auto i = 0u; i < _int_regs.size(); i++)
+        for (auto i = 0u; i < _word_regs.size(); i++)
         {
-            _int_regs[i] = 0u;
-        }
-        for (auto i = 0u; i < _float_regs.size(); i++)
-        {
-            _float_regs[i] = 0.0f;
+            _word_regs.at(i).u = 0u;
         }
     }
 
@@ -46,34 +43,6 @@ namespace moss
         _flags = flag ? _flags | NEG_FLAG : _flags & ~(NEG_FLAG);
     }
 
-    /*
-    uint32_t Registers::num_int_reg() const
-    {
-        return static_cast<uint32_t>(_int_regs.size());
-    }
-    uint32_t Registers::int_reg(uint32_t index) const
-    {
-        return _int_regs[index];
-    }
-    void Registers::int_reg(uint32_t index, uint32_t value)
-    {
-        _int_regs[index] = value;
-    }
-
-    uint32_t Registers::num_float_reg() const
-    {
-        return static_cast<uint32_t>(_float_regs.size());
-    }
-    float Registers::float_reg(uint32_t index) const
-    {
-        return _float_regs[index];
-    }
-    void Registers::float_reg(uint32_t index, float value)
-    {
-        _float_regs[index] = value;
-    }
-    */
-
     uint32_t Registers::num_word_reg() const
     {
         return static_cast<uint32_t>(_word_regs.size());
@@ -81,28 +50,40 @@ namespace moss
     // INT 
     int32_t Registers::int_reg(uint32_t index) const
     {
-        return _word_regs[index].i;
+        return _word_regs.at(index).i;
     }
     void Registers::int_reg(uint32_t index, int32_t value)
     {
+        if (index >= num_word_reg())
+        {
+            throw std::out_of_range("Out of register bounds");
+        }
         _word_regs[index].i = value;
     }
     // UINT
     uint32_t Registers::uint_reg(uint32_t index) const
     {
-        return _word_regs[index].u;
+        return _word_regs.at(index).u;
     }
     void Registers::uint_reg(uint32_t index, uint32_t value)
     {
+        if (index >= num_word_reg())
+        {
+            throw std::out_of_range("Out of register bounds");
+        }
         _word_regs[index].u = value;
     }
     // FLOAT
     float Registers::float_reg(uint32_t index) const
     {
-        return _word_regs[index].f;
+        return _word_regs.at(index).f;
     }
     void Registers::float_reg(uint32_t index, float value)
     {
+        if (index >= num_word_reg())
+        {
+            throw std::out_of_range("Out of register bounds");
+        }
         _word_regs[index].f = value;
     }
 
@@ -143,9 +124,10 @@ namespace moss
             "- SP: " << stack_pointer() << "\n"
             "- Flags: " << flags() << "\n"
             ;
+        os << std::setw(5) << "Reg:" << std::setw(15) << "UINT" << std::setw(15) << "FLOAT\n";
         for (auto i = 0; i < num_word_reg(); i++)
         {
-            os << "- " << i << ": " << std::setw(8) << word_reg(i).i << std::setw(14) << word_reg(i).f << "\n";
+            os << "- " << std::setw(2) << i << ": " << std::setw(14) << uint_reg(i) << std::setw(14) << float_reg(i) << "\n";
         }
     }
 }

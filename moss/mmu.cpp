@@ -33,20 +33,36 @@ namespace moss
         _memory = memory;
     }
 
-    uint32_t Mmu::data(uint32_t index) const
+    int32_t Mmu::int_data(uint32_t index) const
     {
-        return _memory->data(translate_index(index));
+        return _memory->int_data(translate_index(index));
     }
-    void Mmu::data(uint32_t index, uint32_t value)
+    void Mmu::int_data(uint32_t index, int32_t value)
     {
-        _memory->data(translate_index(index), value);
+        _memory->int_data(translate_index(index), value);
+    }
+    uint32_t Mmu::uint_data(uint32_t index) const
+    {
+        return _memory->uint_data(translate_index(index));
+    }
+    void Mmu::uint_data(uint32_t index, uint32_t value)
+    {
+        _memory->uint_data(translate_index(index), value);
+    }
+    float Mmu::float_data(uint32_t index) const
+    {
+        return _memory->float_data(translate_index(index));
+    }
+    void Mmu::float_data(uint32_t index, float value)
+    {
+        _memory->float_data(translate_index(index), value);
     }
 
     uint32_t Mmu::translate_index(uint32_t index) const
     {
         uint32_t page = index >> _page_bit_size;
         uint32_t index_offset = index & _page_bit_mask;;
-        uint32_t translated = _memory->data(_table_pointer + page);
+        uint32_t translated = _memory->uint_data(_table_pointer + page);
         return (translated << _page_bit_size) + index_offset;
     }
     
@@ -65,7 +81,7 @@ namespace moss
         {
             if (p == 0)
             {
-                os << "Page: " << page << ", " << _memory->data(_table_pointer + page) << "\n";
+                os << "Page: " << page << ", " << _memory->uint_data(_table_pointer + page) << "\n";
             }
             p++;
             if (p >= _page_size)
@@ -76,11 +92,11 @@ namespace moss
 
             if (in_virtual)
             {
-                os << std::setw(4) << data(i) << ' ';
+                os << std::setw(14) << uint_data(i) << ' ';
             }
             else
             {
-                os << std::setw(4) << _memory->data(i) << ' ';
+                os << std::setw(14) << _memory->uint_data(i) << ' ';
             }
             j++;
             if (j >= 8)
