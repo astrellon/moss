@@ -29,7 +29,7 @@ namespace moss
             void stop();
             bool is_running() const;
 
-            enum Opcodes
+            enum Opcode
             {
                 HALT,
             

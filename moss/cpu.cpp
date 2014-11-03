@@ -104,37 +104,37 @@ namespace moss
                     // reg[arg1] = reg[arg2]
                     arg1 = next_pc();
                     arg2 = next_pc();
-                    _regs.int_reg(arg1, _regs.int_reg(arg2));
+                    _regs.uint_reg(arg1, _regs.uint_reg(arg2));
                     break;
                 case MOV_R_I:
                     // reg[arg1] = arg2
                     arg1 = next_pc();
                     arg2 = next_pc();
-                    _regs.int_reg(arg1, arg2);
+                    _regs.uint_reg(arg1, arg2);
                     break;
                 case MOV_M_R:
                     // mem[reg[arg1]] = reg[arg2]
                     arg1 = next_pc();
                     arg2 = next_pc();
-                    _mmu.data(_regs.int_reg(arg1), _regs.int_reg(arg2));
+                    _mmu.data(_regs.uint_reg(arg1), _regs.uint_reg(arg2));
                     break;
                 case MOV_R_M:
                     // reg[arg1] = mem[reg[arg2]]
                     arg1 = next_pc();
                     arg2 = next_pc();
-                    _regs.int_reg(arg1, _mmu.data(_regs.int_reg(arg2)));
+                    _regs.uint_reg(arg1, _mmu.data(_regs.uint_reg(arg2)));
                     break;
                 case MOV_M_I:
                     // mem[reg[arg1]] = arg2
                     arg1 = next_pc();
                     arg2 = next_pc();
-                    _mmu.data(_regs.int_reg(arg1), arg2);
+                    _mmu.data(_regs.uint_reg(arg1), arg2);
                     break;
                 case MOV_M_M:
                     // mem[reg[arg1]] = mem[reg[arg2]]
                     arg1 = next_pc();
                     arg2 = next_pc();
-                    _mmu.data(_regs.int_reg(arg1), _mmu.data(_regs.int_reg(arg2)));
+                    _mmu.data(_regs.uint_reg(arg1), _mmu.data(_regs.uint_reg(arg2)));
                     break;
                 // }}}
                 
@@ -182,7 +182,7 @@ namespace moss
                     arg1 = next_pc();
                     arg2 = next_pc();
                     {
-                        uint32_t value = _regs.int_reg(arg2);
+                        uint32_t value = _regs.uint_reg(arg2);
                         _regs.float_reg(arg1, static_cast<float>(value));
                     }
                     break;
@@ -191,7 +191,7 @@ namespace moss
                     arg2 = next_pc();
                     {
                         float value = _regs.float_reg(arg2);
-                        _regs.int_reg(arg1, static_cast<uint32_t>(value));
+                        _regs.uint_reg(arg1, static_cast<uint32_t>(value));
                     }
                     break;
                 // }}}
@@ -201,27 +201,27 @@ namespace moss
                     // reg[arg1] += reg[arg2]
                     arg1 = next_pc();
                     arg2 = next_pc();
-                    _regs.int_reg(arg1, _regs.int_reg(arg1) + _regs.int_reg(arg2));
+                    _regs.uint_reg(arg1, _regs.uint_reg(arg1) + _regs.uint_reg(arg2));
                     break;
                 case ADD_R_R_R:
                     // reg[arg1] = reg[arg2] + reg[arg3]
                     arg1 = next_pc();
                     arg2 = next_pc();
                     arg3 = next_pc();
-                    _regs.int_reg(arg1, _regs.int_reg(arg2) + _regs.int_reg(arg3));
+                    _regs.uint_reg(arg1, _regs.uint_reg(arg2) + _regs.uint_reg(arg3));
                     break;
                 case ADD_R_R_I:
                     // reg[arg1] = reg[arg2] + arg3
                     arg1 = next_pc();
                     arg2 = next_pc();
                     arg3 = next_pc();
-                    _regs.int_reg(arg1, _regs.int_reg(arg2) + arg3);
+                    _regs.uint_reg(arg1, _regs.uint_reg(arg2) + arg3);
                     break;
                 case ADD_R_I:
                     // reg[arg1] += arg2
                     arg1 = next_pc();
                     arg2 = next_pc();
-                    _regs.int_reg(arg1, _regs.int_reg(arg1) + arg2);
+                    _regs.uint_reg(arg1, _regs.uint_reg(arg1) + arg2);
                     break;
                 // }}}
                 
@@ -259,34 +259,34 @@ namespace moss
                     // reg[arg1] -= reg[arg2]
                     arg1 = next_pc();
                     arg2 = next_pc();
-                    _regs.int_reg(arg1, _regs.int_reg(arg1) - _regs.int_reg(arg2));
+                    _regs.uint_reg(arg1, _regs.uint_reg(arg1) - _regs.uint_reg(arg2));
                     break;
                 case SUB_R_R_R:
                     // reg[arg1] = reg[arg2] - reg[arg3]
                     arg1 = next_pc();
                     arg2 = next_pc();
                     arg3 = next_pc();
-                    _regs.int_reg(arg1, _regs.int_reg(arg2) - _regs.int_reg(arg3));
+                    _regs.uint_reg(arg1, _regs.uint_reg(arg2) - _regs.uint_reg(arg3));
                     break;
                 case SUB_R_I_R:
                     // reg[arg1] = arg2 - reg[arg3]
                     arg1 = next_pc();
                     arg2 = next_pc();
                     arg3 = next_pc();
-                    _regs.int_reg(arg1, arg2 - _regs.int_reg(arg3));
+                    _regs.uint_reg(arg1, arg2 - _regs.uint_reg(arg3));
                     break;
                 case SUB_R_R_I:
                     // reg[arg1] = reg[arg2] - arg3
                     arg1 = next_pc();
                     arg2 = next_pc();
                     arg3 = next_pc();
-                    _regs.int_reg(arg1, _regs.int_reg(arg2) - arg3);
+                    _regs.uint_reg(arg1, _regs.uint_reg(arg2) - arg3);
                     break;
                 case SUB_R_I:
                     // reg[arg1] -= arg2
                     arg1 = next_pc();
                     arg2 = next_pc();
-                    _regs.int_reg(arg1, _regs.int_reg(arg1) - arg2);
+                    _regs.uint_reg(arg1, _regs.uint_reg(arg1) - arg2);
                     break;
                 // }}}
 
@@ -329,7 +329,7 @@ namespace moss
                 // Stack commands {{{
                 case PUSH_R:
                     // push reg[arg1]
-                    push_stack(_regs.int_reg(next_pc()));
+                    push_stack(_regs.uint_reg(next_pc()));
                     break;
                 case PUSH_I:
                     // push arg1
@@ -337,7 +337,7 @@ namespace moss
                     break;
                 case POP_R:
                     // reg[arg1] = pop
-                    _regs.int_reg(next_pc(), pop_stack());
+                    _regs.uint_reg(next_pc(), pop_stack());
                     break;
                 
                 case PUSHF_R:
@@ -363,21 +363,21 @@ namespace moss
                 case CMP_R_R:
                     arg1 = next_pc();
                     arg2 = next_pc();
-                    arg3 = _regs.int_reg(arg1) - _regs.int_reg(arg2);
+                    arg3 = _regs.uint_reg(arg1) - _regs.uint_reg(arg2);
                     _regs.zero_flag(arg3 == 0);
                     _regs.neg_flag(arg3 & 0x80000000);
                     break;
                 case CMP_R_I:
                     arg1 = next_pc();
                     arg2 = next_pc();
-                    arg3 = _regs.int_reg(arg1) - arg2;
+                    arg3 = _regs.uint_reg(arg1) - arg2;
                     _regs.zero_flag(arg3 == 0);
                     _regs.neg_flag(arg3 & 0x80000000);
                     break;
                 case CMP_I_R:
                     arg1 = next_pc();
                     arg2 = next_pc();
-                    arg3 = arg1 - _regs.int_reg(arg2);
+                    arg3 = arg1 - _regs.uint_reg(arg2);
                     _regs.zero_flag(arg3 == 0);
                     _regs.neg_flag(arg3 & 0x80000000);
                     break;
@@ -418,7 +418,7 @@ namespace moss
                 // JMP commands {{{
                 case JMP_R:
                     // pc = reg[arg1]
-                    _regs.program_counter(_regs.int_reg(next_pc()));
+                    _regs.program_counter(_regs.uint_reg(next_pc()));
                     break;
                 case JMP_I:
                     // pc = arg1
@@ -432,7 +432,7 @@ namespace moss
                     arg1 = next_pc();
                     if (!_regs.zero_flag())
                     {
-                        _regs.program_counter(_regs.int_reg(arg1));
+                        _regs.program_counter(_regs.uint_reg(arg1));
                     }
                     break;
                 case JNE_I:
@@ -451,7 +451,7 @@ namespace moss
                     arg1 = next_pc();
                     if (_regs.zero_flag())
                     {
-                        _regs.program_counter(_regs.int_reg(arg1));
+                        _regs.program_counter(_regs.uint_reg(arg1));
                     }
                     break;
                 case JEQ_I:
@@ -470,7 +470,7 @@ namespace moss
                     arg1 = next_pc();
                     if (!_regs.zero_flag() && _regs.neg_flag())
                     {
-                        _regs.program_counter(_regs.int_reg(arg1));
+                        _regs.program_counter(_regs.uint_reg(arg1));
                     }
                     break;
                 case JLT_I:
@@ -489,7 +489,7 @@ namespace moss
                     arg1 = next_pc();
                     if (_regs.zero_flag() || _regs.neg_flag())
                     {
-                        _regs.program_counter(_regs.int_reg(arg1));
+                        _regs.program_counter(_regs.uint_reg(arg1));
                     }
                     break;
                 case JLE_I:
@@ -508,7 +508,7 @@ namespace moss
                     arg1 = next_pc();
                     if (!_regs.zero_flag() && !_regs.neg_flag())
                     {
-                        _regs.program_counter(_regs.int_reg(arg1));
+                        _regs.program_counter(_regs.uint_reg(arg1));
                     }
                     break;
                 case JGT_I:
@@ -527,7 +527,7 @@ namespace moss
                     arg1 = next_pc();
                     if (_regs.zero_flag() || !_regs.neg_flag())
                     {
-                        _regs.program_counter(_regs.int_reg(arg1));
+                        _regs.program_counter(_regs.uint_reg(arg1));
                     }
                     break;
                 case JGE_I:
@@ -545,7 +545,7 @@ namespace moss
                 // Debug commands {{{
                 case PRINT_R:
                     arg1 = next_pc();
-                    std::cout << "Reg " << arg1 << ": " << _regs.int_reg(arg1) << std::endl;
+                    std::cout << "Reg " << arg1 << ": " << _regs.uint_reg(arg1) << std::endl;
                     break;
                 // }}}
 

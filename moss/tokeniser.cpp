@@ -5,10 +5,13 @@ namespace moss
     Tokeniser::Tokeniser(std::istream &input) :
         _has_tokens(false),
         _end_of_stream(false),
-        _current_token_index(0),
+        _in_comment(false),
         _input(input)
     {
-        process_line();
+        do
+        {
+            process_line();
+        } while (!_end_of_stream && _current_tokens.size() == 0);
     }
 
     bool Tokeniser::has_tokens() const
@@ -20,20 +23,20 @@ namespace moss
         return _end_of_stream;
     }
 
-    std::string Tokeniser::next_token()
+    std::vector<std::string> Tokeniser::next_token_line()
     {
-        std::string result = _current_tokens[_current_token_index++]; 
-        if (_current_token_index >= _current_tokens.size())
+        std::vector<std::string> result = _current_tokens;
+        do
         {
             process_line();
-        }
+        } while (!_end_of_stream && _current_tokens.size() == 0);
         return result;
     }
 
     void Tokeniser::process_line()
     {
-        _current_token_index = 0;
         _has_tokens = false;
+        _in_comment = false;
         _current_tokens.clear();
 
         std::string line;
@@ -52,15 +55,18 @@ namespace moss
 
         auto start = 0u;
         auto end = next_whitespace(line, 0u);
+        if (_in_comment)
+        {
+            return;
+        }
+
         do
         {
             _current_tokens.push_back(line.substr(start, end - start));
 
             start = next_non_whitespace(line, end);
             end = next_whitespace(line, start);
-        } while (start < line.size());
-
-        _current_tokens.push_back(std::string());
+        } while (!_in_comment && start < line.size());
     }
 
     void Tokeniser::trim_str(std::string &str)
@@ -79,6 +85,7 @@ namespace moss
 
         str = str.substr(start, end - start + 1);
     }
+    
     bool Tokeniser::is_whitespace(const std::string &str, std::size_t index)
     {
         auto c = str[index];
@@ -89,6 +96,11 @@ namespace moss
     {
         while (index < str.size() && !is_whitespace(str, index))
         {
+            if (str[index] == ';')
+            {
+                _in_comment = true;
+                return index;
+            }
             ++index;
         }
         return index;
@@ -97,6 +109,11 @@ namespace moss
     {
         while (index < str.size() && is_whitespace(str, index))
         {
+            if (str[index] == ';')
+            {
+                _in_comment = true;
+                return index;
+            }
             ++index;
         }
         return index;

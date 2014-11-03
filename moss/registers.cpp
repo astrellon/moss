@@ -46,6 +46,7 @@ namespace moss
         _flags = flag ? _flags | NEG_FLAG : _flags & ~(NEG_FLAG);
     }
 
+    /*
     uint32_t Registers::num_int_reg() const
     {
         return static_cast<uint32_t>(_int_regs.size());
@@ -70,6 +71,39 @@ namespace moss
     void Registers::float_reg(uint32_t index, float value)
     {
         _float_regs[index] = value;
+    }
+    */
+
+    uint32_t Registers::num_word_reg() const
+    {
+        return static_cast<uint32_t>(_word_regs.size());
+    }
+    // INT 
+    int32_t Registers::int_reg(uint32_t index) const
+    {
+        return _word_regs[index].i;
+    }
+    void Registers::int_reg(uint32_t index, int32_t value)
+    {
+        _word_regs[index].i = value;
+    }
+    // UINT
+    uint32_t Registers::uint_reg(uint32_t index) const
+    {
+        return _word_regs[index].u;
+    }
+    void Registers::uint_reg(uint32_t index, uint32_t value)
+    {
+        _word_regs[index].u = value;
+    }
+    // FLOAT
+    float Registers::float_reg(uint32_t index) const
+    {
+        return _word_regs[index].f;
+    }
+    void Registers::float_reg(uint32_t index, float value)
+    {
+        _word_regs[index].f = value;
     }
 
     uint32_t Registers::program_counter() const
@@ -109,9 +143,9 @@ namespace moss
             "- SP: " << stack_pointer() << "\n"
             "- Flags: " << flags() << "\n"
             ;
-        for (auto i = 0; i < num_int_reg(); i++)
+        for (auto i = 0; i < num_word_reg(); i++)
         {
-            os << "- " << i << ": " << std::setw(8) << int_reg(i) << std::setw(14) << float_reg(i) << "\n";
+            os << "- " << i << ": " << std::setw(8) << word_reg(i).i << std::setw(14) << word_reg(i).f << "\n";
         }
     }
 }

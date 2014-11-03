@@ -35,33 +35,6 @@ namespace moss
         _data[index] = value;
     }
 
-    uint32_t Memory::add_command(uint32_t index, uint32_t cmd)
-    {
-        _data[index] = cmd;
-        return index + 1;
-    }
-    uint32_t Memory::add_command(uint32_t index, uint32_t cmd, uint32_t arg1)
-    {
-        _data[index] = cmd;
-        _data[index + 1] = arg1;
-        return index + 2;
-    }
-    uint32_t Memory::add_command(uint32_t index, uint32_t cmd, uint32_t arg1, uint32_t arg2)
-    {
-        _data[index] = cmd;
-        _data[index + 1] = arg1;
-        _data[index + 2] = arg2;
-        return index + 3;
-    }
-    uint32_t Memory::add_command(uint32_t index, uint32_t cmd, uint32_t arg1, uint32_t arg2, uint32_t arg3)
-    {
-        _data[index] = cmd;
-        _data[index + 1] = arg1;
-        _data[index + 2] = arg2;
-        _data[index + 3] = arg3;
-        return index + 4;
-    }
-
     void Memory::to_stream(std::ostream &os, uint32_t start, uint32_t end) const
     {
         if (end > size())

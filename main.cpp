@@ -4,9 +4,12 @@
 #include "moss/memory.h"
 #include "moss/memory_writer.h"
 #include "moss/tokeniser.h"
+#include "moss/registers.h"
+#include "moss/common.h"
 
 #include <string>
 #include <sstream>
+#include <fstream>
 
 int main(int argc, char **argv)
 {
@@ -57,25 +60,25 @@ int main(int argc, char **argv)
     cpu.run();
     cpu.to_stream(std::cout);
 
-    std::stringstream ss;
-    ss << "\tMOV r1 r2\nADD r1 r2 r3\n";
-    moss::Tokeniser tokens(ss);
+    moss::Registers regs;
+    moss::DataWord word;
+    word.i = 34;
+    regs.word_reg(0, word);
+    std::cout << "Word: " <<  regs.word_reg(0).i << "\n";
+
+    /*
+    std::ifstream input_ss("test.asm");
+    moss::Tokeniser tokens(input_ss);
     while (tokens.has_tokens())
     {
-        std::string token = tokens.next_token();
-        std::cout << "Token: >" << token << "<\n";
-        if (token.size() == 0)
+        std::cout << "New line\n";
+        std::vector<std::string> token = tokens.next_token_line();
+        for (auto i = token.begin(); i != token.end(); ++i)
         {
-            if (tokens.end_of_stream())
-            {
-                std::cout << "- End of stream!\n";
-            }
-            else
-            {
-                std::cout << "- Still more\n";
-            }
+            std::cout << "- " << *i << "\n";
         }
     }
+    */
 
     return 0;
 }
