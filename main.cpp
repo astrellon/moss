@@ -7,6 +7,7 @@
 #include "moss/registers.h"
 #include "moss/common.h"
 #include "moss/compiler.h"
+#include "moss/opcode.h"
 
 #include <string>
 #include <sstream>
@@ -39,23 +40,23 @@ int main(int argc, char **argv)
     }
 
     moss::MemoryWriter<moss::Mmu> codeWriter(64, &cpu.mmu());
-    codeWriter.write(moss::Cpu::MOVF_R_I, 8);
+    codeWriter.write(moss::Opcode::MOV_R_I, 8);
     codeWriter.writeF(34.5f);
-    codeWriter.write(moss::Cpu::MOV_R_I, 0, 0);
-    codeWriter.write(moss::Cpu::MOV_R_I, 1, 32u);
+    codeWriter.write(moss::Opcode::MOV_R_I, 0, 0);
+    codeWriter.write(moss::Opcode::MOV_R_I, 1, 32u);
     codeWriter.add_label("start"); 
-    codeWriter.write(moss::Cpu::CMP_R_I, 0, 32);
-    codeWriter.write(moss::Cpu::JGE_I, "end");
-    codeWriter.write(moss::Cpu::MOV_R_M, 2, 1);
-    codeWriter.write(moss::Cpu::ADD_R_I, 0, 1);
-    codeWriter.write(moss::Cpu::ADD_R_I, 1, 1);
-    codeWriter.write(moss::Cpu::PRINT_R, 2u);
-    codeWriter.write(moss::Cpu::JMP_I, "start");
+    codeWriter.write(moss::Opcode::CMP_R_I, 0, 32);
+    codeWriter.write(moss::Opcode::JGE_I, "end");
+    codeWriter.write(moss::Opcode::MOV_R_M, 2, 1);
+    codeWriter.write(moss::Opcode::ADD_R_I, 0, 1);
+    codeWriter.write(moss::Opcode::ADD_R_I, 1, 1);
+    codeWriter.write(moss::Opcode::PRINT_R, 2u);
+    codeWriter.write(moss::Opcode::JMP_I, "start");
     codeWriter.add_label("end");
-    codeWriter.write(moss::Cpu::UINT_FLOAT_R_R, 9, 2);
-    codeWriter.write(moss::Cpu::ADDF_R_R_R, 10, 8, 9);
-    codeWriter.write(moss::Cpu::FLOAT_UINT_R_R, 5, 10);
-    codeWriter.write(moss::Cpu::MOV_R_I, 6, 1337);
+    codeWriter.write(moss::Opcode::UINT_FLOAT_R_R, 9, 2);
+    codeWriter.write(moss::Opcode::ADDF_R_R_R, 10, 8, 9);
+    codeWriter.write(moss::Opcode::FLOAT_UINT_R_R, 5, 10);
+    codeWriter.write(moss::Opcode::MOV_R_I, 6, 1337);
     codeWriter.finalise();
 
     cpu.mmu().to_stream(std::cout, true, 0, 128);

@@ -9,6 +9,7 @@
 #include "tokeniser.h"
 #include "cpu.h"
 #include "common.h"
+#include "opcode.h"
 
 namespace moss
 {
@@ -38,19 +39,9 @@ namespace moss
             void writeF(uint32_t v1, float v2, float v3, float v4);
             void write(uint32_t v1, const char *label);
 
-            enum TokenType
-            {
-                UNKNOWN,
-                COMMAND,
-                NUMBER,
-                MEMORY,
-                CONSTANT,
-                LABEL
-            };
-
-            static TokenType get_token_type(const std::string &token, bool is_first_token);
-
-
+            static Opcode::Type get_token_type(const std::string &token, bool is_first_token);
+            static bool is_register(const std::string &token, std::size_t index);
+            static uint32_t get_register_value(const std::string &value);
 
     };
 }

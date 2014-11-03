@@ -4,6 +4,7 @@
 
 #include "memory.h"
 #include "common.h"
+#include "opcode.h"
 
 namespace moss
 {
@@ -108,43 +109,43 @@ namespace moss
                 // Error or Halt {{{
                     default:
                     std::cout << "Unknown OPCODE: " << opcode << ", halting." << std::endl;
-                case HALT:
+                case Opcode::HALT:
                     stop();
                     break;
                 // }}}
 
                 // MOV Commands {{{
-                case MOV_R_R:
+                case Opcode::MOV_R_R:
                     // reg[arg1] = reg[arg2]
                     arg1 = next_pc();
                     arg2 = next_pc();
                     _regs.uint_reg(arg1, _regs.uint_reg(arg2));
                     break;
-                case MOV_R_I:
+                case Opcode::MOV_R_I:
                     // reg[arg1] = arg2
                     arg1 = next_pc();
                     arg2 = next_pc();
                     _regs.uint_reg(arg1, arg2);
                     break;
-                case MOV_M_R:
+                case Opcode::MOV_M_R:
                     // mem[reg[arg1]] = reg[arg2]
                     arg1 = next_pc();
                     arg2 = next_pc();
                     _mmu.uint_data(_regs.uint_reg(arg1), _regs.uint_reg(arg2));
                     break;
-                case MOV_R_M:
+                case Opcode::MOV_R_M:
                     // reg[arg1] = mem[reg[arg2]]
                     arg1 = next_pc();
                     arg2 = next_pc();
                     _regs.uint_reg(arg1, _mmu.uint_data(_regs.uint_reg(arg2)));
                     break;
-                case MOV_M_I:
+                case Opcode::MOV_M_I:
                     // mem[reg[arg1]] = arg2
                     arg1 = next_pc();
                     arg2 = next_pc();
                     _mmu.uint_data(_regs.uint_reg(arg1), arg2);
                     break;
-                case MOV_M_M:
+                case Opcode::MOV_M_M:
                     // mem[reg[arg1]] = mem[reg[arg2]]
                     arg1 = next_pc();
                     arg2 = next_pc();
@@ -152,54 +153,56 @@ namespace moss
                     break;
                 // }}}
                 
+                    /*
                 // MOVF Commands {{{
-                case MOVF_R_R:
+                case Opcode::MOVF_R_R:
                     // reg[arg1] = reg[arg2]
                     arg1 = next_pc();
                     arg2 = next_pc();
                     _regs.float_reg(arg1, _regs.float_reg(arg2));
                     break;
-                case MOVF_R_I:
+                case Opcode::MOVF_R_I:
                     // reg[arg1] = arg2
                     arg1 = next_pc();
                     farg2 = next_pc_float();
                     _regs.float_reg(arg1, farg2);
                     break;
-                case MOVF_M_R:
+                case Opcode::MOVF_M_R:
                     // mem[reg[arg1]] = reg[arg2]
                     arg1 = next_pc();
                     arg2 = next_pc();
                     _mmu.float_data(_regs.float_reg(arg1), _regs.float_reg(arg2));
                     break;
-                case MOVF_R_M:
+                case Opcode::MOVF_R_M:
                     // reg[arg1] = mem[reg[arg2]]
                     arg1 = next_pc();
                     arg2 = next_pc();
                     _regs.float_reg(arg1, _mmu.float_data(_regs.float_reg(arg2)));
                     break;
-                case MOVF_M_I:
+                case Opcode::MOVF_M_I:
                     // mem[reg[arg1]] = arg2
                     arg1 = next_pc();
                     arg2 = next_pc();
                     _mmu.float_data(_regs.float_reg(arg1), arg2);
                     break;
-                case MOVF_M_M:
+                case Opcode::MOVF_M_M:
                     // mem[reg[arg1]] = mem[reg[arg2]]
                     arg1 = next_pc();
                     arg2 = next_pc();
                     _mmu.float_data(_regs.float_reg(arg1), _mmu.float_data(_regs.float_reg(arg2)));
                     break;
                 // }}}
+                */
 
                 // Unit Converstions {{{
-                case UINT_FLOAT_R:
+                case Opcode::UINT_FLOAT_R:
                     arg1 = next_pc();
                     {
                         uint32_t value = _regs.uint_reg(arg1);
                         _regs.float_reg(arg1, static_cast<float>(value));
                     }
                     break;
-                case UINT_FLOAT_R_R:
+                case Opcode::UINT_FLOAT_R_R:
                     arg1 = next_pc();
                     arg2 = next_pc();
                     {
@@ -207,14 +210,14 @@ namespace moss
                         _regs.float_reg(arg1, static_cast<float>(value));
                     }
                     break;
-                case FLOAT_UINT_R:
+                case Opcode::FLOAT_UINT_R:
                     arg1 = next_pc();
                     {
                         float value = _regs.float_reg(arg1);
                         _regs.uint_reg(arg1, static_cast<uint32_t>(value));
                     }
                     break;
-                case FLOAT_UINT_R_R:
+                case Opcode::FLOAT_UINT_R_R:
                     arg1 = next_pc();
                     arg2 = next_pc();
                     {
@@ -225,27 +228,27 @@ namespace moss
                 // }}}
 
                 // ADD Commands {{{
-                case ADD_R_R:
+                case Opcode::ADD_R_R:
                     // reg[arg1] += reg[arg2]
                     arg1 = next_pc();
                     arg2 = next_pc();
                     _regs.uint_reg(arg1, _regs.uint_reg(arg1) + _regs.uint_reg(arg2));
                     break;
-                case ADD_R_R_R:
+                case Opcode::ADD_R_R_R:
                     // reg[arg1] = reg[arg2] + reg[arg3]
                     arg1 = next_pc();
                     arg2 = next_pc();
                     arg3 = next_pc();
                     _regs.uint_reg(arg1, _regs.uint_reg(arg2) + _regs.uint_reg(arg3));
                     break;
-                case ADD_R_R_I:
+                case Opcode::ADD_R_R_I:
                     // reg[arg1] = reg[arg2] + arg3
                     arg1 = next_pc();
                     arg2 = next_pc();
                     arg3 = next_pc();
                     _regs.uint_reg(arg1, _regs.uint_reg(arg2) + arg3);
                     break;
-                case ADD_R_I:
+                case Opcode::ADD_R_I:
                     // reg[arg1] += arg2
                     arg1 = next_pc();
                     arg2 = next_pc();
@@ -254,27 +257,27 @@ namespace moss
                 // }}}
                 
                 // ADDF Commands {{{
-                case ADDF_R_R:
+                case Opcode::ADDF_R_R:
                     // reg[arg1] += reg[arg2]
                     arg1 = next_pc();
                     arg2 = next_pc();
                     _regs.float_reg(arg1, _regs.float_reg(arg1) + _regs.float_reg(arg2));
                     break;
-                case ADDF_R_R_R:
+                case Opcode::ADDF_R_R_R:
                     // reg[arg1] = reg[arg2] + reg[arg3]
                     arg1 = next_pc();
                     arg2 = next_pc();
                     arg3 = next_pc();
                     _regs.float_reg(arg1, _regs.float_reg(arg2) + _regs.float_reg(arg3));
                     break;
-                case ADDF_R_R_I:
+                case Opcode::ADDF_R_R_I:
                     // reg[arg1] = reg[arg2] + arg3
                     arg1 = next_pc();
                     arg2 = next_pc();
                     arg3 = next_pc();
                     _regs.float_reg(arg1, _regs.float_reg(arg2) + arg3);
                     break;
-                case ADDF_R_I:
+                case Opcode::ADDF_R_I:
                     // reg[arg1] += arg2
                     arg1 = next_pc();
                     farg2 = next_pc_float();
@@ -283,34 +286,34 @@ namespace moss
                 // }}}
                 
                 // SUB Commands {{{
-                case SUB_R_R:
+                case Opcode::SUB_R_R:
                     // reg[arg1] -= reg[arg2]
                     arg1 = next_pc();
                     arg2 = next_pc();
                     _regs.uint_reg(arg1, _regs.uint_reg(arg1) - _regs.uint_reg(arg2));
                     break;
-                case SUB_R_R_R:
+                case Opcode::SUB_R_R_R:
                     // reg[arg1] = reg[arg2] - reg[arg3]
                     arg1 = next_pc();
                     arg2 = next_pc();
                     arg3 = next_pc();
                     _regs.uint_reg(arg1, _regs.uint_reg(arg2) - _regs.uint_reg(arg3));
                     break;
-                case SUB_R_I_R:
+                case Opcode::SUB_R_I_R:
                     // reg[arg1] = arg2 - reg[arg3]
                     arg1 = next_pc();
                     arg2 = next_pc();
                     arg3 = next_pc();
                     _regs.uint_reg(arg1, arg2 - _regs.uint_reg(arg3));
                     break;
-                case SUB_R_R_I:
+                case Opcode::SUB_R_R_I:
                     // reg[arg1] = reg[arg2] - arg3
                     arg1 = next_pc();
                     arg2 = next_pc();
                     arg3 = next_pc();
                     _regs.uint_reg(arg1, _regs.uint_reg(arg2) - arg3);
                     break;
-                case SUB_R_I:
+                case Opcode::SUB_R_I:
                     // reg[arg1] -= arg2
                     arg1 = next_pc();
                     arg2 = next_pc();
@@ -319,34 +322,34 @@ namespace moss
                 // }}}
 
                 // SUBF Commands {{{
-                case SUBF_R_R:
+                case Opcode::SUBF_R_R:
                     // reg[arg1] -= reg[arg2]
                     arg1 = next_pc();
                     arg2 = next_pc();
                     _regs.float_reg(arg1, _regs.float_reg(arg1) - _regs.float_reg(arg2));
                     break;
-                case SUBF_R_R_R:
+                case Opcode::SUBF_R_R_R:
                     // reg[arg1] = reg[arg2] - reg[arg3]
                     arg1 = next_pc();
                     arg2 = next_pc();
                     arg3 = next_pc();
                     _regs.float_reg(arg1, _regs.float_reg(arg2) - _regs.float_reg(arg3));
                     break;
-                case SUBF_R_I_R:
+                case Opcode::SUBF_R_I_R:
                     // reg[arg1] = arg2 - reg[arg3]
                     arg1 = next_pc();
                     arg2 = next_pc();
                     arg3 = next_pc();
                     _regs.float_reg(arg1, arg2 - _regs.float_reg(arg3));
                     break;
-                case SUBF_R_R_I:
+                case Opcode::SUBF_R_R_I:
                     // reg[arg1] = reg[arg2] - arg3
                     arg1 = next_pc();
                     arg2 = next_pc();
                     arg3 = next_pc();
                     _regs.float_reg(arg1, _regs.float_reg(arg2) - arg3);
                     break;
-                case SUBF_R_I:
+                case Opcode::SUBF_R_I:
                     // reg[arg1] -= arg2
                     arg1 = next_pc();
                     farg2 = next_pc_float();
@@ -355,50 +358,52 @@ namespace moss
                 // }}}
                 
                 // Stack commands {{{
-                case PUSH_R:
+                case Opcode::PUSH_R:
                     // push reg[arg1]
                     push_stack(_regs.uint_reg(next_pc()));
                     break;
-                case PUSH_I:
+                case Opcode::PUSH_I:
                     // push arg1
                     push_stack(next_pc());
                     break;
-                case POP_R:
+                case Opcode::POP_R:
                     // reg[arg1] = pop
                     _regs.uint_reg(next_pc(), pop_stack());
                     break;
                 
-                case PUSHF_R:
+                    /*
+                case Opcode::PUSHF_R:
                     // push reg[arg1]
                     push_stack_float(_regs.float_reg(next_pc()));
                     break;
-                case PUSHF_I:
+                case Opcode::PUSHF_I:
                     // push arg1
                     push_stack_float(next_pc_float());
                     break;
-                case POPF_R:
+                case Opcode::POPF_R:
                     // reg[arg1] = pop
                     farg2 = pop_stack_float();
                     _regs.float_reg(next_pc(), arg2);
                     break;
+                    */
                 // }}}
 
                 // CMP commands {{{
-                case CMP_R_R:
+                case Opcode::CMP_R_R:
                     arg1 = next_pc();
                     arg2 = next_pc();
                     arg3 = _regs.uint_reg(arg1) - _regs.uint_reg(arg2);
                     _regs.zero_flag(arg3 == 0);
                     _regs.neg_flag(arg3 & 0x80000000);
                     break;
-                case CMP_R_I:
+                case Opcode::CMP_R_I:
                     arg1 = next_pc();
                     arg2 = next_pc();
                     arg3 = _regs.uint_reg(arg1) - arg2;
                     _regs.zero_flag(arg3 == 0);
                     _regs.neg_flag(arg3 & 0x80000000);
                     break;
-                case CMP_I_R:
+                case Opcode::CMP_I_R:
                     arg1 = next_pc();
                     arg2 = next_pc();
                     arg3 = arg1 - _regs.uint_reg(arg2);
@@ -408,7 +413,7 @@ namespace moss
                 // }}}
 
                 // CMPF commands {{{
-                case CMPF_R_R:
+                case Opcode::CMPF_R_R:
                     arg1 = next_pc();
                     arg2 = next_pc();
                     {
@@ -417,7 +422,7 @@ namespace moss
                         _regs.neg_flag(value < 0.0f);
                     }
                     break;
-                case CMPF_R_I:
+                case Opcode::CMPF_R_I:
                     arg1 = next_pc();
                     farg2 = next_pc_float();
                     {
@@ -426,7 +431,7 @@ namespace moss
                         _regs.neg_flag(value < 0.0f);
                     }
                     break;
-                case CMPF_I_R:
+                case Opcode::CMPF_I_R:
                     farg1 = next_pc_float();
                     arg2 = next_pc();
                     {
@@ -440,18 +445,18 @@ namespace moss
                 // Branching {{{
                 
                 // JMP commands {{{
-                case JMP_R:
+                case Opcode::JMP_R:
                     // pc = reg[arg1]
                     _regs.program_counter(_regs.uint_reg(next_pc()));
                     break;
-                case JMP_I:
+                case Opcode::JMP_I:
                     // pc = arg1
                     _regs.program_counter(next_pc());
                     break;
                 // }}}
                 
                 // JNE commands {{{
-                case JNE_R:
+                case Opcode::JNE_R:
                     // pc = reg[arg1] if !zero_flag
                     arg1 = next_pc();
                     if (!_regs.zero_flag())
@@ -459,7 +464,7 @@ namespace moss
                         _regs.program_counter(_regs.uint_reg(arg1));
                     }
                     break;
-                case JNE_I:
+                case Opcode::JNE_I:
                     // pc = arg1 if !zero_flag
                     arg1 = next_pc();
                     if (!_regs.zero_flag())
@@ -470,7 +475,7 @@ namespace moss
                 // }}}
                 
                 // JEQ commands {{{
-                case JEQ_R:
+                case Opcode::JEQ_R:
                     // pc = reg[arg1] if !zero_flag
                     arg1 = next_pc();
                     if (_regs.zero_flag())
@@ -478,7 +483,7 @@ namespace moss
                         _regs.program_counter(_regs.uint_reg(arg1));
                     }
                     break;
-                case JEQ_I:
+                case Opcode::JEQ_I:
                     // pc = arg1 if zero_flag
                     arg1 = next_pc();
                     if (_regs.zero_flag())
@@ -489,7 +494,7 @@ namespace moss
                 // }}}
                 
                 // JLT commands {{{
-                case JLT_R:
+                case Opcode::JLT_R:
                     // pc = reg[arg1] if !zero_flag && neg_flag
                     arg1 = next_pc();
                     if (!_regs.zero_flag() && _regs.neg_flag())
@@ -497,7 +502,7 @@ namespace moss
                         _regs.program_counter(_regs.uint_reg(arg1));
                     }
                     break;
-                case JLT_I:
+                case Opcode::JLT_I:
                     // pc = arg1 if !zero_flag && neg_flag
                     arg1 = next_pc();
                     if (!_regs.zero_flag() && _regs.neg_flag())
@@ -508,7 +513,7 @@ namespace moss
                 // }}}
                 
                 // JLE commands {{{
-                case JLE_R:
+                case Opcode::JLE_R:
                     // pc = reg[arg1] if zero_flag || neg_flag
                     arg1 = next_pc();
                     if (_regs.zero_flag() || _regs.neg_flag())
@@ -516,7 +521,7 @@ namespace moss
                         _regs.program_counter(_regs.uint_reg(arg1));
                     }
                     break;
-                case JLE_I:
+                case Opcode::JLE_I:
                     // pc = arg1 if zero_flag || neg_flag
                     arg1 = next_pc();
                     if (_regs.zero_flag() || _regs.neg_flag())
@@ -527,7 +532,7 @@ namespace moss
                 // }}}
                 
                 // JGT commands {{{
-                case JGT_R:
+                case Opcode::JGT_R:
                     // pc = reg[arg1] if !zero_flag && !neg_flag
                     arg1 = next_pc();
                     if (!_regs.zero_flag() && !_regs.neg_flag())
@@ -535,7 +540,7 @@ namespace moss
                         _regs.program_counter(_regs.uint_reg(arg1));
                     }
                     break;
-                case JGT_I:
+                case Opcode::JGT_I:
                     // pc = reg[arg1] if !zero_flag && !neg_flag
                     arg1 = next_pc();
                     if (!_regs.zero_flag() && !_regs.neg_flag())
@@ -546,7 +551,7 @@ namespace moss
                 // }}}
                 
                 // JGE commands {{{
-                case JGE_R:
+                case Opcode::JGE_R:
                     // pc = reg[arg1] if zero_flag || !neg_flag
                     arg1 = next_pc();
                     if (_regs.zero_flag() || !_regs.neg_flag())
@@ -554,7 +559,7 @@ namespace moss
                         _regs.program_counter(_regs.uint_reg(arg1));
                     }
                     break;
-                case JGE_I:
+                case Opcode::JGE_I:
                     // pc = reg[arg1] if zero_flag || !neg_flag
                     arg1 = next_pc();
                     if (_regs.zero_flag() || !_regs.neg_flag())
@@ -567,7 +572,7 @@ namespace moss
                 // }}}
 
                 // Debug commands {{{
-                case PRINT_R:
+                case Opcode::PRINT_R:
                     arg1 = next_pc();
                     std::cout << "Reg " << arg1 << ": " << _regs.uint_reg(arg1) << std::endl;
                     break;

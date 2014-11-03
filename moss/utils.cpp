@@ -23,9 +23,9 @@ namespace moss
     {
         return c == ' ' || c == '\t' || c == '\n' || c == '\r';
     }
-    bool Utils::is_digit(char c, bool or_dot)
+    bool Utils::is_digit(char c, bool include_float)
     {
-        if (or_dot && c == '.')
+        if (include_float && (c == '.' || c == 'f'))
         {
             return true;
         }
