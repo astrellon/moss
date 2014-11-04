@@ -22,6 +22,15 @@ namespace moss
             void process_stream(const std::string &filename, std::istream &ss);
             bool finalise();
 
+            template <class T>
+            void write_to_memory(T *memory, uint32_t offset)
+            {
+                for (auto i = 0u; i < _data.size(); ++i)
+                {
+                    memory->uint_data(i + offset, _data[i].u);
+                }
+            }
+
         private:
             uint32_t _index;
             Tokeniser *_tokens;

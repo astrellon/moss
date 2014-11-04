@@ -81,7 +81,7 @@ namespace moss
         {
             if (p == 0)
             {
-                os << "Page: " << page << ", " << _memory->uint_data(_table_pointer + page) << "\n";
+                os << "Page: " << page << ", " << _memory->int_data(_table_pointer + page) << "\n";
             }
             p++;
             if (p >= _page_size)
@@ -92,11 +92,11 @@ namespace moss
 
             if (in_virtual)
             {
-                os << std::setw(14) << uint_data(i) << ' ';
+                os << std::setw(10) << int_data(i) << ' ';
             }
             else
             {
-                os << std::setw(14) << _memory->uint_data(i) << ' ';
+                os << std::setw(10) << _memory->int_data(i) << ' ';
             }
             j++;
             if (j >= 8)

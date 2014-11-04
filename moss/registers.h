@@ -32,6 +32,7 @@ namespace moss
             uint32_t program_counter() const;
             uint32_t program_counter_inc();
             void program_counter(uint32_t value);
+            void change_program_counter(int32_t value);
 
             uint32_t stack_pointer() const;
             uint32_t stack_pointer_push();

@@ -8,6 +8,7 @@
 #include "moss/common.h"
 #include "moss/compiler.h"
 #include "moss/opcode.h"
+#include "moss/disassembler.h"
 
 #include <string>
 #include <sstream>
@@ -39,6 +40,7 @@ int main(int argc, char **argv)
         dataWriter.write(i * 4);
     }
 
+    /*
     moss::MemoryWriter<moss::Mmu> codeWriter(64, &cpu.mmu());
     codeWriter.write(moss::Opcode::MOV_R_I, 8);
     codeWriter.writeF(34.5f);
@@ -58,8 +60,16 @@ int main(int argc, char **argv)
     codeWriter.write(moss::Opcode::FLOAT_UINT_R_R, 5, 10);
     codeWriter.write(moss::Opcode::MOV_R_I, 6, 1337);
     codeWriter.finalise();
+    */
 
-    cpu.mmu().to_stream(std::cout, true, 0, 128);
+    moss::Compiler compiler;
+    std::ifstream input_ss("test.asm");
+    compiler.process_stream(std::string("test.asm"), input_ss);
+    compiler.finalise();
+    compiler.write_to_memory<moss::Mmu>(&cpu.mmu(), 64);
+
+    moss::Disassembler::to_stream(std::cout, &cpu.mmu(), 64, 128);
+    //cpu.mmu().to_stream(std::cout, true, 0, 128);
 
     try
     {
@@ -70,10 +80,6 @@ int main(int argc, char **argv)
         std::cout << "Error running CPU!\n";
     }
     cpu.to_stream(std::cout);
-
-    moss::Compiler compiler;
-    std::ifstream input_ss("test.asm");
-    compiler.process_stream(std::string("test.asm"), input_ss);
 
 
     /*

@@ -37,7 +37,8 @@ namespace moss
             Mmu _mmu;
             Memory *_memory;
 
-            uint32_t next_pc();
+            uint32_t next_pc_uint();
+            int32_t next_pc_int();
             float next_pc_float();
 
             void do_run();

@@ -90,7 +90,8 @@ namespace moss
                 FLOAT_NUMBER,
                 REGISTER,
                 MEMORY,
-                LABEL
+                LABEL,
+                NUMBER
             };
             // }}}
 
@@ -98,10 +99,12 @@ namespace moss
             static std::string build_command_name(const std::string &command, 
                     const std::vector<Type> &types);
 
+            static std::pair<std::string, std::vector<Type> > get_opcode_types(Command command);
             static std::string type_name(Type type);
             
         private:
             static std::map<std::string, Command> s_names_to_commands;
+            static std::map<Command, std::pair<std::string, std::vector<Type> > > s_commands_to_types;
             static std::map<Type, std::string> s_type_names;
             static std::map<Type, std::string> s_type_codes;
     };

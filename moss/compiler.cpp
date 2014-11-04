@@ -29,7 +29,7 @@ namespace moss
         while (_tokens->has_tokens())
         {
             auto line = _tokens->next_token_line();
-            std::cout << "New line\n";
+            //std::cout << "New line\n";
             Opcode::Type first_type = Opcode::UNKNOWN_TYPE;
             std::vector<Opcode::Type> types;
             for (auto iter = line.begin(); iter != line.end(); ++iter)
@@ -44,6 +44,7 @@ namespace moss
                 {
                     types.push_back(type);
                 }
+                /*
                 std::cout << "- Token: >" << *iter << " | " << Opcode::type_name(type); 
                 if (type == Opcode::REGISTER || type == Opcode::MEMORY)
                 {
@@ -60,6 +61,7 @@ namespace moss
                     std::cout << " | " << value;
                 }
                 std::cout << "\n";
+                */
             }
 
             if (first_type == Opcode::COMMAND)
@@ -67,17 +69,34 @@ namespace moss
                 auto command_name = Opcode::build_command_name(line[0], types);
                 auto command = Opcode::find_command(command_name); 
                 
-                std::cout << "- Line command: " << command_name << "\n";
-                write(command);
+                //std::cout << "- Line command: " << command_name << "\n";
+                writeU(command);
 
                 for (auto i = 1u; i < line.size(); i++)
                 {
-                     
+                    switch (types[i - 1])
+                    {
+                        case Opcode::INT_NUMBER:
+                            writeU(static_cast<uint32_t>(std::stol(line[i])));
+                            break;
+                        case Opcode::FLOAT_NUMBER:
+                            writeF(static_cast<float>(std::stof(line[i])));
+                            break;
+                        case Opcode::REGISTER:
+                        case Opcode::MEMORY:
+                            writeU(get_register_value(line[i]));
+                            break;
+                        case Opcode::LABEL:
+                            writeL(line[i]);
+                            break;
+                        default:
+                            std::cout << "Unknown opcode type: " << types[i - 1] << "\n";
+                    }
                 }
             }
             else if (first_type == Opcode::LABEL)
             {
-                add_label(*iter);
+                add_label(process_label(line[0]));
             }
         }
     }
@@ -95,7 +114,9 @@ namespace moss
 
             for (auto iter2 = iter->second.begin(); iter2 != iter->second.end(); ++iter2)
             {
-                _data[*iter2].u = find->second;
+                auto index = static_cast<int32_t>(*iter2);
+                auto diff = static_cast<int32_t>(find->second) - index;
+                _data[*iter2].i = diff;
             }
         }
 
@@ -126,8 +147,7 @@ namespace moss
     void Compiler::writeL(const std::string &label)
     {
         _label_temp[label].push_back(_index);
-        _data.push_back(DataWord(0u));
-        ++_index;
+        writeU(0u);
     }
 
     Opcode::Type Compiler::get_token_type(const std::string &token, bool is_first_token)
@@ -217,7 +237,7 @@ namespace moss
     {
         if (token.back() == ':')
         {
-            return token.substr(token.size() - 1);
+            return token.substr(0, token.size() - 1);
         }
         return token;
     }

@@ -99,6 +99,10 @@ namespace moss
     {
         _program_counter = value;
     }
+    void Registers::change_program_counter(int32_t value)
+    {
+        _program_counter += value;
+    }
 
     uint32_t Registers::stack_pointer() const
     {
