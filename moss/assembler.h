@@ -13,11 +13,11 @@
 
 namespace moss
 {
-    class Compiler
+    class Assembler
     {
         public:
-            Compiler();
-            ~Compiler();
+            Assembler();
+            ~Assembler();
 
             void process_stream(const std::string &filename, std::istream &ss);
             bool finalise();

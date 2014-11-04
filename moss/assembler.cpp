@@ -1,4 +1,4 @@
-#include "compiler.h"
+#include "assembler.h"
 
 #include "common.h"
 #include "utils.h"
@@ -7,13 +7,13 @@
 
 namespace moss
 {
-    Compiler::Compiler() :
+    Assembler::Assembler() :
         _index(0),
         _tokens(nullptr)
     {
 
     }
-    Compiler::~Compiler()
+    Assembler::~Assembler()
     {
         if (_tokens != nullptr)
         {
@@ -22,7 +22,7 @@ namespace moss
         finalise();
     }
 
-    void Compiler::process_stream(const std::string &filename, std::istream &ss)
+    void Assembler::process_stream(const std::string &filename, std::istream &ss)
     {
         _tokens = new Tokeniser(ss);
 
@@ -101,7 +101,7 @@ namespace moss
         }
     }
 
-    bool Compiler::finalise()
+    bool Assembler::finalise()
     {
         for (auto iter = _label_temp.begin(); iter != _label_temp.end(); ++iter)
         {
@@ -124,33 +124,33 @@ namespace moss
         return true;
     }
 
-    void Compiler::add_label(const std::string &label)
+    void Assembler::add_label(const std::string &label)
     {
         _label_locations[label] = _index;
     }
 
-    void Compiler::writeU(uint32_t value)
+    void Assembler::writeU(uint32_t value)
     {
         _data.push_back(DataWord(value));
         ++_index;
     }
-    void Compiler::writeI(int32_t value)
+    void Assembler::writeI(int32_t value)
     {
         _data.push_back(DataWord(value));
         ++_index;
     }
-    void Compiler::writeF(float value)
+    void Assembler::writeF(float value)
     {
         _data.push_back(DataWord(value));
         ++_index;
     }
-    void Compiler::writeL(const std::string &label)
+    void Assembler::writeL(const std::string &label)
     {
         _label_temp[label].push_back(_index);
         writeU(0u);
     }
 
-    Opcode::Type Compiler::get_token_type(const std::string &token, bool is_first_token)
+    Opcode::Type Assembler::get_token_type(const std::string &token, bool is_first_token)
     {
         if (token.size() == 0u)
         {
@@ -200,7 +200,7 @@ namespace moss
         return Opcode::LABEL;
     }
 
-    bool Compiler::is_register(const std::string &token, std::size_t index)
+    bool Assembler::is_register(const std::string &token, std::size_t index)
     {
         if (index >= token.size() || token[index] != 'r')
         {
@@ -217,7 +217,7 @@ namespace moss
         return true;
     }
 
-    uint32_t Compiler::get_register_value(const std::string &value)
+    uint32_t Assembler::get_register_value(const std::string &value)
     {
         auto index = 0u;
         while (!Utils::is_digit(value[index], false))
@@ -233,7 +233,7 @@ namespace moss
         return static_cast<uint32_t>(std::stol(sub));
     }
 
-    std::string Compiler::process_label(const std::string &token)
+    std::string Assembler::process_label(const std::string &token)
     {
         if (token.back() == ':')
         {

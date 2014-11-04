@@ -6,7 +6,7 @@
 #include "moss/tokeniser.h"
 #include "moss/registers.h"
 #include "moss/common.h"
-#include "moss/compiler.h"
+#include "moss/assembler.h"
 #include "moss/opcode.h"
 #include "moss/disassembler.h"
 
@@ -62,11 +62,11 @@ int main(int argc, char **argv)
     codeWriter.finalise();
     */
 
-    moss::Compiler compiler;
+    moss::Assembler assembler;
     std::ifstream input_ss("test.asm");
-    compiler.process_stream(std::string("test.asm"), input_ss);
-    compiler.finalise();
-    compiler.write_to_memory<moss::Mmu>(&cpu.mmu(), 64);
+    assembler.process_stream(std::string("test.asm"), input_ss);
+    assembler.finalise();
+    assembler.write_to_memory<moss::Mmu>(&cpu.mmu(), 64);
 
     moss::Disassembler::to_stream(std::cout, &cpu.mmu(), 64, 128);
     //cpu.mmu().to_stream(std::cout, true, 0, 128);
