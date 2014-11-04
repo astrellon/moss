@@ -1,7 +1,7 @@
 moss
 ====
 
-Funky MOSS to the rescue.
+Funky MOSS (My Operating SyStem) to the rescue.
 
 MOSS is my attempt at creating a VM that follows mostly how a real computer works whilst keeping things simple.
 
