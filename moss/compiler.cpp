@@ -44,13 +44,40 @@ namespace moss
                 {
                     types.push_back(type);
                 }
-                std::cout << "- Token: >" << *iter << " | " << Opcode::type_name(type) << "\n";
+                std::cout << "- Token: >" << *iter << " | " << Opcode::type_name(type); 
+                if (type == Opcode::REGISTER || type == Opcode::MEMORY)
+                {
+                    std::cout << " | " << get_register_value(*iter);
+                }
+                else if (type == Opcode::INT_NUMBER)
+                {
+                    uint32_t value = static_cast<uint32_t>(std::stol(*iter));
+                    std::cout << " | " << value;
+                }
+                else if (type == Opcode::FLOAT_NUMBER)
+                {
+                    float value = static_cast<float>(std::stof(*iter));
+                    std::cout << " | " << value;
+                }
+                std::cout << "\n";
             }
 
             if (first_type == Opcode::COMMAND)
             {
-                std::string command_name = Opcode::build_command_name(line[0], types);
+                auto command_name = Opcode::build_command_name(line[0], types);
+                auto command = Opcode::find_command(command_name); 
+                
                 std::cout << "- Line command: " << command_name << "\n";
+                write(command);
+
+                for (auto i = 1u; i < line.size(); i++)
+                {
+                     
+                }
+            }
+            else if (first_type == Opcode::LABEL)
+            {
+                add_label(*iter);
             }
         }
     }
@@ -78,64 +105,29 @@ namespace moss
 
     void Compiler::add_label(const std::string &label)
     {
-        _label_locations[std::string(label)] = _index;
+        _label_locations[label] = _index;
     }
 
-    void Compiler::write(uint32_t v1)
+    void Compiler::writeU(uint32_t value)
     {
-        _data.push_back(DataWord(v1));
+        _data.push_back(DataWord(value));
         ++_index;
     }
-    void Compiler::write(uint32_t v1, uint32_t v2)
+    void Compiler::writeI(int32_t value)
     {
-        _data.push_back(DataWord(v1));
-        _data.push_back(DataWord(v2));
-        _index += 2;
+        _data.push_back(DataWord(value));
+        ++_index;
     }
-    void Compiler::write(uint32_t v1, uint32_t v2, uint32_t v3)
+    void Compiler::writeF(float value)
     {
-        _data.push_back(DataWord(v1));
-        _data.push_back(DataWord(v2));
-        _data.push_back(DataWord(v3));
-        _index += 3;
+        _data.push_back(DataWord(value));
+        ++_index;
     }
-    void Compiler::write(uint32_t v1, uint32_t v2, uint32_t v3, uint32_t v4)
+    void Compiler::writeL(const std::string &label)
     {
-        _data.push_back(DataWord(v1));
-        _data.push_back(DataWord(v2));
-        _data.push_back(DataWord(v3));
-        _data.push_back(DataWord(v4));
-        _index += 4;
-    }
-
-    void Compiler::writeF(uint32_t v1, float v2)
-    {
-        _data.push_back(DataWord(v1));
-        _data.push_back(DataWord(v2));
-        _index += 2;
-    }
-    void Compiler::writeF(uint32_t v1, float v2, float v3)
-    {
-        _data.push_back(DataWord(v1));
-        _data.push_back(DataWord(v2));
-        _data.push_back(DataWord(v3));
-        _index += 3;
-    }
-    void Compiler::writeF(uint32_t v1, float v2, float v3, float v4)
-    {
-        _data.push_back(DataWord(v1));
-        _data.push_back(DataWord(v2));
-        _data.push_back(DataWord(v3));
-        _data.push_back(DataWord(v4));
-        _index += 4;
-    }
-
-    void Compiler::write(uint32_t v1, const char *label)
-    {
-        _data.push_back(DataWord(v1));
-        _label_temp[std::string(label)].push_back(_index + 1);
+        _label_temp[label].push_back(_index);
         _data.push_back(DataWord(0u));
-        _index += 2;
+        ++_index;
     }
 
     Opcode::Type Compiler::get_token_type(const std::string &token, bool is_first_token)
@@ -207,11 +199,6 @@ namespace moss
 
     uint32_t Compiler::get_register_value(const std::string &value)
     {
-        if (!is_register(value, 0))
-        {
-            return -1;
-        }
-
         auto index = 0u;
         while (!Utils::is_digit(value[index], false))
         {
@@ -224,5 +211,14 @@ namespace moss
 
         std::string sub = value.substr(index);
         return static_cast<uint32_t>(std::stol(sub));
+    }
+
+    std::string Compiler::process_label(const std::string &token)
+    {
+        if (token.back() == ':')
+        {
+            return token.substr(token.size() - 1);
+        }
+        return token;
     }
 }

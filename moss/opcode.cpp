@@ -6,7 +6,13 @@ namespace moss
 {
     Opcode::Command Opcode::find_command(const std::string &command_name)
     {
-        return UNKNOWN_COMMAND;
+        //return UNKNOWN_COMMAND;
+        auto find = s_names_to_commands.find(command_name);
+        if (find == s_names_to_commands.end())
+        {
+            return  UNKNOWN_COMMAND;
+        }
+        return find->second;
     }
 
     std::string Opcode::build_command_name(const std::string &command, 

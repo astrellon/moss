@@ -1,5 +1,6 @@
 ; Test file
-    MOVF r8 34.5
+    MOV r8 34.5
+    MOV r13 7.23f
     MOV r0 0
     MOV r1 32
 start:

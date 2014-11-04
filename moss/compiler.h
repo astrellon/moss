@@ -30,18 +30,15 @@ namespace moss
             std::map< std::string, std::vector<uint32_t> > _label_temp;
 
             void add_label(const std::string &label);
-            void write(uint32_t v1);
-            void write(uint32_t v1, uint32_t v2);
-            void write(uint32_t v1, uint32_t v2, uint32_t v3);
-            void write(uint32_t v1, uint32_t v2, uint32_t v3, uint32_t v4);
-            void writeF(uint32_t v1, float v2);
-            void writeF(uint32_t v1, float v2, float v3);
-            void writeF(uint32_t v1, float v2, float v3, float v4);
-            void write(uint32_t v1, const char *label);
+            void writeU(uint32_t value);
+            void writeI(int32_t value);
+            void writeF(float value);
+            void writeL(const std::string &label);
 
             static Opcode::Type get_token_type(const std::string &token, bool is_first_token);
             static bool is_register(const std::string &token, std::size_t index);
             static uint32_t get_register_value(const std::string &value);
+            static std::string process_label(const std::string &token);
 
     };
 }

@@ -23,15 +23,6 @@ namespace moss
                 MOV_M_I,
                 MOV_M_M,
 
-                /*
-                MOVF_R_R,
-                MOVF_R_I,
-                MOVF_M_R,
-                MOVF_R_M,
-                MOVF_M_I,
-                MOVF_M_M,
-                */
-
                 UINT_FLOAT_R,
                 UINT_FLOAT_R_R,
                 FLOAT_UINT_R,
@@ -62,12 +53,6 @@ namespace moss
                 PUSH_R,
                 PUSH_I,
                 POP_R,
-
-                /*
-                PUSHF_R,
-                PUSHF_I,
-                POPF_R,
-                */
 
                 CMP_R_R,
                 CMP_R_I,
