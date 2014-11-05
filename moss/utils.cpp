@@ -4,8 +4,8 @@ namespace moss
 {
     void Utils::trim_str(std::string &str)
     {
-        auto start = 0u;
-        auto end = str.size() - 1;
+        int start = 0;
+        int end = static_cast<int>(str.size()) - 1;
 
         while (start <= end && is_whitespace(str[start]))
         {

@@ -40,28 +40,6 @@ int main(int argc, char **argv)
         dataWriter.write(i * 4);
     }
 
-    /*
-    moss::MemoryWriter<moss::Mmu> codeWriter(64, &cpu.mmu());
-    codeWriter.write(moss::Opcode::MOV_R_I, 8);
-    codeWriter.writeF(34.5f);
-    codeWriter.write(moss::Opcode::MOV_R_I, 0, 0);
-    codeWriter.write(moss::Opcode::MOV_R_I, 1, 32u);
-    codeWriter.add_label("start"); 
-    codeWriter.write(moss::Opcode::CMP_R_I, 0, 32);
-    codeWriter.write(moss::Opcode::JGE_I, "end");
-    codeWriter.write(moss::Opcode::MOV_R_M, 2, 1);
-    codeWriter.write(moss::Opcode::ADD_R_I, 0, 1);
-    codeWriter.write(moss::Opcode::ADD_R_I, 1, 1);
-    codeWriter.write(moss::Opcode::PRINT_R, 2u);
-    codeWriter.write(moss::Opcode::JMP_I, "start");
-    codeWriter.add_label("end");
-    codeWriter.write(moss::Opcode::UINT_FLOAT_R_R, 9, 2);
-    codeWriter.write(moss::Opcode::ADDF_R_R_R, 10, 8, 9);
-    codeWriter.write(moss::Opcode::FLOAT_UINT_R_R, 5, 10);
-    codeWriter.write(moss::Opcode::MOV_R_I, 6, 1337);
-    codeWriter.finalise();
-    */
-
     moss::Assembler assembler;
     std::ifstream input_ss("test.asm");
     assembler.process_stream(std::string("test.asm"), input_ss);
@@ -83,20 +61,7 @@ int main(int argc, char **argv)
     }
     cpu.to_stream(std::cout);
 
-
-    /*
-    std::ifstream input_ss("test.asm");
-    moss::Tokeniser tokens(input_ss);
-    while (tokens.has_tokens())
-    {
-        std::cout << "New line\n";
-        std::vector<std::string> token = tokens.next_token_line();
-        for (auto i = token.begin(); i != token.end(); ++i)
-        {
-            std::cout << "- " << *i << "\n";
-        }
-    }
-    */
+	std::cin.get();
 
     return 0;
 }
