@@ -160,47 +160,6 @@ namespace moss
                     _mmu.uint_data(_regs.uint_reg(arg1), _mmu.uint_data(_regs.uint_reg(arg2)));
                     break;
                 // }}}
-                
-                    /*
-                // MOVF Commands {{{
-                case Opcode::MOVF_R_R:
-                    // reg[arg1] = reg[arg2]
-                    arg1 = next_pc_uint();
-                    arg2 = next_pc_uint();
-                    _regs.float_reg(arg1, _regs.float_reg(arg2));
-                    break;
-                case Opcode::MOVF_R_I:
-                    // reg[arg1] = arg2
-                    arg1 = next_pc_uint();
-                    farg2 = next_pc_float();
-                    _regs.float_reg(arg1, farg2);
-                    break;
-                case Opcode::MOVF_M_R:
-                    // mem[reg[arg1]] = reg[arg2]
-                    arg1 = next_pc_uint();
-                    arg2 = next_pc_uint();
-                    _mmu.float_data(_regs.float_reg(arg1), _regs.float_reg(arg2));
-                    break;
-                case Opcode::MOVF_R_M:
-                    // reg[arg1] = mem[reg[arg2]]
-                    arg1 = next_pc_uint();
-                    arg2 = next_pc_uint();
-                    _regs.float_reg(arg1, _mmu.float_data(_regs.float_reg(arg2)));
-                    break;
-                case Opcode::MOVF_M_I:
-                    // mem[reg[arg1]] = arg2
-                    arg1 = next_pc_uint();
-                    arg2 = next_pc_uint();
-                    _mmu.float_data(_regs.float_reg(arg1), arg2);
-                    break;
-                case Opcode::MOVF_M_M:
-                    // mem[reg[arg1]] = mem[reg[arg2]]
-                    arg1 = next_pc_uint();
-                    arg2 = next_pc_uint();
-                    _mmu.float_data(_regs.float_reg(arg1), _mmu.float_data(_regs.float_reg(arg2)));
-                    break;
-                // }}}
-                */
 
                 // Unit Converstions {{{
                 case Opcode::UINT_FLOAT_R:
@@ -378,22 +337,6 @@ namespace moss
                     // reg[arg1] = pop
                     _regs.uint_reg(next_pc_uint(), pop_stack());
                     break;
-                
-                    /*
-                case Opcode::PUSHF_R:
-                    // push reg[arg1]
-                    push_stack_float(_regs.float_reg(next_pc_uint()));
-                    break;
-                case Opcode::PUSHF_I:
-                    // push arg1
-                    push_stack_float(next_pc_float());
-                    break;
-                case Opcode::POPF_R:
-                    // reg[arg1] = pop
-                    farg2 = pop_stack_float();
-                    _regs.float_reg(next_pc_uint(), arg2);
-                    break;
-                    */
                 // }}}
 
                 // CMP commands {{{
