@@ -15,4 +15,5 @@ end:
     ADDF r10 r8 r9
     FLOAT_UINT r5 r10
     MOV r6 1337
+    HALT
 

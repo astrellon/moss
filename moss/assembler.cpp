@@ -115,7 +115,7 @@ namespace moss
             for (auto iter2 = iter->second.begin(); iter2 != iter->second.end(); ++iter2)
             {
                 auto index = static_cast<int32_t>(*iter2);
-                auto diff = static_cast<int32_t>(find->second) - index;
+                auto diff = static_cast<int32_t>(find->second) - index - 1;
                 _data[*iter2].i = diff;
             }
         }

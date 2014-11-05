@@ -78,6 +78,8 @@ int main(int argc, char **argv)
     catch (std::exception e)
     {
         std::cout << "Error running CPU!\n";
+        std::cout << "- Message: " << e.what() << "\n";
+        std::cout << "- Stopped at: " << (cpu.registers().program_counter() - 1) << "\n";
     }
     cpu.to_stream(std::cout);
 
