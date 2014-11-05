@@ -28,28 +28,6 @@ namespace moss
                 FLOAT_UINT_R,
                 FLOAT_UINT_R_R,
 
-                ADD_R_R,
-                ADD_R_R_R,
-                ADD_R_R_I,
-                ADD_R_I,
-
-                ADDF_R_R,
-                ADDF_R_R_R,
-                ADDF_R_R_I,
-                ADDF_R_I,
-
-                SUB_R_R,
-                SUB_R_R_R,
-                SUB_R_I_R,
-                SUB_R_R_I,
-                SUB_R_I,
-
-                SUBF_R_R,
-                SUBF_R_R_R,
-                SUBF_R_I_R,
-                SUBF_R_R_I,
-                SUBF_R_I,
-
                 PUSH_R,
                 PUSH_I,
                 POP_R,
@@ -76,6 +54,33 @@ namespace moss
                 JGT_I,
                 JGE_R,
                 JGE_I,
+
+                ADD_R_R,
+                ADD_R_R_R,
+                ADD_R_R_I,
+                ADD_R_I,
+
+                ADDF_R_R,
+                ADDF_R_R_R,
+                ADDF_R_R_I,
+                ADDF_R_I,
+
+                SUB_R_R,
+                SUB_R_R_R,
+                SUB_R_I_R,
+                SUB_R_R_I,
+                SUB_R_I,
+
+                SUBF_R_R,
+                SUBF_R_R_R,
+                SUBF_R_I_R,
+                SUBF_R_R_I,
+                SUBF_R_I,
+
+                INC_R,
+                INCF_R,
+                DEC_R,
+                DECF_R,
 
                 PRINT_R
             };

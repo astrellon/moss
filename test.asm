@@ -7,8 +7,8 @@ start:
     CMP r0 32
     JGE end
     MOV r2 @r1
-    ADD r0 1
-    ADD r1 1
+    INC r0
+    INC r1
     JMP start
 end:
     UINT_FLOAT r9 r2

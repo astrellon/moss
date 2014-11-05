@@ -61,6 +61,7 @@ int main(int argc, char **argv)
     }
     cpu.to_stream(std::cout);
 
+    std::cout << "Press enter to continue... ";
 	std::cin.get();
 
     return 0;

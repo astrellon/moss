@@ -56,23 +56,6 @@ namespace moss
         { std::string("ADD_R_R_R"), Opcode::ADD_R_R_R },
         { std::string("ADD_R_R_I"), Opcode::ADD_R_R_I },
         { std::string("ADD_R_I"),   Opcode::ADD_R_I },
-        
-        { std::string("ADDF_R_R"),   Opcode::ADDF_R_R },
-        { std::string("ADDF_R_R_R"), Opcode::ADDF_R_R_R },
-        { std::string("ADDF_R_R_I"), Opcode::ADDF_R_R_I },
-        { std::string("ADDF_R_I"),   Opcode::ADDF_R_I },
-
-        { std::string("SUB_R_R"),   Opcode::SUB_R_R },
-        { std::string("SUB_R_R_R"), Opcode::SUB_R_R_R },
-        { std::string("SUB_R_I_R"), Opcode::SUB_R_I_R },
-        { std::string("SUB_R_R_I"), Opcode::SUB_R_R_I },
-        { std::string("SUB_R_I"),   Opcode::SUB_R_I },
-
-        { std::string("SUBF_R_R"),   Opcode::SUBF_R_R },
-        { std::string("SUBF_R_R_R"), Opcode::SUBF_R_R_R },
-        { std::string("SUBF_R_I_R"), Opcode::SUBF_R_I_R },
-        { std::string("SUBF_R_R_I"), Opcode::SUBF_R_R_I },
-        { std::string("SUBF_R_I"),   Opcode::SUBF_R_I },
 
         { std::string("PUSH_R"),    Opcode::PUSH_R },
         { std::string("PUSH_I"),    Opcode::PUSH_I },
@@ -100,6 +83,28 @@ namespace moss
         { std::string("JGT_I"),  Opcode::JGT_I },
         { std::string("JGE_R"),  Opcode::JGE_R },
         { std::string("JGE_I"),  Opcode::JGE_I },
+        
+        { std::string("ADDF_R_R"),   Opcode::ADDF_R_R },
+        { std::string("ADDF_R_R_R"), Opcode::ADDF_R_R_R },
+        { std::string("ADDF_R_R_I"), Opcode::ADDF_R_R_I },
+        { std::string("ADDF_R_I"),   Opcode::ADDF_R_I },
+
+        { std::string("SUB_R_R"),   Opcode::SUB_R_R },
+        { std::string("SUB_R_R_R"), Opcode::SUB_R_R_R },
+        { std::string("SUB_R_I_R"), Opcode::SUB_R_I_R },
+        { std::string("SUB_R_R_I"), Opcode::SUB_R_R_I },
+        { std::string("SUB_R_I"),   Opcode::SUB_R_I },
+
+        { std::string("SUBF_R_R"),   Opcode::SUBF_R_R },
+        { std::string("SUBF_R_R_R"), Opcode::SUBF_R_R_R },
+        { std::string("SUBF_R_I_R"), Opcode::SUBF_R_I_R },
+        { std::string("SUBF_R_R_I"), Opcode::SUBF_R_R_I },
+        { std::string("SUBF_R_I"),   Opcode::SUBF_R_I },
+        
+        { std::string("INC_R"),   Opcode::INC_R },
+        { std::string("INCF_R"),  Opcode::INCF_R },
+        { std::string("DEC_R"),   Opcode::DEC_R },
+        { std::string("DECF_R"),  Opcode::DECF_R },
 
         { std::string("PRINT_R"),  Opcode::PRINT_R }
     };
@@ -119,28 +124,6 @@ namespace moss
         { Opcode::UINT_FLOAT_R_R, { "uint_float", { Opcode::REGISTER, Opcode::REGISTER } } },
         { Opcode::FLOAT_UINT_R, { "float_uint", { Opcode::REGISTER } } },
         { Opcode::FLOAT_UINT_R_R, { "float_uint", { Opcode::REGISTER, Opcode::REGISTER } } },
-        
-        { Opcode::ADD_R_R, { "add", { Opcode::REGISTER, Opcode::REGISTER } } },
-        { Opcode::ADD_R_R_R, { "add", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
-        { Opcode::ADD_R_R_I, { "add", { Opcode::REGISTER, Opcode::REGISTER, Opcode::INT_NUMBER } } },
-        { Opcode::ADD_R_I, { "add", { Opcode::REGISTER, Opcode::INT_NUMBER } } },
-        
-        { Opcode::ADDF_R_R, { "addf", { Opcode::REGISTER, Opcode::REGISTER } } },
-        { Opcode::ADDF_R_R_R, { "addf", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
-        { Opcode::ADDF_R_R_I, { "addf", { Opcode::REGISTER, Opcode::REGISTER, Opcode::FLOAT_NUMBER } } },
-        { Opcode::ADDF_R_I, { "addf", { Opcode::REGISTER, Opcode::FLOAT_NUMBER } } },
-        
-        { Opcode::SUB_R_R, { "sub", { Opcode::REGISTER, Opcode::REGISTER } } },
-        { Opcode::SUB_R_R_R, { "sub", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
-        { Opcode::SUB_R_I_R, { "sub", { Opcode::REGISTER, Opcode::INT_NUMBER, Opcode::REGISTER } } },
-        { Opcode::SUB_R_R_I, { "sub", { Opcode::REGISTER, Opcode::REGISTER, Opcode::INT_NUMBER } } },
-        { Opcode::SUB_R_I, { "sub", { Opcode::REGISTER, Opcode::INT_NUMBER } } },
-        
-        { Opcode::SUBF_R_R, { "subf", { Opcode::REGISTER, Opcode::REGISTER } } },
-        { Opcode::SUBF_R_R_R, { "subf", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
-        { Opcode::SUBF_R_I_R, { "subf", { Opcode::FLOAT_NUMBER, Opcode::REGISTER, Opcode::REGISTER } } },
-        { Opcode::SUBF_R_R_I, { "subf", { Opcode::REGISTER, Opcode::REGISTER, Opcode::FLOAT_NUMBER } } },
-        { Opcode::SUBF_R_I, { "subf", { Opcode::REGISTER, Opcode::FLOAT_NUMBER } } },
         
         { Opcode::PUSH_R, { "push", { Opcode::REGISTER } } },
         { Opcode::PUSH_I, { "push", { Opcode::NUMBER } } },
@@ -168,6 +151,33 @@ namespace moss
         { Opcode::JGT_I, { "jgt", { Opcode::INT_NUMBER } } },
         { Opcode::JGE_R, { "jge", { Opcode::REGISTER } } },
         { Opcode::JGE_I, { "jge", { Opcode::INT_NUMBER } } },
+        
+        { Opcode::ADD_R_R, { "add", { Opcode::REGISTER, Opcode::REGISTER } } },
+        { Opcode::ADD_R_R_R, { "add", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
+        { Opcode::ADD_R_R_I, { "add", { Opcode::REGISTER, Opcode::REGISTER, Opcode::INT_NUMBER } } },
+        { Opcode::ADD_R_I, { "add", { Opcode::REGISTER, Opcode::INT_NUMBER } } },
+        
+        { Opcode::ADDF_R_R, { "addf", { Opcode::REGISTER, Opcode::REGISTER } } },
+        { Opcode::ADDF_R_R_R, { "addf", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
+        { Opcode::ADDF_R_R_I, { "addf", { Opcode::REGISTER, Opcode::REGISTER, Opcode::FLOAT_NUMBER } } },
+        { Opcode::ADDF_R_I, { "addf", { Opcode::REGISTER, Opcode::FLOAT_NUMBER } } },
+        
+        { Opcode::SUB_R_R, { "sub", { Opcode::REGISTER, Opcode::REGISTER } } },
+        { Opcode::SUB_R_R_R, { "sub", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
+        { Opcode::SUB_R_I_R, { "sub", { Opcode::REGISTER, Opcode::INT_NUMBER, Opcode::REGISTER } } },
+        { Opcode::SUB_R_R_I, { "sub", { Opcode::REGISTER, Opcode::REGISTER, Opcode::INT_NUMBER } } },
+        { Opcode::SUB_R_I, { "sub", { Opcode::REGISTER, Opcode::INT_NUMBER } } },
+        
+        { Opcode::SUBF_R_R, { "subf", { Opcode::REGISTER, Opcode::REGISTER } } },
+        { Opcode::SUBF_R_R_R, { "subf", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
+        { Opcode::SUBF_R_I_R, { "subf", { Opcode::FLOAT_NUMBER, Opcode::REGISTER, Opcode::REGISTER } } },
+        { Opcode::SUBF_R_R_I, { "subf", { Opcode::REGISTER, Opcode::REGISTER, Opcode::FLOAT_NUMBER } } },
+        { Opcode::SUBF_R_I, { "subf", { Opcode::REGISTER, Opcode::FLOAT_NUMBER } } },
+        
+        { Opcode::INC_R, { "inc", { Opcode::REGISTER } } },
+        { Opcode::INCF_R, { "incf", { Opcode::REGISTER } } },
+        { Opcode::DEC_R, { "dec", { Opcode::REGISTER } } },
+        { Opcode::DECF_R, { "decf", { Opcode::REGISTER } } },
         
         { Opcode::PRINT_R, { "print", { Opcode::INT_NUMBER } } }
     };

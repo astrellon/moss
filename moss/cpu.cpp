@@ -194,136 +194,6 @@ namespace moss
                     break;
                 // }}}
 
-                // ADD Commands {{{
-                case Opcode::ADD_R_R:
-                    // reg[arg1] += reg[arg2]
-                    arg1 = next_pc_uint();
-                    arg2 = next_pc_uint();
-                    _regs.uint_reg(arg1, _regs.uint_reg(arg1) + _regs.uint_reg(arg2));
-                    break;
-                case Opcode::ADD_R_R_R:
-                    // reg[arg1] = reg[arg2] + reg[arg3]
-                    arg1 = next_pc_uint();
-                    arg2 = next_pc_uint();
-                    arg3 = next_pc_uint();
-                    _regs.uint_reg(arg1, _regs.uint_reg(arg2) + _regs.uint_reg(arg3));
-                    break;
-                case Opcode::ADD_R_R_I:
-                    // reg[arg1] = reg[arg2] + arg3
-                    arg1 = next_pc_uint();
-                    arg2 = next_pc_uint();
-                    arg3 = next_pc_uint();
-                    _regs.uint_reg(arg1, _regs.uint_reg(arg2) + arg3);
-                    break;
-                case Opcode::ADD_R_I:
-                    // reg[arg1] += arg2
-                    arg1 = next_pc_uint();
-                    arg2 = next_pc_uint();
-                    _regs.uint_reg(arg1, _regs.uint_reg(arg1) + arg2);
-                    break;
-                // }}}
-                
-                // ADDF Commands {{{
-                case Opcode::ADDF_R_R:
-                    // reg[arg1] += reg[arg2]
-                    arg1 = next_pc_uint();
-                    arg2 = next_pc_uint();
-                    _regs.float_reg(arg1, _regs.float_reg(arg1) + _regs.float_reg(arg2));
-                    break;
-                case Opcode::ADDF_R_R_R:
-                    // reg[arg1] = reg[arg2] + reg[arg3]
-                    arg1 = next_pc_uint();
-                    arg2 = next_pc_uint();
-                    arg3 = next_pc_uint();
-                    _regs.float_reg(arg1, _regs.float_reg(arg2) + _regs.float_reg(arg3));
-                    break;
-                case Opcode::ADDF_R_R_I:
-                    // reg[arg1] = reg[arg2] + arg3
-                    arg1 = next_pc_uint();
-                    arg2 = next_pc_uint();
-                    arg3 = next_pc_uint();
-                    _regs.float_reg(arg1, _regs.float_reg(arg2) + arg3);
-                    break;
-                case Opcode::ADDF_R_I:
-                    // reg[arg1] += arg2
-                    arg1 = next_pc_uint();
-                    farg2 = next_pc_float();
-                    _regs.float_reg(arg1, _regs.float_reg(arg1) + arg2);
-                    break;
-                // }}}
-                
-                // SUB Commands {{{
-                case Opcode::SUB_R_R:
-                    // reg[arg1] -= reg[arg2]
-                    arg1 = next_pc_uint();
-                    arg2 = next_pc_uint();
-                    _regs.uint_reg(arg1, _regs.uint_reg(arg1) - _regs.uint_reg(arg2));
-                    break;
-                case Opcode::SUB_R_R_R:
-                    // reg[arg1] = reg[arg2] - reg[arg3]
-                    arg1 = next_pc_uint();
-                    arg2 = next_pc_uint();
-                    arg3 = next_pc_uint();
-                    _regs.uint_reg(arg1, _regs.uint_reg(arg2) - _regs.uint_reg(arg3));
-                    break;
-                case Opcode::SUB_R_I_R:
-                    // reg[arg1] = arg2 - reg[arg3]
-                    arg1 = next_pc_uint();
-                    arg2 = next_pc_uint();
-                    arg3 = next_pc_uint();
-                    _regs.uint_reg(arg1, arg2 - _regs.uint_reg(arg3));
-                    break;
-                case Opcode::SUB_R_R_I:
-                    // reg[arg1] = reg[arg2] - arg3
-                    arg1 = next_pc_uint();
-                    arg2 = next_pc_uint();
-                    arg3 = next_pc_uint();
-                    _regs.uint_reg(arg1, _regs.uint_reg(arg2) - arg3);
-                    break;
-                case Opcode::SUB_R_I:
-                    // reg[arg1] -= arg2
-                    arg1 = next_pc_uint();
-                    arg2 = next_pc_uint();
-                    _regs.uint_reg(arg1, _regs.uint_reg(arg1) - arg2);
-                    break;
-                // }}}
-
-                // SUBF Commands {{{
-                case Opcode::SUBF_R_R:
-                    // reg[arg1] -= reg[arg2]
-                    arg1 = next_pc_uint();
-                    arg2 = next_pc_uint();
-                    _regs.float_reg(arg1, _regs.float_reg(arg1) - _regs.float_reg(arg2));
-                    break;
-                case Opcode::SUBF_R_R_R:
-                    // reg[arg1] = reg[arg2] - reg[arg3]
-                    arg1 = next_pc_uint();
-                    arg2 = next_pc_uint();
-                    arg3 = next_pc_uint();
-                    _regs.float_reg(arg1, _regs.float_reg(arg2) - _regs.float_reg(arg3));
-                    break;
-                case Opcode::SUBF_R_I_R:
-                    // reg[arg1] = arg2 - reg[arg3]
-                    arg1 = next_pc_uint();
-                    arg2 = next_pc_uint();
-                    arg3 = next_pc_uint();
-                    _regs.float_reg(arg1, arg2 - _regs.float_reg(arg3));
-                    break;
-                case Opcode::SUBF_R_R_I:
-                    // reg[arg1] = reg[arg2] - arg3
-                    arg1 = next_pc_uint();
-                    arg2 = next_pc_uint();
-                    arg3 = next_pc_uint();
-                    _regs.float_reg(arg1, _regs.float_reg(arg2) - arg3);
-                    break;
-                case Opcode::SUBF_R_I:
-                    // reg[arg1] -= arg2
-                    arg1 = next_pc_uint();
-                    farg2 = next_pc_float();
-                    _regs.float_reg(arg1, _regs.float_reg(arg1) - arg2);
-                    break;
-                // }}}
-                
                 // Stack commands {{{
                 case Opcode::PUSH_R:
                     // push reg[arg1]
@@ -522,6 +392,159 @@ namespace moss
                 
                 // }}}
 
+                // ADD Commands {{{
+                case Opcode::ADD_R_R:
+                    // reg[arg1] += reg[arg2]
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    _regs.uint_reg(arg1, _regs.uint_reg(arg1) + _regs.uint_reg(arg2));
+                    break;
+                case Opcode::ADD_R_R_R:
+                    // reg[arg1] = reg[arg2] + reg[arg3]
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    arg3 = next_pc_uint();
+                    _regs.uint_reg(arg1, _regs.uint_reg(arg2) + _regs.uint_reg(arg3));
+                    break;
+                case Opcode::ADD_R_R_I:
+                    // reg[arg1] = reg[arg2] + arg3
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    arg3 = next_pc_uint();
+                    _regs.uint_reg(arg1, _regs.uint_reg(arg2) + arg3);
+                    break;
+                case Opcode::ADD_R_I:
+                    // reg[arg1] += arg2
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    _regs.uint_reg(arg1, _regs.uint_reg(arg1) + arg2);
+                    break;
+                // }}}
+                
+                // ADDF Commands {{{
+                case Opcode::ADDF_R_R:
+                    // reg[arg1] += reg[arg2]
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    _regs.float_reg(arg1, _regs.float_reg(arg1) + _regs.float_reg(arg2));
+                    break;
+                case Opcode::ADDF_R_R_R:
+                    // reg[arg1] = reg[arg2] + reg[arg3]
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    arg3 = next_pc_uint();
+                    _regs.float_reg(arg1, _regs.float_reg(arg2) + _regs.float_reg(arg3));
+                    break;
+                case Opcode::ADDF_R_R_I:
+                    // reg[arg1] = reg[arg2] + arg3
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    arg3 = next_pc_uint();
+                    _regs.float_reg(arg1, _regs.float_reg(arg2) + arg3);
+                    break;
+                case Opcode::ADDF_R_I:
+                    // reg[arg1] += arg2
+                    arg1 = next_pc_uint();
+                    farg2 = next_pc_float();
+                    _regs.float_reg(arg1, _regs.float_reg(arg1) + arg2);
+                    break;
+                // }}}
+                
+                // SUB Commands {{{
+                case Opcode::SUB_R_R:
+                    // reg[arg1] -= reg[arg2]
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    _regs.uint_reg(arg1, _regs.uint_reg(arg1) - _regs.uint_reg(arg2));
+                    break;
+                case Opcode::SUB_R_R_R:
+                    // reg[arg1] = reg[arg2] - reg[arg3]
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    arg3 = next_pc_uint();
+                    _regs.uint_reg(arg1, _regs.uint_reg(arg2) - _regs.uint_reg(arg3));
+                    break;
+                case Opcode::SUB_R_I_R:
+                    // reg[arg1] = arg2 - reg[arg3]
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    arg3 = next_pc_uint();
+                    _regs.uint_reg(arg1, arg2 - _regs.uint_reg(arg3));
+                    break;
+                case Opcode::SUB_R_R_I:
+                    // reg[arg1] = reg[arg2] - arg3
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    arg3 = next_pc_uint();
+                    _regs.uint_reg(arg1, _regs.uint_reg(arg2) - arg3);
+                    break;
+                case Opcode::SUB_R_I:
+                    // reg[arg1] -= arg2
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    _regs.uint_reg(arg1, _regs.uint_reg(arg1) - arg2);
+                    break;
+                // }}}
+
+                // SUBF Commands {{{
+                case Opcode::SUBF_R_R:
+                    // reg[arg1] -= reg[arg2]
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    _regs.float_reg(arg1, _regs.float_reg(arg1) - _regs.float_reg(arg2));
+                    break;
+                case Opcode::SUBF_R_R_R:
+                    // reg[arg1] = reg[arg2] - reg[arg3]
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    arg3 = next_pc_uint();
+                    _regs.float_reg(arg1, _regs.float_reg(arg2) - _regs.float_reg(arg3));
+                    break;
+                case Opcode::SUBF_R_I_R:
+                    // reg[arg1] = arg2 - reg[arg3]
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    arg3 = next_pc_uint();
+                    _regs.float_reg(arg1, arg2 - _regs.float_reg(arg3));
+                    break;
+                case Opcode::SUBF_R_R_I:
+                    // reg[arg1] = reg[arg2] - arg3
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    arg3 = next_pc_uint();
+                    _regs.float_reg(arg1, _regs.float_reg(arg2) - arg3);
+                    break;
+                case Opcode::SUBF_R_I:
+                    // reg[arg1] -= arg2
+                    arg1 = next_pc_uint();
+                    farg2 = next_pc_float();
+                    _regs.float_reg(arg1, _regs.float_reg(arg1) - arg2);
+                    break;
+                // }}}
+
+                // INC/DEC Commands {{{
+                case Opcode::INC_R:
+                    // reg[arg1] += 1
+                    arg1 = next_pc_uint();
+                    _regs.uint_reg(arg1, _regs.uint_reg(arg1) + 1);
+                    break;
+                case Opcode::INCF_R:
+                    // reg[arg1] += 1.0f
+                    arg1 = next_pc_uint();
+                    _regs.float_reg(arg1, _regs.float_reg(arg1) + 1.0f);
+                    break;
+                case Opcode::DEC_R:
+                    // reg[arg1] -= 1
+                    arg1 = next_pc_uint();
+                    _regs.uint_reg(arg1, _regs.uint_reg(arg1) - 1);
+                    break;
+                case Opcode::DECF_R:
+                    // reg[arg1] -= 1.0f
+                    arg1 = next_pc_uint();
+                    _regs.float_reg(arg1, _regs.float_reg(arg1) - 1.0f);
+                    break;
+                // }}}
+                
                 // Debug commands {{{
                 case Opcode::PRINT_R:
                     arg1 = next_pc_uint();
