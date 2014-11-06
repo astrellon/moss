@@ -47,7 +47,6 @@ int main(int argc, char **argv)
     assembler.write_to_memory<moss::Mmu>(&cpu.mmu(), 64);
 
     moss::Disassembler::to_stream(std::cout, &cpu.mmu(), 64, 110);
-    //cpu.mmu().to_stream(std::cout, true, 0, 128);
 
     try
     {
