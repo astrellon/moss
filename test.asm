@@ -1,7 +1,7 @@
 ; Test file
     MOV r11 0x80000000
-    SHR r12 r11
-    SHL r13 r11
+    ROR r12 r11
+    ROL r13 r11
     MOV r8 34.5
     MOV r15 7.23f
     MOV r0 0

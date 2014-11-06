@@ -8,6 +8,7 @@
 
 namespace moss
 {
+    uint32_t Cpu::s_int_bit_shift = (sizeof(uint32_t) << 3) - 1;
     Cpu::Cpu(uint32_t page_bit_size) :
         _running(false),
         _mmu(page_bit_size),
@@ -679,24 +680,24 @@ namespace moss
                 case Opcode::ROR_R:
                     arg1 = next_pc_uint();
                     arg2 = _regs.uint_reg(arg1);
-                    _regs.uint_reg(arg1, (arg2 << 1) | (arg2 >> (sizeof(uint32_t) << 3)));
+                    _regs.uint_reg(arg1, (arg2 << 1) | (arg2 >> s_int_bit_shift));
                     break;
                 case Opcode::ROR_R_R:
                     arg1 = next_pc_uint();
                     arg2 = next_pc_uint();
                     arg3 = _regs.uint_reg(arg2);
-                    _regs.uint_reg(arg1, (arg3 << 1) | (arg3 >> (sizeof(uint32_t) << 3)));
+                    _regs.uint_reg(arg1, (arg3 << 1) | (arg3 >> s_int_bit_shift));
                     break;
                 case Opcode::ROL_R:
                     arg1 = next_pc_uint();
                     arg2 = _regs.uint_reg(arg1);
-                    _regs.uint_reg(arg1, (arg2 >> 1) | (arg2 << (sizeof(uint32_t) << 3)));
+                    _regs.uint_reg(arg1, (arg2 >> 1) | (arg2 << s_int_bit_shift));
                     break;
                 case Opcode::ROL_R_R:
                     arg1 = next_pc_uint();
                     arg2 = next_pc_uint();
                     arg3 = _regs.uint_reg(arg2);
-                    _regs.uint_reg(arg1, (arg3 >> 1) | (arg3 << (sizeof(uint32_t) << 3)));
+                    _regs.uint_reg(arg1, (arg3 >> 1) | (arg3 << s_int_bit_shift));
                     break;
                 // }}}
 
