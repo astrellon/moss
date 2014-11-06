@@ -16,22 +16,29 @@ namespace moss
                 UNKNOWN_COMMAND,
                 HALT,
 
+                // MOV {{{
                 MOV_R_R,
                 MOV_R_I,
                 MOV_M_R,
                 MOV_R_M,
                 MOV_M_I,
                 MOV_M_M,
+                // }}}
 
+                // Unit conversions {{{
                 UINT_FLOAT_R,
                 UINT_FLOAT_R_R,
                 FLOAT_UINT_R,
                 FLOAT_UINT_R_R,
+                // }}}
 
+                // Stack {{{
                 PUSH_R,
                 PUSH_I,
                 POP_R,
+                // }}}
 
+                // CMP/CMPF {{{
                 CMP_R_R,
                 CMP_R_I,
                 CMP_I_R,
@@ -39,7 +46,9 @@ namespace moss
                 CMPF_R_R,
                 CMPF_R_I,
                 CMPF_I_R,
+                // }}}
 
+                // Branching {{{
                 JMP_R,
                 JMP_I,
                 JNE_R,
@@ -54,7 +63,9 @@ namespace moss
                 JGT_I,
                 JGE_R,
                 JGE_I,
+                // }}}
 
+                // ADD/ADDF {{{
                 ADD_R_R,
                 ADD_R_R_R,
                 ADD_R_R_I,
@@ -64,7 +75,9 @@ namespace moss
                 ADDF_R_R_R,
                 ADDF_R_R_I,
                 ADDF_R_I,
+                // }}}
 
+                // SUB/SUBF {{{
                 SUB_R_R,
                 SUB_R_R_R,
                 SUB_R_I_R,
@@ -76,11 +89,54 @@ namespace moss
                 SUBF_R_I_R,
                 SUBF_R_R_I,
                 SUBF_R_I,
+                // }}}
 
+                // INC/DEC {{{
                 INC_R,
                 INCF_R,
                 DEC_R,
                 DECF_R,
+                // }}}
+
+                // MUL/MULF {{{
+                MUL_R_R,
+                MUL_R_R_R,
+                MUL_R_R_I,
+                MUL_R_I,
+
+                MULF_R_R,
+                MULF_R_R_R,
+                MULF_R_R_I,
+                MULF_R_I,
+                // }}}
+
+                // DIV/DIVF {{{
+                DIV_R_R,
+                DIV_R_R_R,
+                DIV_R_I_R,
+                DIV_R_R_I,
+                DIV_R_I,
+
+                DIVF_R_R,
+                DIVF_R_R_R,
+                DIVF_R_I_R,
+                DIVF_R_R_I,
+                DIVF_R_I,
+                // }}}
+
+                // ROR/ROL {{{
+                ROR_R,
+                ROR_R_R,
+                ROL_R,
+                ROL_R_R,
+                // }}}
+
+                // SHR/SHL {{{
+                SHR_R,
+                SHR_R_R,
+                SHL_R,
+                SHL_R_R,
+                // }}}
 
                 PRINT_R
             };

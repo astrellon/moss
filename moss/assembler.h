@@ -31,6 +31,8 @@ namespace moss
                 }
             }
 
+            static uint32_t parse_int(const std::string &str);
+
         private:
             uint32_t _index;
             Tokeniser *_tokens;

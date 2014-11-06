@@ -23,12 +23,16 @@ namespace moss
     {
         return c == ' ' || c == '\t' || c == '\n' || c == '\r';
     }
-    bool Utils::is_digit(char c, bool include_float)
+    bool Utils::is_int_digit(char c)
     {
-        if (include_float && (c == '.' || c == 'f'))
-        {
-            return true;
-        }
         return c >= '0' && c <= '9';
+    }
+    bool Utils::is_float_digit(char c)
+    {
+        return c == '.' || c == 'f' || is_int_digit(c);
+    }
+    bool Utils::is_hex_digit(char c)
+    {
+        return (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F') || is_int_digit(c);
     }
 }

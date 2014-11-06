@@ -545,6 +545,182 @@ namespace moss
                     break;
                 // }}}
                 
+                // MUL Commands {{{
+                case Opcode::MUL_R_R:
+                    // reg[arg1] *= reg[arg2]
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    _regs.uint_reg(arg1, _regs.uint_reg(arg1) * _regs.uint_reg(arg2));
+                    break;
+                case Opcode::MUL_R_R_R:
+                    // reg[arg1] = reg[arg2] * reg[arg3]
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    arg3 = next_pc_uint();
+                    _regs.uint_reg(arg1, _regs.uint_reg(arg2) * _regs.uint_reg(arg3));
+                    break;
+                case Opcode::MUL_R_R_I:
+                    // reg[arg1] = reg[arg2] * arg3
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    arg3 = next_pc_uint();
+                    _regs.uint_reg(arg1, _regs.uint_reg(arg2) * arg3);
+                    break;
+                case Opcode::MUL_R_I:
+                    // reg[arg1] *= arg2
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    _regs.uint_reg(arg1, _regs.uint_reg(arg1) * arg2);
+                    break;
+                // }}}
+                
+                // MULF Commands {{{
+                case Opcode::MULF_R_R:
+                    // reg[arg1] *= reg[arg2]
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    _regs.float_reg(arg1, _regs.float_reg(arg1) * _regs.float_reg(arg2));
+                    break;
+                case Opcode::MULF_R_R_R:
+                    // reg[arg1] = reg[arg2] * reg[arg3]
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    arg3 = next_pc_uint();
+                    _regs.float_reg(arg1, _regs.float_reg(arg2) * _regs.float_reg(arg3));
+                    break;
+                case Opcode::MULF_R_R_I:
+                    // reg[arg1] = reg[arg2] * arg3
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    arg3 = next_pc_uint();
+                    _regs.float_reg(arg1, _regs.float_reg(arg2) * arg3);
+                    break;
+                case Opcode::MULF_R_I:
+                    // reg[arg1] *= arg2
+                    arg1 = next_pc_uint();
+                    farg2 = next_pc_float();
+                    _regs.float_reg(arg1, _regs.float_reg(arg1) * arg2);
+                    break;
+                // }}}
+                
+                // DIV Commands {{{
+                case Opcode::DIV_R_R:
+                    // reg[arg1] /= reg[arg2]
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    _regs.uint_reg(arg1, _regs.uint_reg(arg1) / _regs.uint_reg(arg2));
+                    break;
+                case Opcode::DIV_R_R_R:
+                    // reg[arg1] = reg[arg2] / reg[arg3]
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    arg3 = next_pc_uint();
+                    _regs.uint_reg(arg1, _regs.uint_reg(arg2) / _regs.uint_reg(arg3));
+                    break;
+                case Opcode::DIV_R_I_R:
+                    // reg[arg1] = arg2 / reg[arg3]
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    arg3 = next_pc_uint();
+                    _regs.uint_reg(arg1, arg2 / _regs.uint_reg(arg3));
+                    break;
+                case Opcode::DIV_R_R_I:
+                    // reg[arg1] = reg[arg2] / arg3
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    arg3 = next_pc_uint();
+                    _regs.uint_reg(arg1, _regs.uint_reg(arg2) / arg3);
+                    break;
+                case Opcode::DIV_R_I:
+                    // reg[arg1] /= arg2
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    _regs.uint_reg(arg1, _regs.uint_reg(arg1) / arg2);
+                    break;
+                // }}}
+
+                // DIVF Commands {{{
+                case Opcode::DIVF_R_R:
+                    // reg[arg1] /= reg[arg2]
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    _regs.float_reg(arg1, _regs.float_reg(arg1) / _regs.float_reg(arg2));
+                    break;
+                case Opcode::DIVF_R_R_R:
+                    // reg[arg1] = reg[arg2] / reg[arg3]
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    arg3 = next_pc_uint();
+                    _regs.float_reg(arg1, _regs.float_reg(arg2) / _regs.float_reg(arg3));
+                    break;
+                case Opcode::DIVF_R_I_R:
+                    // reg[arg1] = arg2 / reg[arg3]
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    arg3 = next_pc_uint();
+                    _regs.float_reg(arg1, arg2 / _regs.float_reg(arg3));
+                    break;
+                case Opcode::DIVF_R_R_I:
+                    // reg[arg1] = reg[arg2] / arg3
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    arg3 = next_pc_uint();
+                    _regs.float_reg(arg1, _regs.float_reg(arg2) / arg3);
+                    break;
+                case Opcode::DIVF_R_I:
+                    // reg[arg1] /= arg2
+                    arg1 = next_pc_uint();
+                    farg2 = next_pc_float();
+                    _regs.float_reg(arg1, _regs.float_reg(arg1) / arg2);
+                    break;
+                // }}}
+
+                // Rotate Right/Left Commands {{{
+                case Opcode::ROR_R:
+                    arg1 = next_pc_uint();
+                    arg2 = _regs.uint_reg(arg1);
+                    _regs.uint_reg(arg1, (arg2 << 1) | (arg2 >> (sizeof(uint32_t) << 3)));
+                    break;
+                case Opcode::ROR_R_R:
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    arg3 = _regs.uint_reg(arg2);
+                    _regs.uint_reg(arg1, (arg3 << 1) | (arg3 >> (sizeof(uint32_t) << 3)));
+                    break;
+                case Opcode::ROL_R:
+                    arg1 = next_pc_uint();
+                    arg2 = _regs.uint_reg(arg1);
+                    _regs.uint_reg(arg1, (arg2 >> 1) | (arg2 << (sizeof(uint32_t) << 3)));
+                    break;
+                case Opcode::ROL_R_R:
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    arg3 = _regs.uint_reg(arg2);
+                    _regs.uint_reg(arg1, (arg3 >> 1) | (arg3 << (sizeof(uint32_t) << 3)));
+                    break;
+                // }}}
+
+                // Shift Right/Left Commands {{{
+                case Opcode::SHR_R:
+                    arg1 = next_pc_uint();
+                    _regs.uint_reg(arg1, _regs.uint_reg(arg1) << 1);
+                    break;
+                case Opcode::SHR_R_R:
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    _regs.uint_reg(arg1, _regs.uint_reg(arg2) << 1);
+                    break;
+                case Opcode::SHL_R:
+                    arg1 = next_pc_uint();
+                    _regs.uint_reg(arg1, _regs.uint_reg(arg1) >> 1);
+                    break;
+                case Opcode::SHL_R_R:
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    _regs.uint_reg(arg1, _regs.uint_reg(arg2) >> 1);
+                    break;
+                // }}}
+
                 // Debug commands {{{
                 case Opcode::PRINT_R:
                     arg1 = next_pc_uint();

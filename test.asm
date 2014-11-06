@@ -1,8 +1,11 @@
 ; Test file
+    MOV r11 0x80000000
+    SHR r12 r11
+    SHL r13 r11
     MOV r8 34.5
-    MOV r13 7.23f
+    MOV r15 7.23f
     MOV r0 0
-    MOV r1 32
+    MOV r1 0x20
 start:
     CMP r0 32
     JGE end

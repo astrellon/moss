@@ -9,6 +9,8 @@ namespace moss
         public:
             static void trim_str(std::string &str);
             static bool is_whitespace(char c);
-            static bool is_digit(char c, bool include_float);
+            static bool is_int_digit(char c);
+            static bool is_float_digit(char c);
+            static bool is_hex_digit(char c);
     };
 }

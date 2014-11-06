@@ -4,6 +4,7 @@
 #include "utils.h"
 
 #include <stdlib.h>
+#include <sstream>
 
 namespace moss
 {
@@ -44,24 +45,6 @@ namespace moss
                 {
                     types.push_back(type);
                 }
-                /*
-                std::cout << "- Token: >" << *iter << " | " << Opcode::type_name(type); 
-                if (type == Opcode::REGISTER || type == Opcode::MEMORY)
-                {
-                    std::cout << " | " << get_register_value(*iter);
-                }
-                else if (type == Opcode::INT_NUMBER)
-                {
-                    uint32_t value = static_cast<uint32_t>(std::stol(*iter));
-                    std::cout << " | " << value;
-                }
-                else if (type == Opcode::FLOAT_NUMBER)
-                {
-                    float value = static_cast<float>(std::stof(*iter));
-                    std::cout << " | " << value;
-                }
-                std::cout << "\n";
-                */
             }
 
             if (first_type == Opcode::COMMAND)
@@ -69,7 +52,6 @@ namespace moss
                 auto command_name = Opcode::build_command_name(line[0], types);
                 auto command = Opcode::find_command(command_name); 
                 
-                //std::cout << "- Line command: " << command_name << "\n";
                 writeU(command);
 
                 for (auto i = 1u; i < line.size(); i++)
@@ -77,7 +59,7 @@ namespace moss
                     switch (types[i - 1])
                     {
                         case Opcode::INT_NUMBER:
-                            writeU(static_cast<uint32_t>(std::stol(line[i])));
+                            writeU(parse_int(line[i]));
                             break;
                         case Opcode::FLOAT_NUMBER:
                             writeF(static_cast<float>(std::stof(line[i])));
@@ -166,12 +148,25 @@ namespace moss
             return Opcode::COMMAND;
         }
 
-        if (Utils::is_digit(token[0], true))
+        if (Utils::is_int_digit(token[0]) ||
+            Utils::is_float_digit(token[0]))
         {
             bool is_float = false;
+            bool is_hex = false;
             for (auto i = 1u; i < token.size(); ++i)
             {
-                if (!Utils::is_digit(token[i], true))
+                if (i == 1u && token[1u] == 'x')
+                {
+                    if (token[0] == '0')
+                    {
+                        is_hex = true;
+                        continue;
+                    }
+                    return Opcode::UNKNOWN_TYPE;
+                }
+                if (!Utils::is_int_digit(token[i]) &&
+                    !Utils::is_float_digit(token[i]) &&
+                    !Utils::is_hex_digit(token[i]))
                 {
                     return Opcode::UNKNOWN_TYPE;
                 }
@@ -180,9 +175,15 @@ namespace moss
                     is_float = true;
                 }
             }
+            
+            if (is_float && is_hex)
+            {
+                return Opcode::UNKNOWN_TYPE;
+            }
+
             return is_float ? Opcode::FLOAT_NUMBER : Opcode::INT_NUMBER;
         }
-        if (token[0] == 'r' && Utils::is_digit(token[1], false))
+        if (token[0] == 'r' && Utils::is_int_digit(token[1]))
         {
             if (is_register(token, 0))
             {
@@ -209,7 +210,7 @@ namespace moss
 
         for (auto i = index + 1; i < token.size(); ++i)
         {
-            if (!Utils::is_digit(token[i], false))
+            if (!Utils::is_int_digit(token[i]))
             {
                 return false;
             }
@@ -220,7 +221,7 @@ namespace moss
     uint32_t Assembler::get_register_value(const std::string &value)
     {
         auto index = 0u;
-        while (!Utils::is_digit(value[index], false))
+        while (!Utils::is_int_digit(value[index]))
         {
             ++index;
         }
@@ -229,8 +230,7 @@ namespace moss
             return -1;
         }
 
-        std::string sub = value.substr(index);
-        return static_cast<uint32_t>(std::stol(sub));
+        return parse_int(value.substr(index));
     }
 
     std::string Assembler::process_label(const std::string &token)
@@ -240,5 +240,21 @@ namespace moss
             return token.substr(0, token.size() - 1);
         }
         return token;
+    }
+
+    uint32_t Assembler::parse_int(const std::string &str)
+    {
+        if (str.size() >= 3)
+        {
+            if (str[0] == '0' && str[1] == 'x' && Utils::is_hex_digit(str[2]))
+            {
+                uint32_t result;
+                std::stringstream ss;
+                ss << std::hex << str;
+                ss >> result;
+                return result;
+            }
+        }
+        return static_cast<uint32_t>(std::stol(str));
     }
 }
