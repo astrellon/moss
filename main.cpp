@@ -15,6 +15,8 @@
 #include <fstream>
 #include <exception>
 
+#include <sys/time.h>
+
 int main(int argc, char **argv)
 {
     moss::Memory mem(1024u);
@@ -41,8 +43,8 @@ int main(int argc, char **argv)
     }
 
     moss::Assembler assembler;
-    std::ifstream input_ss("test.asm");
-    assembler.process_stream(std::string("test.asm"), input_ss);
+    std::ifstream input_ss("test2.asm");
+    assembler.process_stream(std::string("test2.asm"), input_ss);
     assembler.finalise();
     assembler.write_to_memory<moss::Mmu>(&cpu.mmu(), 64);
 
@@ -51,7 +53,16 @@ int main(int argc, char **argv)
 
     try
     {
+        struct timeval start, end;
+        gettimeofday(&start, NULL);
         cpu.run();
+        gettimeofday(&end, NULL);
+
+        long seconds  = end.tv_sec  - start.tv_sec;
+        long useconds = end.tv_usec - start.tv_usec;
+        long mtime = ((seconds) * 1000 + useconds/1000.0) + 0.5;
+
+        printf("Time taken: %ld m\n", mtime);
     }
     catch (std::exception e)
     {

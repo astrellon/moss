@@ -33,38 +33,40 @@ namespace moss
         _memory = memory;
     }
 
-    int32_t Mmu::int_data(uint32_t index) const
-    {
-        return _memory->int_data(translate_index(index));
-    }
-    void Mmu::int_data(uint32_t index, int32_t value)
-    {
-        _memory->int_data(translate_index(index), value);
-    }
-    uint32_t Mmu::uint_data(uint32_t index) const
-    {
-        return _memory->uint_data(translate_index(index));
-    }
-    void Mmu::uint_data(uint32_t index, uint32_t value)
-    {
-        _memory->uint_data(translate_index(index), value);
-    }
-    float Mmu::float_data(uint32_t index) const
-    {
-        return _memory->float_data(translate_index(index));
-    }
-    void Mmu::float_data(uint32_t index, float value)
-    {
-        _memory->float_data(translate_index(index), value);
-    }
-
-    uint32_t Mmu::translate_index(uint32_t index) const
-    {
-        uint32_t page = index >> _page_bit_size;
-        uint32_t index_offset = index & _page_bit_mask;;
-        uint32_t translated = _memory->uint_data(_table_pointer + page);
-        return (translated << _page_bit_size) + index_offset;
-    }
+/*
+ *    int32_t Mmu::int_data(uint32_t index) const
+ *    {
+ *        return _memory->int_data(translate_index(index));
+ *    }
+ *    void Mmu::int_data(uint32_t index, int32_t value)
+ *    {
+ *        _memory->int_data(translate_index(index), value);
+ *    }
+ *    uint32_t Mmu::uint_data(uint32_t index) const
+ *    {
+ *        return _memory->uint_data(translate_index(index));
+ *    }
+ *    void Mmu::uint_data(uint32_t index, uint32_t value)
+ *    {
+ *        _memory->uint_data(translate_index(index), value);
+ *    }
+ *    float Mmu::float_data(uint32_t index) const
+ *    {
+ *        return _memory->float_data(translate_index(index));
+ *    }
+ *    void Mmu::float_data(uint32_t index, float value)
+ *    {
+ *        _memory->float_data(translate_index(index), value);
+ *    }
+ *
+ *    uint32_t Mmu::translate_index(uint32_t index) const
+ *    {
+ *        uint32_t page = index >> _page_bit_size;
+ *        uint32_t index_offset = index & _page_bit_mask;;
+ *        uint32_t translated = _memory->uint_data(_table_pointer + page);
+ *        return (translated << _page_bit_size) + index_offset;
+ *    }
+ */
     
     void Mmu::to_stream(std::ostream &os, bool in_virtual, uint32_t start, uint32_t end) const
     {

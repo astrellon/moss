@@ -69,6 +69,7 @@ namespace moss
         _regs.to_stream(os);
     }
 
+    /*
     uint32_t Cpu::next_pc_uint()
     {
         return _mmu.uint_data(_regs.program_counter_inc());
@@ -81,6 +82,7 @@ namespace moss
     {
         return _mmu.float_data(_regs.program_counter_inc());
     }
+    */
 
     void Cpu::push_stack(uint32_t value)
     {

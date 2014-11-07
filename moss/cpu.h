@@ -37,9 +37,18 @@ namespace moss
             Mmu _mmu;
             Memory *_memory;
 
-            uint32_t next_pc_uint();
-            int32_t next_pc_int();
-            float next_pc_float();
+            inline uint32_t next_pc_uint()
+            {
+                return _mmu.uint_data(_regs.program_counter_inc());
+            }
+            inline int32_t next_pc_int()
+            {
+                return _mmu.int_data(_regs.program_counter_inc());
+            }
+            inline float next_pc_float()
+            {
+                return _mmu.float_data(_regs.program_counter_inc());
+            }
 
             void do_run();
 
