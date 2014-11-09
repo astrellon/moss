@@ -1,13 +1,9 @@
 #include <iostream>
 
-#include "moss/cpu.h"
+#include "moss/cpu_arm.h"
 #include "moss/memory.h"
 #include "moss/memory_writer.h"
-#include "moss/tokeniser.h"
-#include "moss/registers.h"
-#include "moss/common.h"
 #include "moss/assembler.h"
-#include "moss/opcode.h"
 #include "moss/disassembler.h"
 
 #include <string>
@@ -31,7 +27,7 @@ int main(int argc, char **argv)
     mem.uint_data(3, 8);
     mem.uint_data(8, 3);
 
-    moss::Cpu cpu(4u);
+    moss::CpuArm cpu(4u);
 
     cpu.registers().program_counter(64);
     cpu.memory(&mem);

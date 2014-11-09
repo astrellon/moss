@@ -4,6 +4,7 @@
 #include <array>
 #include <iostream>
 #include "common.h"
+#include "opcode_arm.h"
 
 namespace moss
 {
@@ -16,10 +17,12 @@ namespace moss
 
             uint32_t flags() const;
 
-            bool zero_flag() const;
-            void zero_flag(bool flag);
-            bool neg_flag() const;
-            void neg_flag(bool flag);
+            /*
+             *bool zero_flag() const;
+             *void zero_flag(bool flag);
+             *bool neg_flag() const;
+             *void neg_flag(bool flag);
+             */
 
             /*
                uint32_t num_word_reg() const;
@@ -42,12 +45,6 @@ namespace moss
             void stack_pointer(uint32_t value);
 
             void to_stream(std::ostream &os) const;
-
-            enum FlagBits
-            {
-                ZERO_FLAG = 0x01,
-                NEG_FLAG = 0x02
-            };
 
         private:
             uint32_t _flags;
@@ -104,6 +101,23 @@ namespace moss
             inline void change_program_counter(int32_t value)
             {
                 _program_counter += value;
+            }
+    
+            inline bool zero_flag() const
+            {
+                return (_flags & OpcodeArm::FLAG_ZERO) > 0;
+            }
+            inline void zero_flag(bool flag)
+            {
+                _flags = flag ? _flags | OpcodeArm::FLAG_ZERO : _flags & ~(OpcodeArm::FLAG_ZERO);
+            }
+            inline bool neg_flag() const
+            {
+                return (_flags & OpcodeArm::FLAG_NEGATIVE) > 0;
+            }
+            inline void neg_flag(bool flag)
+            {
+                _flags = flag ? _flags | OpcodeArm::FLAG_NEGATIVE : _flags & ~(OpcodeArm::FLAG_NEGATIVE);
             }
     };
 }

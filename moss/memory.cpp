@@ -22,42 +22,6 @@ namespace moss
         }
     }
 
-/*
- *    
- *    uint32_t Memory::size() const
- *    {
- *        return _size;
- *    }
- *
- *    // INT
- *    int32_t Memory::int_data(uint32_t index) const
- *    {
- *        return _data.at(index).i;
- *    }
- *    void Memory::int_data(uint32_t index, int32_t value)
- *    {
- *        _data[index].i = value;
- *    }
- *    // UINT
- *    uint32_t Memory::uint_data(uint32_t index) const
- *    {
- *        return _data.at(index).u;
- *    }
- *    void Memory::uint_data(uint32_t index, uint32_t value)
- *    {
- *        _data[index].u = value;
- *    }
- *    // FLOAT
- *    float Memory::float_data(uint32_t index) const
- *    {
- *        return _data.at(index).f;
- *    }
- *    void Memory::float_data(uint32_t index, float value)
- *    {
- *        _data[index].f = value;
- *    }
- */
-
     void Memory::to_stream(std::ostream &os, uint32_t start, uint32_t end) const
     {
         if (end > size())

@@ -9,7 +9,6 @@ namespace moss
     class Opcode
     {
         public:
-
             // List of codes {{{
             enum Command
             {

@@ -26,22 +26,24 @@ namespace moss
         return _flags;
     }
 
-    bool Registers::zero_flag() const
-    {
-        return (_flags & ZERO_FLAG) > 0;
-    }
-    void Registers::zero_flag(bool flag)
-    {
-        _flags = flag ? _flags | ZERO_FLAG : _flags & ~(ZERO_FLAG);
-    }
-    bool Registers::neg_flag() const
-    {
-        return (_flags & NEG_FLAG) > 0;
-    }
-    void Registers::neg_flag(bool flag)
-    {
-        _flags = flag ? _flags | NEG_FLAG : _flags & ~(NEG_FLAG);
-    }
+    /*
+     *bool Registers::zero_flag() const
+     *{
+     *    return (_flags & ZERO_FLAG) > 0;
+     *}
+     *void Registers::zero_flag(bool flag)
+     *{
+     *    _flags = flag ? _flags | ZERO_FLAG : _flags & ~(ZERO_FLAG);
+     *}
+     *bool Registers::neg_flag() const
+     *{
+     *    return (_flags & NEG_FLAG) > 0;
+     *}
+     *void Registers::neg_flag(bool flag)
+     *{
+     *    _flags = flag ? _flags | NEG_FLAG : _flags & ~(NEG_FLAG);
+     *}
+     */
 
     /*
     uint32_t Registers::num_word_reg() const
