@@ -10,11 +10,11 @@ namespace moss
 {
     class Memory;
 
-    class Cpu
+    class CpuArm
     {
         public:
-            Cpu(uint32_t page_bit_size);
-            ~Cpu();
+            CpuArm(uint32_t page_bit_size);
+            ~CpuArm();
 
             Registers &registers();
             const Registers &registers() const;

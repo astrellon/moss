@@ -98,8 +98,8 @@ CFLAGS  = -g -O0
 CXXFLAGS= -g -O0
 
 ifdef RELEASE
-	CFLAGS =   -O2
-	CXXFLAGS = -O2
+	CFLAGS =   -O3
+	CXXFLAGS = -O3
 endif
 
 # The C program compiler.

@@ -1,4 +1,4 @@
-#include "cpu.h"
+#include "cpu_arm.h"
 
 #include <iostream>
 
@@ -8,100 +8,85 @@
 
 namespace moss
 {
-    uint32_t Cpu::s_int_bit_shift = (sizeof(uint32_t) << 3) - 1;
-    Cpu::Cpu(uint32_t page_bit_size) :
+    uint32_t CpuArm::s_int_bit_shift = (sizeof(uint32_t) << 3) - 1;
+    CpuArm::CpuArm(uint32_t page_bit_size) :
         _running(false),
         _mmu(page_bit_size),
         _memory(nullptr)
     {
         _regs.zero();
     }
-    Cpu::~Cpu()
+    CpuArm::~CpuArm()
     {
         stop();
     }
 
-    Registers &Cpu::registers()
+    Registers &CpuArm::registers()
     {
         return _regs;
     }
-    const Registers &Cpu::registers() const
+    const Registers &CpuArm::registers() const
     {
         return _regs;
     }
 
-    Mmu &Cpu::mmu()
+    Mmu &CpuArm::mmu()
     {
         return _mmu;
     }
-    const Mmu &Cpu::mmu() const
+    const Mmu &CpuArm::mmu() const
     {
         return _mmu;
     }
 
-    Memory *Cpu::memory() const
+    Memory *CpuArm::memory() const
     {
         return _memory;
     }
-    void Cpu::memory(Memory *memory)
+    void CpuArm::memory(Memory *memory)
     {
         _memory = memory;
         _mmu.memory(memory);
     }
 
-    void Cpu::run()
+    void CpuArm::run()
     {
         _running = true;
         do_run();
     }
-    void Cpu::stop()
+    void CpuArm::stop()
     {
         _running = false;
     }
-    bool Cpu::is_running() const
+    bool CpuArm::is_running() const
     {
         return _running;
     }
 
-    void Cpu::to_stream(std::ostream &os) const
+    void CpuArm::to_stream(std::ostream &os) const
     {
-        os << "Cpu running: " << is_running() << "\n";
+        os << "CpuArm running: " << is_running() << "\n";
         _regs.to_stream(os);
     }
 
-    /*
-    uint32_t Cpu::next_pc_uint()
-    {
-        return _mmu.uint_data(_regs.program_counter_inc());
-    }
-    int32_t Cpu::next_pc_int()
-    {
-        return _mmu.int_data(_regs.program_counter_inc());
-    }
-    float Cpu::next_pc_float()
-    {
-        return _mmu.float_data(_regs.program_counter_inc());
-    }
-    */
-
-    void Cpu::push_stack(uint32_t value)
+    void CpuArm::push_stack(uint32_t value)
     {
         _mmu.uint_data(_regs.stack_pointer_push(), value);
     }
-    uint32_t Cpu::pop_stack()
+    uint32_t CpuArm::pop_stack()
     {
         return _mmu.uint_data(_regs.stack_pointer_pop());
     }
-    void Cpu::push_stack_float(float value)
+    void CpuArm::push_stack_float(float value)
     {
         _mmu.float_data(_regs.stack_pointer_push(), value);
     }
-    float Cpu::pop_stack_float()
+    float CpuArm::pop_stack_float()
     {
         return _mmu.float_data(_regs.stack_pointer_pop());
     }
 
-    void Cpu::do_run()
+    void CpuArm::do_run()
     {
         float farg1 = 0.0f;
         float farg2 = 0.0f;
@@ -113,6 +98,17 @@ namespace moss
         while (_running)
         {
             uint32_t opcode = next_pc_uint();
+            bool meets_condition = opcode < OpcodeArm::FLAG_HAS_CONDITION;
+            if (!meets_condition)
+            {
+                // Change to switch case with the conditional flags, need
+                // a meets_condition for each code path.
+                /*
+                 *uint32_t flagged = opcode & OpcodeArm::FLAG_ALL;
+                 *meets_condition = (flagged & _regs.flags()) == flagged;
+                 */
+            }
+
             switch (opcode)
             {
                 // Error or Halt {{{

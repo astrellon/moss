@@ -26,23 +26,26 @@ namespace moss
         return _flags;
     }
 
-    bool Registers::zero_flag() const
-    {
-        return (_flags & ZERO_FLAG) > 0;
-    }
-    void Registers::zero_flag(bool flag)
-    {
-        _flags = flag ? _flags | ZERO_FLAG : _flags & ~(ZERO_FLAG);
-    }
-    bool Registers::neg_flag() const
-    {
-        return (_flags & NEG_FLAG) > 0;
-    }
-    void Registers::neg_flag(bool flag)
-    {
-        _flags = flag ? _flags | NEG_FLAG : _flags & ~(NEG_FLAG);
-    }
+    /*
+     *bool Registers::zero_flag() const
+     *{
+     *    return (_flags & ZERO_FLAG) > 0;
+     *}
+     *void Registers::zero_flag(bool flag)
+     *{
+     *    _flags = flag ? _flags | ZERO_FLAG : _flags & ~(ZERO_FLAG);
+     *}
+     *bool Registers::neg_flag() const
+     *{
+     *    return (_flags & NEG_FLAG) > 0;
+     *}
+     *void Registers::neg_flag(bool flag)
+     *{
+     *    _flags = flag ? _flags | NEG_FLAG : _flags & ~(NEG_FLAG);
+     *}
+     */
 
+    /*
     uint32_t Registers::num_word_reg() const
     {
         return static_cast<uint32_t>(_word_regs.size());
@@ -54,10 +57,6 @@ namespace moss
     }
     void Registers::int_reg(uint32_t index, int32_t value)
     {
-        if (index >= num_word_reg())
-        {
-            throw std::out_of_range("Out of register bounds");
-        }
         _word_regs[index].i = value;
     }
     // UINT
@@ -67,10 +66,6 @@ namespace moss
     }
     void Registers::uint_reg(uint32_t index, uint32_t value)
     {
-        if (index >= num_word_reg())
-        {
-            throw std::out_of_range("Out of register bounds");
-        }
         _word_regs[index].u = value;
     }
     // FLOAT
@@ -80,10 +75,6 @@ namespace moss
     }
     void Registers::float_reg(uint32_t index, float value)
     {
-        if (index >= num_word_reg())
-        {
-            throw std::out_of_range("Out of register bounds");
-        }
         _word_regs[index].f = value;
     }
 
@@ -103,6 +94,7 @@ namespace moss
     {
         _program_counter += value;
     }
+    */
 
     uint32_t Registers::stack_pointer() const
     {

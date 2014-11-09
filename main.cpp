@@ -1,19 +1,17 @@
 #include <iostream>
 
-#include "moss/cpu.h"
+#include "moss/cpu_arm.h"
 #include "moss/memory.h"
 #include "moss/memory_writer.h"
-#include "moss/tokeniser.h"
-#include "moss/registers.h"
-#include "moss/common.h"
 #include "moss/assembler.h"
-#include "moss/opcode.h"
 #include "moss/disassembler.h"
 
 #include <string>
 #include <sstream>
 #include <fstream>
 #include <exception>
+
+#include <sys/time.h>
 
 int main(int argc, char **argv)
 {
@@ -29,7 +27,7 @@ int main(int argc, char **argv)
     mem.uint_data(3, 8);
     mem.uint_data(8, 3);
 
-    moss::Cpu cpu(4u);
+    moss::CpuArm cpu(4u);
 
     cpu.registers().program_counter(64);
     cpu.memory(&mem);
@@ -41,8 +39,8 @@ int main(int argc, char **argv)
     }
 
     moss::Assembler assembler;
-    std::ifstream input_ss("test.asm");
-    assembler.process_stream(std::string("test.asm"), input_ss);
+    std::ifstream input_ss("test2.asm");
+    assembler.process_stream(std::string("test2.asm"), input_ss);
     assembler.finalise();
     assembler.write_to_memory<moss::Mmu>(&cpu.mmu(), 64);
 
@@ -50,7 +48,16 @@ int main(int argc, char **argv)
 
     try
     {
+        struct timeval start, end;
+        gettimeofday(&start, NULL);
         cpu.run();
+        gettimeofday(&end, NULL);
+
+        long seconds  = end.tv_sec  - start.tv_sec;
+        long useconds = end.tv_usec - start.tv_usec;
+        long mtime = ((seconds) * 1000 + useconds/1000.0) + 0.5;
+
+        printf("Time taken: %ld m\n", mtime);
     }
     catch (std::exception e)
     {
