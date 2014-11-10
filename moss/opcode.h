@@ -143,6 +143,22 @@ namespace moss
                 CONDITION
             };
             // }}}
+            
+            // List of Conditionals {{{
+            enum Conditionals
+            {
+                COND_UNKNOWN =      0x0,
+                COND_NONE =         0x1,
+                COND_ANY =           1 << 28, 
+                COND_EQ =            2 << 28, 
+                COND_NE =            3 << 28, 
+                COND_LT =            4 << 28, 
+                COND_LE =            5 << 28, 
+                COND_GT =            6 << 28, 
+                COND_GE =            7 << 28,
+                COND_ALL =          0xF0000000
+            };
+            // }}}
 
             static Command find_command(const std::string &command_name);
             static std::string build_command_name(const std::string &command, 
@@ -150,11 +166,16 @@ namespace moss
 
             static std::pair<std::string, std::vector<Type> > get_opcode_types(Command command);
             static std::string type_name(Type type);
+
+            static Conditionals find_conditional(const std::string &str);
+            static std::string conditional_name(Conditionals cond);
+            static std::string conditional_name(uint32_t cond);
             
         private:
             static std::map<std::string, Command> s_names_to_commands;
             static std::map<Command, std::pair<std::string, std::vector<Type> > > s_commands_to_types;
             static std::map<Type, std::string> s_type_names;
             static std::map<Type, std::string> s_type_codes;
+            static std::map<std::string, Conditionals> s_conditional_suffix;
     };
 }

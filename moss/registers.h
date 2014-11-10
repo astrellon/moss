@@ -4,7 +4,6 @@
 #include <array>
 #include <iostream>
 #include "common.h"
-#include "opcode_arm.h"
 
 namespace moss
 {
@@ -16,28 +15,6 @@ namespace moss
             void zero();
 
             uint32_t flags() const;
-
-            /*
-             *bool zero_flag() const;
-             *void zero_flag(bool flag);
-             *bool neg_flag() const;
-             *void neg_flag(bool flag);
-             */
-
-            /*
-               uint32_t num_word_reg() const;
-               int32_t int_reg(uint32_t index) const;
-               void int_reg(uint32_t index, int32_t value);
-               uint32_t uint_reg(uint32_t index) const;
-               void uint_reg(uint32_t index, uint32_t value);
-               float float_reg(uint32_t index) const;
-               void float_reg(uint32_t index, float value);
-
-               uint32_t program_counter() const;
-               uint32_t program_counter_inc();
-               void program_counter(uint32_t value);
-               void change_program_counter(int32_t value);
-               */
 
             uint32_t stack_pointer() const;
             uint32_t stack_pointer_push();

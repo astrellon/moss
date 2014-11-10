@@ -1,7 +1,6 @@
 #include "disassembler.h"
 
 #include "opcode.h"
-#include "opcode_arm.h"
 #include "mmu.h"
 
 #include <iomanip>
@@ -13,11 +12,11 @@ namespace moss
         for (auto i = start; i < end; ++i)
         {
             auto code = mmu->uint_data(i);
-            if (code > OpcodeArm::COND_ANY)
+            if (code > Opcode::COND_ANY)
             {
-                auto cond = code & OpcodeArm::COND_ALL;
-                auto cond_name = OpcodeArm::get_conditional(cond);
-                code &= ~(OpcodeArm::COND_ALL);
+                auto cond = code & Opcode::COND_ALL;
+                auto cond_name = Opcode::conditional_name(cond);
+                code &= ~(Opcode::COND_ALL);
                 std::cout << std::setw(3) << cond_name << ' ';
             }
             else

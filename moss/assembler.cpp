@@ -32,7 +32,7 @@ namespace moss
             auto line = _tokens->next_token_line();
             std::cout << "New line\n";
             Opcode::Type first_type = Opcode::UNKNOWN_TYPE;
-            OpcodeArm::Conditionals condition = OpcodeArm::COND_NONE;
+            Opcode::Conditionals condition = Opcode::COND_NONE;
             uint32_t type_index = 0;
 
             std::vector<Opcode::Type> types;
@@ -44,7 +44,7 @@ namespace moss
                 
                 if (type == Opcode::CONDITION)
                 {
-                    condition = OpcodeArm::get_conditional(*iter);
+                    condition = Opcode::find_conditional(*iter);
                     type_index = 1;
                 }
                 else if (first)
@@ -62,7 +62,7 @@ namespace moss
             {
                 auto command_name = Opcode::build_command_name(line[type_index], types);
                 uint32_t command = static_cast<uint32_t>(Opcode::find_command(command_name)); 
-                if (condition != OpcodeArm::COND_NONE)
+                if (condition != Opcode::COND_NONE)
                 {
                     std::cout << "- Before cond: " << std::hex << command;
                     command |= static_cast<uint32_t>(condition);
@@ -162,7 +162,7 @@ namespace moss
 
         if (is_first_token)
         {
-            if (OpcodeArm::get_conditional(token) != OpcodeArm::COND_UNKNOWN)
+            if (Opcode::find_conditional(token) != Opcode::COND_UNKNOWN)
             {
                 return Opcode::CONDITION;
             }

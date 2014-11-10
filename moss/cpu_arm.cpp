@@ -98,32 +98,32 @@ namespace moss
         while (_running)
         {
             uint32_t opcode = next_pc_uint();
-            bool meets_condition = opcode < OpcodeArm::COND_ANY;
+            bool meets_condition = opcode < Opcode::COND_ANY;
             if (!meets_condition)
             {
                 // Change to switch case with the conditional flags, need
                 // a meets_condition for each code path.
-                uint32_t conds = opcode & OpcodeArm::COND_ALL;
-                opcode &= ~(OpcodeArm::COND_ALL);
+                uint32_t conds = opcode & Opcode::COND_ALL;
+                opcode &= ~(Opcode::COND_ALL);
                 
                 switch (conds)
                 {
-                    case OpcodeArm::COND_EQ:
+                    case Opcode::COND_EQ:
                         meets_condition = _regs.zero_flag();
                         break;
-                    case OpcodeArm::COND_NE:
+                    case Opcode::COND_NE:
                         meets_condition = !_regs.zero_flag();
                         break;
-                    case OpcodeArm::COND_LT:
+                    case Opcode::COND_LT:
                         meets_condition = _regs.neg_flag() && !_regs.zero_flag();
                         break;
-                    case OpcodeArm::COND_LE:
+                    case Opcode::COND_LE:
                         meets_condition = _regs.neg_flag() || _regs.zero_flag();
                         break;
-                    case OpcodeArm::COND_GT:
+                    case Opcode::COND_GT:
                         meets_condition = !_regs.neg_flag() && !_regs.zero_flag();
                         break;;
-                    case OpcodeArm::COND_GE:
+                    case Opcode::COND_GE:
                         meets_condition = !_regs.neg_flag() || _regs.zero_flag();
                         break;
                     default:

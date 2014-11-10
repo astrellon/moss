@@ -35,6 +35,32 @@ namespace moss
     {
         return s_commands_to_types[command];
     }
+    
+    Opcode::Conditionals Opcode::find_conditional(const std::string &str)
+    {
+        auto find = s_conditional_suffix.find(str);
+        if (find == s_conditional_suffix.end())
+        {
+            return COND_UNKNOWN;
+        }
+
+        return find->second;
+    }
+    std::string Opcode::conditional_name(Opcode::Conditionals cond)
+    {
+        return conditional_name(static_cast<uint32_t>(cond));
+    }
+    std::string Opcode::conditional_name(uint32_t cond)
+    {
+        for (auto iter = s_conditional_suffix.begin(); iter != s_conditional_suffix.end(); ++iter)
+        {
+            if (iter->second == cond)
+            {
+                return iter->first;
+            }
+        }
+        return std::string("Unknown conditional");
+    }
 
     std::map<std::string, Opcode::Command> Opcode::s_names_to_commands = {
         { std::string("HALT"), Opcode::HALT },
@@ -290,5 +316,22 @@ namespace moss
         { Opcode::LABEL, std::string("I") },
         { Opcode::NUMBER, std::string("I") },
         { Opcode::CONDITION, std::string("Condition") }
+    };
+    
+    std::map<std::string, Opcode::Conditionals> Opcode::s_conditional_suffix = {
+        { "EQ", Opcode::COND_EQ },
+        { "==", Opcode::COND_EQ },
+        { "NE", Opcode::COND_NE },
+        { "!=", Opcode::COND_NE },
+
+        { "LT", Opcode::COND_LT },
+        { "<",  Opcode::COND_LT },
+        { "LE", Opcode::COND_LE },
+        { "<=", Opcode::COND_LE },
+        
+        { "GT", Opcode::COND_GT },
+        { ">",  Opcode::COND_GT },
+        { "GE", Opcode::COND_GE },
+        { ">=", Opcode::COND_GE }
     };
 }

@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include "moss/cpu.h"
 #include "moss/cpu_arm.h"
 #include "moss/memory.h"
 #include "moss/memory_writer.h"
@@ -22,12 +23,8 @@ int main(int argc, char **argv)
     {
         mem.uint_data(i, i);
     }
-    mem.uint_data(2, 5);
-    mem.uint_data(5, 2);
-    mem.uint_data(3, 8);
-    mem.uint_data(8, 3);
 
-    moss::CpuArm cpu(4u);
+    moss::Cpu cpu(4u);
 
     cpu.registers().program_counter(64);
     cpu.memory(&mem);
@@ -39,8 +36,8 @@ int main(int argc, char **argv)
     }
 
     moss::Assembler assembler;
-    std::ifstream input_ss("test3.asm");
-    assembler.process_stream(std::string("test3.asm"), input_ss);
+    std::ifstream input_ss("test2.asm");
+    assembler.process_stream(std::string("test2.asm"), input_ss);
     assembler.finalise();
     assembler.write_to_memory<moss::Mmu>(&cpu.mmu(), 64);
 
