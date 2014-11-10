@@ -1,6 +1,7 @@
 #include "disassembler.h"
 
 #include "opcode.h"
+#include "opcode_arm.h"
 #include "mmu.h"
 
 #include <iomanip>
@@ -12,16 +13,23 @@ namespace moss
         for (auto i = start; i < end; ++i)
         {
             auto code = mmu->uint_data(i);
+            if (code > OpcodeArm::COND_ANY)
+            {
+                auto cond = code & OpcodeArm::COND_ALL;
+                auto cond_name = OpcodeArm::get_conditional(cond);
+                code &= ~(OpcodeArm::COND_ALL);
+                std::cout << cond_name << ' ';
+            }
             auto types = Opcode::get_opcode_types(static_cast<Opcode::Command>(code));
 
             std::cout << std::setw(8) << i << " - " << types.first;
 
             if (types.second.size() > 0)
             {
-                std::cout << ":";
+                std::cout << ':';
                 for (auto iter = types.second.begin(); iter != types.second.end(); ++iter)
                 {
-                    std::cout << " ";
+                    std::cout << ' ';
                     switch (*iter)
                     {
                         case Opcode::INT_NUMBER:
@@ -31,9 +39,9 @@ namespace moss
                             std::cout << mmu->float_data(++i);
                             break;
                         case Opcode::MEMORY:
-                            std::cout << "@";
+                            std::cout << '@';
                         case Opcode::REGISTER:
-                            std::cout << "r" << mmu->uint_data(++i);
+                            std::cout << 'r' << mmu->uint_data(++i);
                             break;
                         case Opcode::NUMBER:
                             ++i;

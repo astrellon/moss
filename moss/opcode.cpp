@@ -74,18 +74,6 @@ namespace moss
         // Branching {{{
         { std::string("JMP_R"),  Opcode::JMP_R },
         { std::string("JMP_I"),  Opcode::JMP_I },
-        { std::string("JNE_R"),  Opcode::JNE_R },
-        { std::string("JNE_I"),  Opcode::JNE_I },
-        { std::string("JEQ_R"),  Opcode::JEQ_R },
-        { std::string("JEQ_I"),  Opcode::JEQ_I },
-        { std::string("JLT_R"),  Opcode::JLT_R },
-        { std::string("JLT_I"),  Opcode::JLT_I },
-        { std::string("JLE_R"),  Opcode::JLE_R },
-        { std::string("JLE_I"),  Opcode::JLE_I },
-        { std::string("JGT_R"),  Opcode::JGT_R },
-        { std::string("JGT_I"),  Opcode::JGT_I },
-        { std::string("JGE_R"),  Opcode::JGE_R },
-        { std::string("JGE_I"),  Opcode::JGE_I },
         // }}}
         
         // ADD/ADDF {{{
@@ -202,18 +190,6 @@ namespace moss
         // Branching {{{
         { Opcode::JMP_R, { "jmp", { Opcode::REGISTER } } },
         { Opcode::JMP_I, { "jmp", { Opcode::INT_NUMBER } } },
-        { Opcode::JNE_R, { "jne", { Opcode::REGISTER } } },
-        { Opcode::JNE_I, { "jne", { Opcode::INT_NUMBER } } },
-        { Opcode::JEQ_R, { "jeq", { Opcode::REGISTER } } },
-        { Opcode::JEQ_I, { "jeq", { Opcode::INT_NUMBER } } },
-        { Opcode::JLT_R, { "jlt", { Opcode::REGISTER } } },
-        { Opcode::JLT_I, { "jlt", { Opcode::INT_NUMBER } } },
-        { Opcode::JLE_R, { "jle", { Opcode::REGISTER } } },
-        { Opcode::JLE_I, { "jle", { Opcode::INT_NUMBER } } },
-        { Opcode::JGT_R, { "jgt", { Opcode::REGISTER } } },
-        { Opcode::JGT_I, { "jgt", { Opcode::INT_NUMBER } } },
-        { Opcode::JGE_R, { "jge", { Opcode::REGISTER } } },
-        { Opcode::JGE_I, { "jge", { Opcode::INT_NUMBER } } },
         // }}}
         
         // ADD/ADDF {{{
@@ -300,7 +276,8 @@ namespace moss
         { Opcode::REGISTER, std::string("register") },
         { Opcode::MEMORY, std::string("memory") },
         { Opcode::LABEL, std::string("label") },
-        { Opcode::NUMBER, std::string("number") }
+        { Opcode::NUMBER, std::string("number") },
+        { Opcode::CONDITION, std::string("condition") }
     };
     
     std::map<Opcode::Type, std::string> Opcode::s_type_codes = {
@@ -311,6 +288,7 @@ namespace moss
         { Opcode::REGISTER, std::string("R") },
         { Opcode::MEMORY, std::string("M") },
         { Opcode::LABEL, std::string("I") },
-        { Opcode::NUMBER, std::string("I") }
+        { Opcode::NUMBER, std::string("I") },
+        { Opcode::CONDITION, std::string("Condition") }
     };
 }

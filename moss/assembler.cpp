@@ -30,16 +30,25 @@ namespace moss
         while (_tokens->has_tokens())
         {
             auto line = _tokens->next_token_line();
-            //std::cout << "New line\n";
+            std::cout << "New line\n";
             Opcode::Type first_type = Opcode::UNKNOWN_TYPE;
+            OpcodeArm::Conditionals condition = OpcodeArm::COND_NONE;
+
             std::vector<Opcode::Type> types;
+            bool first = true;
             for (auto iter = line.begin(); iter != line.end(); ++iter)
             {
-                bool first = iter == line.begin();
                 Opcode::Type type = get_token_type(*iter, first);
-                if (first)
+                std::cout << "- " << *iter << " | " << Opcode::type_name(type) << "\n";
+                
+                if (type == Opcode::CONDITION)
+                {
+                    condition = OpcodeArm::get_conditional(*iter);
+                }
+                else if (first)
                 {
                     first_type = type;
+                    first = false;
                 }
                 else
                 {
@@ -49,9 +58,20 @@ namespace moss
 
             if (first_type == Opcode::COMMAND)
             {
-                auto command_name = Opcode::build_command_name(line[0], types);
-                auto command = Opcode::find_command(command_name); 
-                
+                uint32_t command = 0;
+                if (condition != OpcodeArm::COND_NONE)
+                {
+                    auto command_name = Opcode::build_command_name(line[1], types);
+                    command = static_cast<uint32_t>(Opcode::find_command(command_name)); 
+                    std::cout << "- Before cond: " << std::hex << command;
+                    command |= static_cast<uint32_t>(condition);
+                    std::cout << " | " << std::hex << command << "\n";
+                }
+                else
+                {
+                    auto command_name = Opcode::build_command_name(line[0], types);
+                    command = static_cast<uint32_t>(Opcode::find_command(command_name)); 
+                }
                 writeU(command);
 
                 for (auto i = 1u; i < line.size(); i++)
@@ -145,6 +165,11 @@ namespace moss
 
         if (is_first_token)
         {
+            if (OpcodeArm::get_conditional(token) != OpcodeArm::COND_UNKNOWN)
+            {
+                return Opcode::CONDITION;
+            }
+
             return Opcode::COMMAND;
         }
 

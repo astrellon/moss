@@ -50,18 +50,6 @@ namespace moss
                 // Branching {{{
                 JMP_R,
                 JMP_I,
-                JNE_R,
-                JNE_I,
-                JEQ_R,
-                JEQ_I,
-                JLT_R,
-                JLT_I,
-                JLE_R,
-                JLE_I,
-                JGT_R,
-                JGT_I,
-                JGE_R,
-                JGE_I,
                 // }}}
 
                 // ADD/ADDF {{{
@@ -151,7 +139,8 @@ namespace moss
                 REGISTER,
                 MEMORY,
                 LABEL,
-                NUMBER
+                NUMBER,
+                CONDITION
             };
             // }}}
 

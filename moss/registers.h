@@ -46,6 +46,14 @@ namespace moss
 
             void to_stream(std::ostream &os) const;
 
+            enum Flags
+            {
+                FLAG_ZERO =     0x1,
+                FLAG_NEGATIVE = 0x2,
+                FLAG_CARRY =    0x4,
+                FLAG_OVERFLOW = 0x8
+            };
+
         private:
             uint32_t _flags;
             uint32_t _stack_pointer;
@@ -105,19 +113,19 @@ namespace moss
     
             inline bool zero_flag() const
             {
-                return (_flags & OpcodeArm::FLAG_ZERO) > 0;
+                return (_flags & FLAG_ZERO) > 0;
             }
             inline void zero_flag(bool flag)
             {
-                _flags = flag ? _flags | OpcodeArm::FLAG_ZERO : _flags & ~(OpcodeArm::FLAG_ZERO);
+                _flags = flag ? _flags | FLAG_ZERO : _flags & ~(FLAG_ZERO);
             }
             inline bool neg_flag() const
             {
-                return (_flags & OpcodeArm::FLAG_NEGATIVE) > 0;
+                return (_flags & FLAG_NEGATIVE) > 0;
             }
             inline void neg_flag(bool flag)
             {
-                _flags = flag ? _flags | OpcodeArm::FLAG_NEGATIVE : _flags & ~(OpcodeArm::FLAG_NEGATIVE);
+                _flags = flag ? _flags | FLAG_NEGATIVE : _flags & ~(FLAG_NEGATIVE);
             }
     };
 }

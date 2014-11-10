@@ -39,13 +39,14 @@ int main(int argc, char **argv)
     }
 
     moss::Assembler assembler;
-    std::ifstream input_ss("test2.asm");
-    assembler.process_stream(std::string("test2.asm"), input_ss);
+    std::ifstream input_ss("test3.asm");
+    assembler.process_stream(std::string("test3.asm"), input_ss);
     assembler.finalise();
     assembler.write_to_memory<moss::Mmu>(&cpu.mmu(), 64);
 
-    moss::Disassembler::to_stream(std::cout, &cpu.mmu(), 64, 110);
+    moss::Disassembler::to_stream(std::cout, &cpu.mmu(), 64, 84);
 
+    /*
     try
     {
         struct timeval start, end;
@@ -69,6 +70,7 @@ int main(int argc, char **argv)
 
     std::cout << "Press enter to continue... ";
 	std::cin.get();
+    */
 
     return 0;
 }
