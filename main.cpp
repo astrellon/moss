@@ -46,7 +46,6 @@ int main(int argc, char **argv)
 
     moss::Disassembler::to_stream(std::cout, &cpu.mmu(), 64, 84);
 
-    /*
     try
     {
         struct timeval start, end;
@@ -67,10 +66,6 @@ int main(int argc, char **argv)
         std::cout << "- Stopped at: " << (cpu.registers().program_counter() - 1) << "\n";
     }
     cpu.to_stream(std::cout);
-
-    std::cout << "Press enter to continue... ";
-	std::cin.get();
-    */
 
     return 0;
 }

@@ -33,6 +33,7 @@ namespace moss
             std::cout << "New line\n";
             Opcode::Type first_type = Opcode::UNKNOWN_TYPE;
             OpcodeArm::Conditionals condition = OpcodeArm::COND_NONE;
+            uint32_t type_index = 0;
 
             std::vector<Opcode::Type> types;
             bool first = true;
@@ -44,6 +45,7 @@ namespace moss
                 if (type == Opcode::CONDITION)
                 {
                     condition = OpcodeArm::get_conditional(*iter);
+                    type_index = 1;
                 }
                 else if (first)
                 {
@@ -58,25 +60,20 @@ namespace moss
 
             if (first_type == Opcode::COMMAND)
             {
-                uint32_t command = 0;
+                auto command_name = Opcode::build_command_name(line[type_index], types);
+                uint32_t command = static_cast<uint32_t>(Opcode::find_command(command_name)); 
                 if (condition != OpcodeArm::COND_NONE)
                 {
-                    auto command_name = Opcode::build_command_name(line[1], types);
-                    command = static_cast<uint32_t>(Opcode::find_command(command_name)); 
                     std::cout << "- Before cond: " << std::hex << command;
                     command |= static_cast<uint32_t>(condition);
                     std::cout << " | " << std::hex << command << "\n";
                 }
-                else
-                {
-                    auto command_name = Opcode::build_command_name(line[0], types);
-                    command = static_cast<uint32_t>(Opcode::find_command(command_name)); 
-                }
+                
                 writeU(command);
 
-                for (auto i = 1u; i < line.size(); i++)
+                for (auto i = type_index + 1; i < line.size(); i++)
                 {
-                    switch (types[i - 1])
+                    switch (types[i - type_index - 1])
                     {
                         case Opcode::INT_NUMBER:
                             writeU(parse_int(line[i]));
@@ -92,7 +89,7 @@ namespace moss
                             writeL(line[i]);
                             break;
                         default:
-                            std::cout << "Unknown opcode type: " << types[i - 1] << "\n";
+                            std::cout << "Unknown opcode type: " << types[i - type_index - 1] << "\n";
                     }
                 }
             }

@@ -18,7 +18,11 @@ namespace moss
                 auto cond = code & OpcodeArm::COND_ALL;
                 auto cond_name = OpcodeArm::get_conditional(cond);
                 code &= ~(OpcodeArm::COND_ALL);
-                std::cout << cond_name << ' ';
+                std::cout << std::setw(3) << cond_name << ' ';
+            }
+            else
+            {
+                std::cout << "    ";
             }
             auto types = Opcode::get_opcode_types(static_cast<Opcode::Command>(code));
 

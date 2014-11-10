@@ -336,17 +336,18 @@ namespace moss
                 // JMP commands {{{
                 case Opcode::JMP_R:
                     // pc = reg[arg1]
+                    arg1 = next_pc_uint();
                     if (meets_condition)
                     {
-                        _regs.program_counter(_regs.uint_reg(next_pc_uint()));
+                        _regs.program_counter(_regs.uint_reg(arg1));
                     }
                     break;
                 case Opcode::JMP_I:
                     // pc += arg1
-
+                    arg1 = next_pc_uint();
                     if (meets_condition)
                     {
-                        _regs.change_program_counter(next_pc_int());
+                        _regs.change_program_counter(arg1);
                     }
                     break;
                 // }}}
