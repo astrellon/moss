@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <array>
 #include <vector>
 
 #include "registers.h"
@@ -9,6 +10,7 @@
 namespace moss
 {
     class Memory;
+    class IPeripheral;
 
     class CpuArm
     {
@@ -31,10 +33,13 @@ namespace moss
 
             void to_stream(std::ostream &os) const;
 
+            void install_peripheral(IPeripheral *perf);
+
         private:
             bool _running;
             Registers _regs;
             Mmu _mmu;
+            std::array<IPeripheral *, 16> _peripherals;
             Memory *_memory;
 
             inline uint32_t next_pc_uint()

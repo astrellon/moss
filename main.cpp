@@ -6,6 +6,7 @@
 #include "moss/memory_writer.h"
 #include "moss/assembler.h"
 #include "moss/disassembler.h"
+#include "moss/test_peripheral.h"
 
 #include <string>
 #include <sstream>
@@ -24,7 +25,10 @@ int main(int argc, char **argv)
         mem.uint_data(i, i);
     }
 
-    moss::Cpu cpu(4u);
+    moss::CpuArm cpu(4u);
+
+    moss::TestPeripheral testPerf;
+    cpu.install_peripheral(&testPerf);
 
     cpu.registers().program_counter(64);
     cpu.memory(&mem);
@@ -36,8 +40,8 @@ int main(int argc, char **argv)
     }
 
     moss::Assembler assembler;
-    std::ifstream input_ss("test2.asm");
-    assembler.process_stream(std::string("test2.asm"), input_ss);
+    std::ifstream input_ss("test3.asm");
+    assembler.process_stream(std::string("test3.asm"), input_ss);
     assembler.finalise();
     assembler.write_to_memory<moss::Mmu>(&cpu.mmu(), 64);
 
@@ -66,3 +70,4 @@ int main(int argc, char **argv)
 
     return 0;
 }
+

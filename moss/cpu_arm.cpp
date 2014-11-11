@@ -5,6 +5,7 @@
 #include "memory.h"
 #include "common.h"
 #include "opcode.h"
+#include "iperipheral.h"
 
 namespace moss
 {
@@ -61,6 +62,10 @@ namespace moss
     bool CpuArm::is_running() const
     {
         return _running;
+    }
+    void CpuArm::install_peripheral(IPeripheral *perf)
+    {
+        _peripherals[0] = perf;
     }
 
     void CpuArm::to_stream(std::ostream &os) const
@@ -823,6 +828,41 @@ namespace moss
                     if (meets_condition)
                     {
                         _regs.uint_reg(arg1, _regs.uint_reg(arg2) >> 1);
+                    }
+                    break;
+                // }}}
+
+                // Peripherals commands {{{
+                case Opcode::SEND_I_I:
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    if (meets_condition)
+                    {
+                        _peripherals[arg1]->send_command(arg2);
+                    }
+                    break;
+                case Opcode::SEND_R_I:
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    if (meets_condition)
+                    {
+                        _peripherals[_regs.uint_reg(arg1)]->send_command(arg2);
+                    }
+                    break;
+                case Opcode::SEND_I_R:
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    if (meets_condition)
+                    {
+                        _peripherals[arg1]->send_command(_regs.uint_reg(arg2));
+                    }
+                    break;
+                case Opcode::SEND_R_R:
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    if (meets_condition)
+                    {
+                        _peripherals[_regs.uint_reg(arg1)]->send_command(_regs.uint_reg(arg2));
                     }
                     break;
                 // }}}

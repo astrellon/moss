@@ -125,6 +125,13 @@ namespace moss
                 SHL_R_R,
                 // }}}
 
+                // Peripherals {{{
+                SEND_I_I,
+                SEND_R_I,
+                SEND_I_R,
+                SEND_R_R,
+                // }}}
+
                 PRINT_R
             };
             // }}}

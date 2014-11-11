@@ -174,6 +174,13 @@ namespace moss
         { std::string("SHL_R"),     Opcode::SHL_R },
         { std::string("SHL_R_R"),   Opcode::SHL_R_R },
         // }}}
+
+        // Peripherals {{{
+        { std::string("SEND_I_I"),  Opcode::SEND_I_I },
+        { std::string("SEND_R_I"),  Opcode::SEND_R_I },
+        { std::string("SEND_I_R"),  Opcode::SEND_I_R },
+        { std::string("SEND_R_R"),  Opcode::SEND_R_R },
+        // }}}
         
         { std::string("PRINT_R"),  Opcode::PRINT_R }
     };
@@ -290,7 +297,14 @@ namespace moss
         { Opcode::SHL_R, { "shl", { Opcode::REGISTER } } },
         { Opcode::SHL_R_R, { "shl", { Opcode::REGISTER, Opcode::REGISTER } } },
         // }}}
-        
+
+        // Peripherals {{{
+        { Opcode::SEND_I_I, { "send", { Opcode::INT_NUMBER, Opcode::NUMBER } } },
+        { Opcode::SEND_R_I, { "send", { Opcode::REGISTER, Opcode::NUMBER } } },
+        { Opcode::SEND_I_R, { "send", { Opcode::INT_NUMBER, Opcode::REGISTER } } },
+        { Opcode::SEND_R_R, { "send", { Opcode::REGISTER, Opcode::REGISTER } } },
+        // }}}
+
         { Opcode::PRINT_R, { "print", { Opcode::INT_NUMBER } } }
     };
     
