@@ -40,7 +40,7 @@ namespace moss
             end = _memory->size();
         }
 
-        os << "Mmu: [" << start << ", " << end << "]\n";
+        os << std::dec << "Mmu: [" << start << ", " << end << "]\n";
         auto j = 0;
         auto p = 0;
         auto page = 0;

@@ -21,6 +21,9 @@ namespace moss
             Registers &registers();
             const Registers &registers() const;
 
+            bool enable_mmu() const;
+            void enable_mmu(bool enable);
+
             Mmu &mmu();
             const Mmu &mmu() const;
 
@@ -37,22 +40,37 @@ namespace moss
 
         private:
             bool _running;
+            bool _enable_mmu;
+            
             Registers _regs;
             Mmu _mmu;
             std::array<IPeripheral *, 16> _peripherals;
+            
             Memory *_memory;
 
             inline uint32_t next_pc_uint()
             {
-                return _mmu.uint_data(_regs.program_counter_inc());
+                if (_regs.enable_mmu())
+                {
+                    return _mmu.uint_data(_regs.program_counter_inc());
+                }
+                return _memory->uint_data(_regs.program_counter_inc());
             }
             inline int32_t next_pc_int()
             {
-                return _mmu.int_data(_regs.program_counter_inc());
+                if (_regs.enable_mmu())
+                {
+                    return _mmu.int_data(_regs.program_counter_inc());
+                }
+                return _memory->int_data(_regs.program_counter_inc());
             }
             inline float next_pc_float()
             {
-                return _mmu.float_data(_regs.program_counter_inc());
+                if (_regs.enable_mmu())
+                {
+                    return _mmu.float_data(_regs.program_counter_inc());
+                }
+                return _memory->float_data(_regs.program_counter_inc());
             }
 
             void do_run();

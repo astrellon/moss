@@ -21,11 +21,6 @@ namespace moss
         }
     }
 
-    uint32_t Registers::flags() const
-    {
-        return _flags;
-    }
-
     uint32_t Registers::stack_pointer() const
     {
         return _stack_pointer;
@@ -45,10 +40,9 @@ namespace moss
     
     void Registers::to_stream(std::ostream &os) const
     {
-        os << "Register: \n"
+        os << std::dec << "Register: \n"
             "- PC: " << program_counter() << "\n"
             "- SP: " << stack_pointer() << "\n"
-            "- Flags: " << flags() << "\n"
             ;
         os << std::setw(5) << "Reg:" << std::setw(15) << "UINT" << std::setw(15) << "FLOAT\n";
         for (auto i = 0; i < num_word_reg(); i++)

@@ -12,6 +12,7 @@ namespace moss
     uint32_t CpuArm::s_int_bit_shift = (sizeof(uint32_t) << 3) - 1;
     CpuArm::CpuArm(uint32_t page_bit_size) :
         _running(false),
+        _enable_mmu(false),
         _mmu(page_bit_size),
         _memory(nullptr)
     {
@@ -29,6 +30,15 @@ namespace moss
     const Registers &CpuArm::registers() const
     {
         return _regs;
+    }
+
+    bool CpuArm::enable_mmu() const
+    {
+        return _enable_mmu;
+    }
+    void CpuArm::enable_mmu(bool enable)
+    {
+        _enable_mmu = enable;
     }
 
     Mmu &CpuArm::mmu()
@@ -168,6 +178,7 @@ namespace moss
                         _regs.uint_reg(arg1, arg2);
                     }
                     break;
+
                 case Opcode::MOV_M_R:
                     // mem[reg[arg1]] = reg[arg2]
                     arg1 = next_pc_uint();
@@ -204,6 +215,33 @@ namespace moss
                         _mmu.uint_data(_regs.uint_reg(arg1), _mmu.uint_data(_regs.uint_reg(arg2)));
                     }
                     break;
+
+                case Opcode::MOV_R_F:
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    if (meets_condition)
+                    {
+                        _regs.uint_reg(arg1, static_cast<uint32_t>(_regs.flag(arg2)));
+                    }
+                    break;
+                case Opcode::MOV_F_R:
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    if (meets_condition)
+                    {
+                        _regs.flag(arg1, _regs.uint_reg(arg2) > 0);
+                    }
+                    break;
+                case Opcode::MOV_F_I:
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    if (meets_condition)
+                    {
+                        _regs.flag(arg1, arg2 > 0);
+                    }
+                    break;
+
+
                 // }}}
 
                 // Unit Converstions {{{

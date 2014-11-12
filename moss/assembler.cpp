@@ -88,6 +88,9 @@ namespace moss
                         case Opcode::LABEL:
                             writeL(line[i]);
                             break;
+                        case Opcode::FLAG:
+                            writeU(static_cast<uint32_t>(Opcode::find_flag(line[i])));
+                            break;
                         default:
                             std::cout << "Unknown opcode type: " << types[i - type_index - 1] << "\n";
                     }
@@ -170,6 +173,7 @@ namespace moss
             return Opcode::COMMAND;
         }
 
+        // Is a number
         if (Utils::is_int_digit(token[0]) ||
             Utils::is_float_digit(token[0]))
         {
@@ -205,6 +209,8 @@ namespace moss
 
             return is_float ? Opcode::FLOAT_NUMBER : Opcode::INT_NUMBER;
         }
+
+        // Is register
         if (token[0] == 'r' && Utils::is_int_digit(token[1]))
         {
             if (is_register(token, 0))
@@ -212,6 +218,8 @@ namespace moss
                 return Opcode::REGISTER;
             }
         }
+
+        // Is memory
         if (token[0] == '@')
         {
             if (is_register(token, 1))
@@ -219,6 +227,12 @@ namespace moss
                 return Opcode::MEMORY;
             }
             return Opcode::UNKNOWN_TYPE;
+        }
+
+        // Is flag string
+        if (Opcode::find_flag(token) != Registers::FLAG_UNKNOWN)
+        {
+            return Opcode::FLAG;
         }
         return Opcode::LABEL;
     }

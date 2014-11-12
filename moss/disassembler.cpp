@@ -50,6 +50,9 @@ namespace moss
                             ++i;
                             std::cout << mmu->int_data(i) << " | " << mmu->float_data(i);
                             break;
+                        case Opcode::FLAG:
+                            std::cout << Opcode::flag_name(mmu->uint_data(++i));
+                            break;
                         default:
                             std::cout << "Unknown";
                     }

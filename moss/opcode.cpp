@@ -62,16 +62,46 @@ namespace moss
         return std::string("Unknown conditional");
     }
 
+    Registers::Flags Opcode::find_flag(const std::string &str)
+    {
+        auto find = s_names_to_flags.find(str);
+        if (find != s_names_to_flags.end())
+        {
+            return find->second;
+        }
+        return Registers::FLAG_UNKNOWN;
+    }
+    std::string Opcode::flag_name(Registers::Flags flag)
+    {
+        return flag_name(static_cast<uint32_t>(flag));
+    }
+    std::string Opcode::flag_name(uint32_t flag)
+    {
+        for (auto iter = s_names_to_flags.begin(); iter != s_names_to_flags.end(); ++iter)
+        {
+            if (iter->second == flag)
+            {
+                return iter->first;
+            }
+        }
+        return std::string("Unknown flag");
+    }
+
     std::map<std::string, Opcode::Command> Opcode::s_names_to_commands = {
         { std::string("HALT"), Opcode::HALT },
-        
+
         // MOV {{{
         { std::string("MOV_R_R"), Opcode::MOV_R_R },
         { std::string("MOV_R_I"), Opcode::MOV_R_I },
         { std::string("MOV_M_R"), Opcode::MOV_M_R },
+        
         { std::string("MOV_R_M"), Opcode::MOV_R_M },
         { std::string("MOV_M_I"), Opcode::MOV_M_I },
         { std::string("MOV_M_M"), Opcode::MOV_M_M },
+        
+        { std::string("MOV_R_F"), Opcode::MOV_R_F },
+        { std::string("MOV_F_R"), Opcode::MOV_F_R },
+        { std::string("MOV_F_I"), Opcode::MOV_F_I },
         // }}}
 
         // Unit conversions {{{
@@ -92,7 +122,6 @@ namespace moss
         { std::string("CMP_R_I"),   Opcode::CMP_R_I },
         { std::string("CMP_I_R"),   Opcode::CMP_I_R },
 
-        { std::string("CMPF_R_R"),  Opcode::CMPF_R_R },
         { std::string("CMPF_R_I"),  Opcode::CMPF_R_I },
         { std::string("CMPF_I_R"),  Opcode::CMPF_I_R },
         // }}}
@@ -192,9 +221,14 @@ namespace moss
         { Opcode::MOV_R_R, { "mov", { Opcode::REGISTER, Opcode::REGISTER } } },
         { Opcode::MOV_R_I, { "mov", { Opcode::REGISTER, Opcode::NUMBER } } },
         { Opcode::MOV_M_R, { "mov", { Opcode::MEMORY, Opcode::REGISTER } } },
+       
         { Opcode::MOV_R_M, { "mov", { Opcode::REGISTER, Opcode::MEMORY } } },
         { Opcode::MOV_M_I, { "mov", { Opcode::MEMORY, Opcode::NUMBER } } },
         { Opcode::MOV_M_M, { "mov", { Opcode::MEMORY, Opcode::MEMORY } } },
+        
+        { Opcode::MOV_R_F, { "mov", { Opcode::REGISTER, Opcode::FLAG } } },
+        { Opcode::MOV_F_R, { "mov", { Opcode::FLAG, Opcode::REGISTER } } },
+        { Opcode::MOV_F_I, { "mov", { Opcode::FLAG, Opcode::INT_NUMBER } } },
         // }}}
         
         // Unit conversion {{{
@@ -317,7 +351,8 @@ namespace moss
         { Opcode::MEMORY, std::string("memory") },
         { Opcode::LABEL, std::string("label") },
         { Opcode::NUMBER, std::string("number") },
-        { Opcode::CONDITION, std::string("condition") }
+        { Opcode::CONDITION, std::string("condition") },
+        { Opcode::FLAG, std::string("flag") }
     };
     
     std::map<Opcode::Type, std::string> Opcode::s_type_codes = {
@@ -329,7 +364,8 @@ namespace moss
         { Opcode::MEMORY, std::string("M") },
         { Opcode::LABEL, std::string("I") },
         { Opcode::NUMBER, std::string("I") },
-        { Opcode::CONDITION, std::string("Condition") }
+        { Opcode::CONDITION, std::string("Condition") },
+        { Opcode::FLAG, std::string("F") }
     };
     
     std::map<std::string, Opcode::Conditionals> Opcode::s_conditional_suffix = {
@@ -348,4 +384,13 @@ namespace moss
         { "GE", Opcode::COND_GE },
         { ">=", Opcode::COND_GE }
     };
+
+    std::map<std::string, Registers::Flags> Opcode::s_names_to_flags = {
+        { "ZERO", Registers::FLAG_ZERO },
+        { "NEGATIVE", Registers::FLAG_NEGATIVE },
+        { "CARRY", Registers::FLAG_CARRY },
+        { "OVERFLOW", Registers::FLAG_OVERFLOW },
+        { "MMU", Registers::FLAG_ENABLE_MMU }
+    };
+
 }

@@ -4,6 +4,8 @@
 #include <vector>
 #include <string>
 
+#include "registers.h"
+
 namespace moss
 {
     class Opcode
@@ -19,9 +21,14 @@ namespace moss
                 MOV_R_R,
                 MOV_R_I,
                 MOV_M_R,
+                
                 MOV_R_M,
                 MOV_M_I,
                 MOV_M_M,
+
+                MOV_R_F,
+                MOV_F_R,
+                MOV_F_I,
                 // }}}
 
                 // Unit conversions {{{
@@ -147,7 +154,8 @@ namespace moss
                 MEMORY,
                 LABEL,
                 NUMBER,
-                CONDITION
+                CONDITION,
+                FLAG
             };
             // }}}
             
@@ -177,6 +185,10 @@ namespace moss
             static Conditionals find_conditional(const std::string &str);
             static std::string conditional_name(Conditionals cond);
             static std::string conditional_name(uint32_t cond);
+
+            static Registers::Flags find_flag(const std::string &str);
+            static std::string flag_name(Registers::Flags flag);
+            static std::string flag_name(uint32_t flag);
             
         private:
             static std::map<std::string, Command> s_names_to_commands;
@@ -184,5 +196,6 @@ namespace moss
             static std::map<Type, std::string> s_type_names;
             static std::map<Type, std::string> s_type_codes;
             static std::map<std::string, Conditionals> s_conditional_suffix;
+            static std::map<std::string, Registers::Flags> s_names_to_flags;
     };
 }
