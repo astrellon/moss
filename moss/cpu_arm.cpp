@@ -240,8 +240,6 @@ namespace moss
                         _regs.flag(arg1, arg2 > 0);
                     }
                     break;
-
-
                 // }}}
 
                 // Unit Converstions {{{
@@ -284,26 +282,26 @@ namespace moss
                 // Stack commands {{{
                 case Opcode::PUSH_R:
                     // push reg[arg1]
-
+                    arg1 = next_pc_uint();
                     if (meets_condition)
                     {
-                        push_stack(_regs.uint_reg(next_pc_uint()));
+                        push_stack(_regs.uint_reg(arg1));
                     }
                     break;
                 case Opcode::PUSH_I:
                     // push arg1
-
+                    arg1 = next_pc_uint();
                     if (meets_condition)
                     {
-                        push_stack(next_pc_uint());
+                        push_stack(arg1);
                     }
                     break;
                 case Opcode::POP_R:
                     // reg[arg1] = pop
-
+                    arg1 = next_pc_uint();
                     if (meets_condition)
                     {
-                        _regs.uint_reg(next_pc_uint(), pop_stack());
+                        _regs.uint_reg(arg1, pop_stack());
                     }
                     break;
                 // }}}
@@ -871,7 +869,10 @@ namespace moss
                 // }}}
 
                 // Peripherals commands {{{
+                
+                // SEND {{{
                 case Opcode::SEND_I_I:
+                    // peripheral[arg1](arg2)
                     arg1 = next_pc_uint();
                     arg2 = next_pc_uint();
                     if (meets_condition)
@@ -880,6 +881,7 @@ namespace moss
                     }
                     break;
                 case Opcode::SEND_R_I:
+                    // peripheral[reg[arg1]](arg2)
                     arg1 = next_pc_uint();
                     arg2 = next_pc_uint();
                     if (meets_condition)
@@ -888,6 +890,7 @@ namespace moss
                     }
                     break;
                 case Opcode::SEND_I_R:
+                    // peripheral[arg1](reg[arg2])
                     arg1 = next_pc_uint();
                     arg2 = next_pc_uint();
                     if (meets_condition)
@@ -896,6 +899,7 @@ namespace moss
                     }
                     break;
                 case Opcode::SEND_R_R:
+                    // peripheral[reg[arg1]](reg[arg2])
                     arg1 = next_pc_uint();
                     arg2 = next_pc_uint();
                     if (meets_condition)
@@ -903,6 +907,126 @@ namespace moss
                         _peripherals[_regs.uint_reg(arg1)]->send_command(_regs.uint_reg(arg2));
                     }
                     break;
+
+                case Opcode::SEND_R_I_I:
+                    // reg[arg1] = peripheral[arg2](arg3)
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    arg3 = next_pc_uint();
+                    if (meets_condition)
+                    {
+                        _regs.uint_reg(arg1, _peripherals[arg2]->send_command(arg3));
+                    }
+                    break;
+                case Opcode::SEND_R_R_I:
+                    // reg[arg1] = peripheral[reg[arg2]](arg3)
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    arg3 = next_pc_uint();
+                    if (meets_condition)
+                    {
+                        _regs.uint_reg(arg1, _peripherals[_regs.uint_reg(arg2)]->send_command(arg3));
+                    }
+                    break;
+                case Opcode::SEND_R_I_R:
+                    // reg[arg1] = peripheral[arg2](reg[arg3])
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    arg3 = next_pc_uint();
+                    if (meets_condition)
+                    {
+                        _regs.uint_reg(arg1, _peripherals[arg2]->send_command(_regs.uint_reg(arg3)));
+                    }
+                    break;
+                case Opcode::SEND_R_R_R:
+                    // reg[arg1] = peripheral[reg[arg2]](reg[arg3])
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    arg3 = next_pc_uint();
+                    if (meets_condition)
+                    {
+                        _regs.uint_reg(arg1, _peripherals[_regs.uint_reg(arg2)]->send_command(_regs.uint_reg(arg3)));
+                    }
+                    break;
+
+                // }}}
+
+                // ASSIGN {{{
+                case Opcode::ASSIGN_R_R_R:
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    arg3 = next_pc_uint();
+                    if (meets_condition)
+                    {
+                        _peripherals[_regs.uint_reg(arg1)]->assign_memory(_memory, _regs.uint_reg(arg2), _regs.uint_reg(arg3)); 
+                    }
+                    break;
+                case Opcode::ASSIGN_R_R_I:
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    arg3 = next_pc_uint();
+                    if (meets_condition)
+                    {
+                        _peripherals[_regs.uint_reg(arg1)]->assign_memory(_memory, _regs.uint_reg(arg2), arg3); 
+                    }
+                    break;
+                case Opcode::ASSIGN_R_I_R:
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    arg3 = next_pc_uint();
+                    if (meets_condition)
+                    {
+                        _peripherals[_regs.uint_reg(arg1)]->assign_memory(_memory, arg2, _regs.uint_reg(arg3)); 
+                    }
+                    break;
+                case Opcode::ASSIGN_R_I_I:
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    arg3 = next_pc_uint();
+                    if (meets_condition)
+                    {
+                        _peripherals[_regs.uint_reg(arg1)]->assign_memory(_memory, arg2, arg3); 
+                    }
+                    break;
+
+                case Opcode::ASSIGN_I_R_R:
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    arg3 = next_pc_uint();
+                    if (meets_condition)
+                    {
+                        _peripherals[arg1]->assign_memory(_memory, _regs.uint_reg(arg2), _regs.uint_reg(arg3)); 
+                    }
+                    break;
+                case Opcode::ASSIGN_I_R_I:
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    arg3 = next_pc_uint();
+                    if (meets_condition)
+                    {
+                        _peripherals[arg1]->assign_memory(_memory, _regs.uint_reg(arg2), arg3); 
+                    }
+                    break;
+                case Opcode::ASSIGN_I_I_R:
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    arg3 = next_pc_uint();
+                    if (meets_condition)
+                    {
+                        _peripherals[arg1]->assign_memory(_memory, arg2, _regs.uint_reg(arg3)); 
+                    }
+                    break;
+                case Opcode::ASSIGN_I_I_I:
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    arg3 = next_pc_uint();
+                    if (meets_condition)
+                    {
+                        _peripherals[arg1]->assign_memory(_memory, arg2, arg3); 
+                    }
+                    break;
+                // }}}
+                
                 // }}}
 
                 // Debug commands {{{

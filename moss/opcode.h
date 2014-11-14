@@ -133,10 +133,30 @@ namespace moss
                 // }}}
 
                 // Peripherals {{{
+                
+                // SEND {{{
                 SEND_I_I,
                 SEND_R_I,
                 SEND_I_R,
                 SEND_R_R,
+
+                SEND_R_I_I,
+                SEND_R_R_I,
+                SEND_R_I_R,
+                SEND_R_R_R,
+                // }}}
+
+                // ASSIGN {{{
+                ASSIGN_R_R_R,
+                ASSIGN_R_R_I,
+                ASSIGN_R_I_R,
+                ASSIGN_R_I_I,
+                ASSIGN_I_R_R,
+                ASSIGN_I_R_I,
+                ASSIGN_I_I_R,
+                ASSIGN_I_I_I,
+                // }}}
+
                 // }}}
 
                 PRINT_R

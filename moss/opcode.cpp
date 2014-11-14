@@ -87,6 +87,8 @@ namespace moss
         return std::string("Unknown flag");
     }
 
+    // This is used by the assembler once the command and argument types have been
+    // determined to get the final opcode.
     std::map<std::string, Opcode::Command> Opcode::s_names_to_commands = {
         { std::string("HALT"), Opcode::HALT },
 
@@ -209,11 +211,18 @@ namespace moss
         { std::string("SEND_R_I"),  Opcode::SEND_R_I },
         { std::string("SEND_I_R"),  Opcode::SEND_I_R },
         { std::string("SEND_R_R"),  Opcode::SEND_R_R },
+        
+        { std::string("SEND_R_I_I"),  Opcode::SEND_R_I_I },
+        { std::string("SEND_R_R_I"),  Opcode::SEND_R_R_I },
+        { std::string("SEND_R_I_R"),  Opcode::SEND_R_I_R },
+        { std::string("SEND_R_R_R"),  Opcode::SEND_R_R_R },
         // }}}
         
         { std::string("PRINT_R"),  Opcode::PRINT_R }
     };
 
+    // This map is used by the disassembler for converting opcode values back
+    // into the original command name with the expected arguments. 
     std::map<Opcode::Command, std::pair<std::string, std::vector<Opcode::Type> > > Opcode::s_commands_to_types = {
         { Opcode::HALT, { "halt", {} } },
 
@@ -333,15 +342,37 @@ namespace moss
         // }}}
 
         // Peripherals {{{
+
+        // SEND {{{
         { Opcode::SEND_I_I, { "send", { Opcode::INT_NUMBER, Opcode::NUMBER } } },
         { Opcode::SEND_R_I, { "send", { Opcode::REGISTER, Opcode::NUMBER } } },
         { Opcode::SEND_I_R, { "send", { Opcode::INT_NUMBER, Opcode::REGISTER } } },
         { Opcode::SEND_R_R, { "send", { Opcode::REGISTER, Opcode::REGISTER } } },
+        
+        { Opcode::SEND_R_I_I, { "send", { Opcode::REGISTER, Opcode::INT_NUMBER, Opcode::NUMBER } } },
+        { Opcode::SEND_R_R_I, { "send", { Opcode::REGISTER, Opcode::REGISTER, Opcode::NUMBER } } },
+        { Opcode::SEND_R_I_R, { "send", { Opcode::REGISTER, Opcode::INT_NUMBER, Opcode::REGISTER } } },
+        { Opcode::SEND_R_R_R, { "send", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
+        // }}}
+        
+        // ASSIGN {{{
+        { Opcode::ASSIGN_R_R_R, { "assign", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
+        { Opcode::ASSIGN_R_R_I, { "assign", { Opcode::REGISTER, Opcode::REGISTER, Opcode::NUMBER } } },
+        { Opcode::ASSIGN_R_I_R, { "assign", { Opcode::REGISTER, Opcode::NUMBER, Opcode::REGISTER } } },
+        { Opcode::ASSIGN_R_I_I, { "assign", { Opcode::REGISTER, Opcode::NUMBER, Opcode::NUMBER } } },
+        
+        { Opcode::ASSIGN_I_R_R, { "assign", { Opcode::NUMBER, Opcode::REGISTER, Opcode::REGISTER } } },
+        { Opcode::ASSIGN_I_R_I, { "assign", { Opcode::NUMBER, Opcode::REGISTER, Opcode::NUMBER } } },
+        { Opcode::ASSIGN_I_I_R, { "assign", { Opcode::NUMBER, Opcode::NUMBER, Opcode::REGISTER } } },
+        { Opcode::ASSIGN_I_I_I, { "assign", { Opcode::NUMBER, Opcode::NUMBER, Opcode::NUMBER } } },
+        // }}}
+        
         // }}}
 
         { Opcode::PRINT_R, { "print", { Opcode::INT_NUMBER } } }
     };
     
+    // Converts opcode types to strings. Mostly for debugging the token parsing output.
     std::map<Opcode::Type, std::string> Opcode::s_type_names = {
         { Opcode::UNKNOWN_TYPE, std::string("unknown") },
         { Opcode::COMMAND, std::string("command") },
@@ -355,6 +386,25 @@ namespace moss
         { Opcode::FLAG, std::string("flag") }
     };
     
+    // For creating the command lookup key.
+    // Each command after being parsed into Opcode parts well then
+    // be turned into a string with the COMMAND_TYPEN format.
+    // For example:
+    // MOV r0 5.6
+    // Is turned into
+    // COMMAND MOV
+    // REGISTER 0
+    // FLOAT_NUMBER 5.6
+    //
+    // Which then uses this lookup for values other than the Command
+    // to create the lookup for the s_names_to_commands to get the
+    // final opcode for the command.
+    //
+    // The key could be something else other than a string really,
+    // however strings already exist and my special key struct didn't.
+    //
+    // That is the reason why values that are invalid opcode arguments still
+    // have values, just for debugging when an inevitable error occurs.
     std::map<Opcode::Type, std::string> Opcode::s_type_codes = {
         { Opcode::UNKNOWN_TYPE, std::string("Unknown") },
         { Opcode::COMMAND, std::string("Command") },
@@ -368,6 +418,10 @@ namespace moss
         { Opcode::FLAG, std::string("F") }
     };
     
+    // Conditional suffix lookup.
+    // Basically if the token that is expected to be the command is one of these
+    // it is taken to be the conditional for that command and then the next token
+    // is expected to be the command.
     std::map<std::string, Opcode::Conditionals> Opcode::s_conditional_suffix = {
         { "EQ", Opcode::COND_EQ },
         { "==", Opcode::COND_EQ },
@@ -385,6 +439,10 @@ namespace moss
         { ">=", Opcode::COND_GE }
     };
 
+    // Names for flags.
+    // If a token that is expected to be an argument is one of these strings
+    // it is now recognised as a flag value. This means that labels
+    // cannot be one of these values.
     std::map<std::string, Registers::Flags> Opcode::s_names_to_flags = {
         { "ZERO", Registers::FLAG_ZERO },
         { "NEGATIVE", Registers::FLAG_NEGATIVE },

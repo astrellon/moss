@@ -20,18 +20,7 @@ namespace moss
             void stack_pointer(uint32_t value);
 
             void to_stream(std::ostream &os) const;
-
-            /*
-            enum Flags
-            {
-                FLAG_UNKNOWN    = 0x00,
-                FLAG_ZERO       = 0x01,
-                FLAG_NEGATIVE   = 0x02,
-                FLAG_CARRY      = 0x04,
-                FLAG_OVERFLOW   = 0x08,
-                FLAG_ENABLE_MMU = 0x10
-            };
-            */
+            
             enum Flags
             {
                 FLAG_UNKNOWN    = -1,
@@ -98,42 +87,6 @@ namespace moss
             {
                 _program_counter += value;
             }
-
-            /*
-            inline bool zero_flag() const
-            {
-                return _flags[FLAG_ZERO];
-            }
-            inline void zero_flag(bool value)
-            {
-                _flags[FLAG_ZERO] = value;
-            }
-            inline bool neg_flag() const
-            {
-                return _flags[FLAG_NEGATIVE];
-            }
-            inline void neg_flag(bool value)
-            {
-                _flags[FLAG_NEGATIVE] = value;
-            }
-            inline bool enable_mmu() const
-            {
-                return _flags[FLAG_ENABLE_MMU];
-            }
-            inline void enable_mmu(bool value)
-            {
-                _flags[FLAG_ENABLE_MMU] = value;
-            }
-
-            inline void flag(uint32_t index, bool value)
-            {
-                _flags[index] = value;
-            }
-            inline bool flag(uint32_t index)
-            {
-                return _flags[index];
-            }
-            */
             
             inline bool zero_flag() const
             {

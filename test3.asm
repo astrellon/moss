@@ -1,9 +1,7 @@
 ; Third test tile
     MOV r0 0
-    CMP r0 0
-    ;MOV ZERO 0
-    == MOV r8 123
-    != MOV r8 456
+    SEND r2 0 10
+    SEND r3 0 14
 start:
     ;CMP r0 0x00FFFFFF
     CMP r0 10
