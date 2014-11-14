@@ -79,7 +79,7 @@ namespace moss
                             writeU(parse_int(line[i]));
                             break;
                         case Opcode::FLOAT_NUMBER:
-                            writeF(static_cast<float>(std::stof(line[i])));
+                            writeF(static_cast<float>(atof(line[i].c_str())));
                             break;
                         case Opcode::REGISTER:
                         case Opcode::MEMORY:
@@ -291,6 +291,6 @@ namespace moss
                 return result;
             }
         }
-        return static_cast<uint32_t>(std::stol(str));
+        return static_cast<uint32_t>(atoi(str.c_str()));
     }
 }

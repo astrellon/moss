@@ -51,6 +51,15 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="moss\cpu_arm.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="moss\test_peripheral.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="moss\iperipheral.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="moss\cpu.h">
@@ -89,5 +98,22 @@
     <ClInclude Include="moss\utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="moss\cpu_arm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="moss\iperipheral.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="moss\test_peripheral.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="test2.asm">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="test3.asm">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

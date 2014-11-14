@@ -18,9 +18,9 @@ namespace moss
                 uint_data(0, 1);
                 return 0;
             case READ:
-                return read_memory();
+                return read_disk();
             case WRITE:
-                return write_memory();
+                return write_disk();
         }
         return 0;
     }

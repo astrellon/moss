@@ -56,6 +56,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -67,12 +68,15 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="moss\assembler.cpp" />
     <ClCompile Include="moss\cpu.cpp" />
+    <ClCompile Include="moss\cpu_arm.cpp" />
     <ClCompile Include="moss\disassembler.cpp" />
+    <ClCompile Include="moss\iperipheral.cpp" />
     <ClCompile Include="moss\memory.cpp" />
     <ClCompile Include="moss\memory_writer.cpp" />
     <ClCompile Include="moss\mmu.cpp" />
     <ClCompile Include="moss\opcode.cpp" />
     <ClCompile Include="moss\registers.cpp" />
+    <ClCompile Include="moss\test_peripheral.cpp" />
     <ClCompile Include="moss\thread.cpp" />
     <ClCompile Include="moss\tokeniser.cpp" />
     <ClCompile Include="moss\utils.cpp" />
@@ -81,15 +85,22 @@
     <ClInclude Include="moss\assembler.h" />
     <ClInclude Include="moss\common.h" />
     <ClInclude Include="moss\cpu.h" />
+    <ClInclude Include="moss\cpu_arm.h" />
     <ClInclude Include="moss\disassembler.h" />
+    <ClInclude Include="moss\iperipheral.h" />
     <ClInclude Include="moss\memory.h" />
     <ClInclude Include="moss\memory_writer.h" />
     <ClInclude Include="moss\mmu.h" />
     <ClInclude Include="moss\opcode.h" />
     <ClInclude Include="moss\registers.h" />
+    <ClInclude Include="moss\test_peripheral.h" />
     <ClInclude Include="moss\thread.h" />
     <ClInclude Include="moss\tokeniser.h" />
     <ClInclude Include="moss\utils.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="test2.asm" />
+    <None Include="test3.asm" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

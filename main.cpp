@@ -12,8 +12,7 @@
 #include <sstream>
 #include <fstream>
 #include <exception>
-
-#include <sys/time.h>
+#include <time.h>
 
 int main(int argc, char **argv)
 {
@@ -49,16 +48,11 @@ int main(int argc, char **argv)
 
     try
     {
-        struct timeval start, end;
-        gettimeofday(&start, NULL);
+		clock_t start = clock();
         cpu.run();
-        gettimeofday(&end, NULL);
-
-        long seconds  = end.tv_sec  - start.tv_sec;
-        long useconds = end.tv_usec - start.tv_usec;
-        long mtime = ((seconds) * 1000 + useconds/1000.0) + 0.5;
-
-        printf("Time taken: %ld m\n", mtime);
+		clock_t end = clock();
+		float time = (float)(end - start) / CLOCKS_PER_SEC;
+		std::cout << "Time taken: " << time << "\n";
     }
     catch (std::exception e)
     {
@@ -67,6 +61,8 @@ int main(int argc, char **argv)
         std::cout << "- Stopped at: " << (cpu.registers().program_counter() - 1) << "\n";
     }
     cpu.to_stream(std::cout);
+
+	std::cin.get();
 
     return 0;
 }
