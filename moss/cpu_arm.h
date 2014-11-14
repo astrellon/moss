@@ -48,7 +48,7 @@ namespace moss
             
             Memory *_memory;
 
-            inline uint32_t next_pc_uint()
+            FORCEINLINE uint32_t next_pc_uint()
             {
                 if (_regs.enable_mmu())
                 {
@@ -56,7 +56,7 @@ namespace moss
                 }
                 return _memory->uint_data(_regs.program_counter_inc());
             }
-            inline int32_t next_pc_int()
+            FORCEINLINE int32_t next_pc_int()
             {
                 if (_regs.enable_mmu())
                 {
@@ -64,7 +64,7 @@ namespace moss
                 }
                 return _memory->int_data(_regs.program_counter_inc());
             }
-            inline float next_pc_float()
+            FORCEINLINE float next_pc_float()
             {
                 if (_regs.enable_mmu())
                 {

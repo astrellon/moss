@@ -24,35 +24,35 @@ namespace moss
 
         public:
 
-            inline uint32_t size() const
+            FORCEINLINE uint32_t size() const
             {
                 return _size;
             }
 
             // INT
-            inline int32_t int_data(uint32_t index) const
+            FORCEINLINE int32_t int_data(uint32_t index) const
             {
                 return _data.at(index).i;
             }
-            inline void int_data(uint32_t index, int32_t value)
+            FORCEINLINE void int_data(uint32_t index, int32_t value)
             {
                 _data[index].i = value;
             }
             // UINT
-            inline uint32_t uint_data(uint32_t index) const
+            FORCEINLINE uint32_t uint_data(uint32_t index) const
             {
                 return _data.at(index).u;
             }
-            inline void uint_data(uint32_t index, uint32_t value)
+            FORCEINLINE void uint_data(uint32_t index, uint32_t value)
             {
                 _data[index].u = value;
             }
             // FLOAT
-            inline float float_data(uint32_t index) const
+            FORCEINLINE float float_data(uint32_t index) const
             {
                 return _data.at(index).f;
             }
-            inline void float_data(uint32_t index, float value)
+            FORCEINLINE void float_data(uint32_t index, float value)
             {
                 _data[index].f = value;
             }

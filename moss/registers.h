@@ -39,85 +39,85 @@ namespace moss
 
         public:
 
-            inline uint32_t num_word_reg() const
+            FORCEINLINE uint32_t num_word_reg() const
             {
                 return static_cast<uint32_t>(_word_regs.size());
             }
             // INT 
-            inline int32_t int_reg(uint32_t index) const
+            FORCEINLINE int32_t int_reg(uint32_t index) const
             {
                 return _word_regs.at(index).i;
             }
-            inline void int_reg(uint32_t index, int32_t value)
+            FORCEINLINE void int_reg(uint32_t index, int32_t value)
             {
                 _word_regs[index].i = value;
             }
             // UINT
-            inline uint32_t uint_reg(uint32_t index) const
+            FORCEINLINE uint32_t uint_reg(uint32_t index) const
             {
                 return _word_regs.at(index).u;
             }
-            inline void uint_reg(uint32_t index, uint32_t value)
+            FORCEINLINE void uint_reg(uint32_t index, uint32_t value)
             {
                 _word_regs[index].u = value;
             }
             // FLOAT
-            inline float float_reg(uint32_t index) const
+            FORCEINLINE float float_reg(uint32_t index) const
             {
                 return _word_regs.at(index).f;
             }
-            inline void float_reg(uint32_t index, float value)
+            FORCEINLINE void float_reg(uint32_t index, float value)
             {
                 _word_regs[index].f = value;
             }
 
-            inline uint32_t program_counter() const
+            FORCEINLINE uint32_t program_counter() const
             {
                 return _program_counter;
             }
-            inline uint32_t program_counter_inc()
+            FORCEINLINE uint32_t program_counter_inc()
             {
                 return _program_counter++;
             }
-            inline void program_counter(uint32_t value)
+            FORCEINLINE void program_counter(uint32_t value)
             {
                 _program_counter = value;
             }
-            inline void change_program_counter(int32_t value)
+            FORCEINLINE void change_program_counter(int32_t value)
             {
                 _program_counter += value;
             }
             
-            inline bool zero_flag() const
+            FORCEINLINE bool zero_flag() const
             {
                 return (_flags & FLAG_ZERO) > 0;
             }
-            inline void zero_flag(bool value)
+            FORCEINLINE void zero_flag(bool value)
             {
                 _flags = value ? _flags | FLAG_ZERO : _flags & ~FLAG_ZERO;
             }
-            inline bool neg_flag() const
+            FORCEINLINE bool neg_flag() const
             {
                 return (_flags & FLAG_NEGATIVE) > 0;
             }
-            inline void neg_flag(bool value)
+            FORCEINLINE void neg_flag(bool value)
             {
                 _flags = value ? _flags | FLAG_NEGATIVE : _flags & ~FLAG_NEGATIVE;
             }
-            inline bool enable_mmu() const
+            FORCEINLINE bool enable_mmu() const
             {
                 return (_flags & FLAG_ENABLE_MMU) > 0;
             }
-            inline void enable_mmu(bool value)
+            FORCEINLINE void enable_mmu(bool value)
             {
                 _flags = value ? _flags | FLAG_ENABLE_MMU : _flags & ~FLAG_ENABLE_MMU;
             }
 
-            inline bool flag(uint32_t mask)
+            FORCEINLINE bool flag(uint32_t mask)
             {
                 return (_flags & mask) > 0;
             }
-            inline void flag(uint32_t mask, bool value)
+            FORCEINLINE void flag(uint32_t mask, bool value)
             {
                 _flags = value ? _flags | mask : _flags & ~mask;
             }

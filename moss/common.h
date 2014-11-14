@@ -2,6 +2,12 @@
 
 #include <stdint.h>
 
+#ifdef _WIN32
+#	define FORCEINLINE __forceinline
+#else
+#	define FORCEINLINE inline
+#endif
+
 namespace moss
 {
     typedef union DataWord_u
