@@ -89,133 +89,146 @@ namespace moss
 
     // This is used by the assembler once the command and argument types have been
     // determined to get the final opcode.
-    std::map<std::string, Opcode::Command> Opcode::s_names_to_commands = {
-        { std::string("HALT"), Opcode::HALT },
+	std::map<std::string, Opcode::Command> Opcode::s_names_to_commands = {
+		{ std::string("HALT"), Opcode::HALT },
 
-        // MOV {{{
-        { std::string("MOV_R_R"), Opcode::MOV_R_R },
-        { std::string("MOV_R_I"), Opcode::MOV_R_I },
-        { std::string("MOV_M_R"), Opcode::MOV_M_R },
+		// MOV {{{
+		{ std::string("MOV_R_R"), Opcode::MOV_R_R },
+		{ std::string("MOV_R_I"), Opcode::MOV_R_I },
+		{ std::string("MOV_M_R"), Opcode::MOV_M_R },
+
+		{ std::string("MOV_R_M"), Opcode::MOV_R_M },
+		{ std::string("MOV_M_I"), Opcode::MOV_M_I },
+		{ std::string("MOV_M_M"), Opcode::MOV_M_M },
+
+		{ std::string("MOV_R_F"), Opcode::MOV_R_F },
+		{ std::string("MOV_F_R"), Opcode::MOV_F_R },
+		{ std::string("MOV_F_I"), Opcode::MOV_F_I },
+		// }}}
+
+		// Unit conversions {{{
+		{ std::string("UINT_FLOAT_R"), Opcode::UINT_FLOAT_R },
+		{ std::string("UINT_FLOAT_R_R"), Opcode::UINT_FLOAT_R_R },
+		{ std::string("FLOAT_UINT_R"), Opcode::FLOAT_UINT_R },
+		{ std::string("FLOAT_UINT_R_R"), Opcode::FLOAT_UINT_R_R },
+		// }}}
+
+		// Stack {{{
+		{ std::string("PUSH_R"), Opcode::PUSH_R },
+		{ std::string("PUSH_I"), Opcode::PUSH_I },
+		{ std::string("POP_R"), Opcode::POP_R },
+		// }}}
+
+		// CMP/CMPF {{{
+		{ std::string("CMP_R_R"), Opcode::CMP_R_R },
+		{ std::string("CMP_R_I"), Opcode::CMP_R_I },
+		{ std::string("CMP_I_R"), Opcode::CMP_I_R },
+
+		{ std::string("CMPF_R_I"), Opcode::CMPF_R_I },
+		{ std::string("CMPF_I_R"), Opcode::CMPF_I_R },
+		// }}}
+
+		// Branching {{{
+		{ std::string("JMP_R"), Opcode::JMP_R },
+		{ std::string("JMP_I"), Opcode::JMP_I },
+		// }}}
+
+		// ADD/ADDF {{{
+		{ std::string("ADD_R_R"), Opcode::ADD_R_R },
+		{ std::string("ADD_R_R_R"), Opcode::ADD_R_R_R },
+		{ std::string("ADD_R_R_I"), Opcode::ADD_R_R_I },
+		{ std::string("ADD_R_I"), Opcode::ADD_R_I },
+
+		{ std::string("ADDF_R_R"), Opcode::ADDF_R_R },
+		{ std::string("ADDF_R_R_R"), Opcode::ADDF_R_R_R },
+		{ std::string("ADDF_R_R_I"), Opcode::ADDF_R_R_I },
+		{ std::string("ADDF_R_I"), Opcode::ADDF_R_I },
+		// }}}
+
+		// SUB/SUBF {{{
+		{ std::string("SUB_R_R"), Opcode::SUB_R_R },
+		{ std::string("SUB_R_R_R"), Opcode::SUB_R_R_R },
+		{ std::string("SUB_R_I_R"), Opcode::SUB_R_I_R },
+		{ std::string("SUB_R_R_I"), Opcode::SUB_R_R_I },
+		{ std::string("SUB_R_I"), Opcode::SUB_R_I },
+
+		{ std::string("SUBF_R_R"), Opcode::SUBF_R_R },
+		{ std::string("SUBF_R_R_R"), Opcode::SUBF_R_R_R },
+		{ std::string("SUBF_R_I_R"), Opcode::SUBF_R_I_R },
+		{ std::string("SUBF_R_R_I"), Opcode::SUBF_R_R_I },
+		{ std::string("SUBF_R_I"), Opcode::SUBF_R_I },
+		// }}}
+
+		// INC/DEC {{{
+		{ std::string("INC_R"), Opcode::INC_R },
+		{ std::string("INCF_R"), Opcode::INCF_R },
+		{ std::string("DEC_R"), Opcode::DEC_R },
+		{ std::string("DECF_R"), Opcode::DECF_R },
+		// }}}
+
+		// MUL/MULF {{{
+		{ std::string("MUL_R_R"), Opcode::MUL_R_R },
+		{ std::string("MUL_R_R_R"), Opcode::MUL_R_R_R },
+		{ std::string("MUL_R_R_I"), Opcode::MUL_R_R_I },
+		{ std::string("MUL_R_I"), Opcode::MUL_R_I },
+
+		{ std::string("MULF_R_R"), Opcode::MULF_R_R },
+		{ std::string("MULF_R_R_R"), Opcode::MULF_R_R_R },
+		{ std::string("MULF_R_R_I"), Opcode::MULF_R_R_I },
+		{ std::string("MULF_R_I"), Opcode::MULF_R_I },
+		// }}}
+
+		// DIV/DIVF {{{
+		{ std::string("DIV_R_R"), Opcode::DIV_R_R },
+		{ std::string("DIV_R_R_R"), Opcode::DIV_R_R_R },
+		{ std::string("DIV_R_I_R"), Opcode::DIV_R_I_R },
+		{ std::string("DIV_R_R_I"), Opcode::DIV_R_R_I },
+		{ std::string("DIV_R_I"), Opcode::DIV_R_I },
+
+		{ std::string("DIVF_R_R"), Opcode::DIVF_R_R },
+		{ std::string("DIVF_R_R_R"), Opcode::DIVF_R_R_R },
+		{ std::string("DIVF_R_I_R"), Opcode::DIVF_R_I_R },
+		{ std::string("DIVF_R_R_I"), Opcode::DIVF_R_R_I },
+		{ std::string("DIVF_R_I"), Opcode::DIVF_R_I },
+		// }}}
+
+		// ROR/ROL {{{
+		{ std::string("ROR_R"), Opcode::ROR_R },
+		{ std::string("ROR_R_R"), Opcode::ROR_R_R },
+		{ std::string("ROL_R"), Opcode::ROL_R },
+		{ std::string("ROL_R_R"), Opcode::ROL_R_R },
+		// }}}
+
+		// SHR/SHL {{{
+		{ std::string("SHR_R"), Opcode::SHR_R },
+		{ std::string("SHR_R_R"), Opcode::SHR_R_R },
+		{ std::string("SHL_R"), Opcode::SHL_R },
+		{ std::string("SHL_R_R"), Opcode::SHL_R_R },
+		// }}}
+
+		// Peripherals {{{
+		// SEND {{{
+		{ std::string("IO_SEND_I_I"), Opcode::IO_SEND_I_I },
+        { std::string("IO_SEND_R_I"),  Opcode::IO_SEND_R_I },
+        { std::string("IO_SEND_I_R"),  Opcode::IO_SEND_I_R },
+        { std::string("IO_SEND_R_R"),  Opcode::IO_SEND_R_R },
         
-        { std::string("MOV_R_M"), Opcode::MOV_R_M },
-        { std::string("MOV_M_I"), Opcode::MOV_M_I },
-        { std::string("MOV_M_M"), Opcode::MOV_M_M },
+		{ std::string("IO_SEND_R_I_I"),  Opcode::IO_SEND_R_I_I },
+        { std::string("IO_SEND_R_R_I"),  Opcode::IO_SEND_R_R_I },
+        { std::string("IO_SEND_R_I_R"),  Opcode::IO_SEND_R_I_R },
+        { std::string("IO_SEND_R_R_R"),  Opcode::IO_SEND_R_R_R },
+		// }}}
         
-        { std::string("MOV_R_F"), Opcode::MOV_R_F },
-        { std::string("MOV_F_R"), Opcode::MOV_F_R },
-        { std::string("MOV_F_I"), Opcode::MOV_F_I },
-        // }}}
-
-        // Unit conversions {{{
-        { std::string("UINT_FLOAT_R"),      Opcode::UINT_FLOAT_R },
-        { std::string("UINT_FLOAT_R_R"),    Opcode::UINT_FLOAT_R_R },
-        { std::string("FLOAT_UINT_R"),      Opcode::FLOAT_UINT_R },
-        { std::string("FLOAT_UINT_R_R"),    Opcode::FLOAT_UINT_R_R },
-        // }}}
-
-        // Stack {{{
-        { std::string("PUSH_R"),    Opcode::PUSH_R },
-        { std::string("PUSH_I"),    Opcode::PUSH_I },
-        { std::string("POP_R"),     Opcode::POP_R },
-        // }}}
-        
-        // CMP/CMPF {{{
-        { std::string("CMP_R_R"),   Opcode::CMP_R_R },
-        { std::string("CMP_R_I"),   Opcode::CMP_R_I },
-        { std::string("CMP_I_R"),   Opcode::CMP_I_R },
-
-        { std::string("CMPF_R_I"),  Opcode::CMPF_R_I },
-        { std::string("CMPF_I_R"),  Opcode::CMPF_I_R },
-        // }}}
-        
-        // Branching {{{
-        { std::string("JMP_R"),  Opcode::JMP_R },
-        { std::string("JMP_I"),  Opcode::JMP_I },
-        // }}}
-        
-        // ADD/ADDF {{{
-        { std::string("ADD_R_R"),   Opcode::ADD_R_R },
-        { std::string("ADD_R_R_R"), Opcode::ADD_R_R_R },
-        { std::string("ADD_R_R_I"), Opcode::ADD_R_R_I },
-        { std::string("ADD_R_I"),   Opcode::ADD_R_I },
-        
-        { std::string("ADDF_R_R"),   Opcode::ADDF_R_R },
-        { std::string("ADDF_R_R_R"), Opcode::ADDF_R_R_R },
-        { std::string("ADDF_R_R_I"), Opcode::ADDF_R_R_I },
-        { std::string("ADDF_R_I"),   Opcode::ADDF_R_I },
-        // }}}
-
-        // SUB/SUBF {{{
-        { std::string("SUB_R_R"),   Opcode::SUB_R_R },
-        { std::string("SUB_R_R_R"), Opcode::SUB_R_R_R },
-        { std::string("SUB_R_I_R"), Opcode::SUB_R_I_R },
-        { std::string("SUB_R_R_I"), Opcode::SUB_R_R_I },
-        { std::string("SUB_R_I"),   Opcode::SUB_R_I },
-
-        { std::string("SUBF_R_R"),   Opcode::SUBF_R_R },
-        { std::string("SUBF_R_R_R"), Opcode::SUBF_R_R_R },
-        { std::string("SUBF_R_I_R"), Opcode::SUBF_R_I_R },
-        { std::string("SUBF_R_R_I"), Opcode::SUBF_R_R_I },
-        { std::string("SUBF_R_I"),   Opcode::SUBF_R_I },
-        // }}}
-        
-        // INC/DEC {{{
-        { std::string("INC_R"),   Opcode::INC_R },
-        { std::string("INCF_R"),  Opcode::INCF_R },
-        { std::string("DEC_R"),   Opcode::DEC_R },
-        { std::string("DECF_R"),  Opcode::DECF_R },
-        // }}}
-
-        // MUL/MULF {{{
-        { std::string("MUL_R_R"),   Opcode::MUL_R_R },
-        { std::string("MUL_R_R_R"), Opcode::MUL_R_R_R },
-        { std::string("MUL_R_R_I"), Opcode::MUL_R_R_I },
-        { std::string("MUL_R_I"),   Opcode::MUL_R_I },
-        
-        { std::string("MULF_R_R"),   Opcode::MULF_R_R },
-        { std::string("MULF_R_R_R"), Opcode::MULF_R_R_R },
-        { std::string("MULF_R_R_I"), Opcode::MULF_R_R_I },
-        { std::string("MULF_R_I"),   Opcode::MULF_R_I },
-        // }}}
-
-        // DIV/DIVF {{{
-        { std::string("DIV_R_R"),   Opcode::DIV_R_R },
-        { std::string("DIV_R_R_R"), Opcode::DIV_R_R_R },
-        { std::string("DIV_R_I_R"), Opcode::DIV_R_I_R },
-        { std::string("DIV_R_R_I"), Opcode::DIV_R_R_I },
-        { std::string("DIV_R_I"),   Opcode::DIV_R_I },
-
-        { std::string("DIVF_R_R"),   Opcode::DIVF_R_R },
-        { std::string("DIVF_R_R_R"), Opcode::DIVF_R_R_R },
-        { std::string("DIVF_R_I_R"), Opcode::DIVF_R_I_R },
-        { std::string("DIVF_R_R_I"), Opcode::DIVF_R_R_I },
-        { std::string("DIVF_R_I"),   Opcode::DIVF_R_I },
-        // }}}
-        
-        // ROR/ROL {{{
-        { std::string("ROR_R"),     Opcode::ROR_R },
-        { std::string("ROR_R_R"),   Opcode::ROR_R_R },
-        { std::string("ROL_R"),     Opcode::ROL_R },
-        { std::string("ROL_R_R"),   Opcode::ROL_R_R },
-        // }}}
-
-        // SHR/SHL {{{
-        { std::string("SHR_R"),     Opcode::SHR_R },
-        { std::string("SHR_R_R"),   Opcode::SHR_R_R },
-        { std::string("SHL_R"),     Opcode::SHL_R },
-        { std::string("SHL_R_R"),   Opcode::SHL_R_R },
-        // }}}
-
-        // Peripherals {{{
-        { std::string("SEND_I_I"),  Opcode::SEND_I_I },
-        { std::string("SEND_R_I"),  Opcode::SEND_R_I },
-        { std::string("SEND_I_R"),  Opcode::SEND_I_R },
-        { std::string("SEND_R_R"),  Opcode::SEND_R_R },
-        
-        { std::string("SEND_R_I_I"),  Opcode::SEND_R_I_I },
-        { std::string("SEND_R_R_I"),  Opcode::SEND_R_R_I },
-        { std::string("SEND_R_I_R"),  Opcode::SEND_R_I_R },
-        { std::string("SEND_R_R_R"),  Opcode::SEND_R_R_R },
+		// ASSIGN {{{
+		{ std::string("IO_ASSIGN_R_R_R"),  Opcode::IO_ASSIGN_R_R_R },
+		{ std::string("IO_ASSIGN_R_R_I"),  Opcode::IO_ASSIGN_R_R_I },
+		{ std::string("IO_ASSIGN_R_I_R"),  Opcode::IO_ASSIGN_R_I_R },
+		{ std::string("IO_ASSIGN_R_I_I"),  Opcode::IO_ASSIGN_R_I_I },
+		
+		{ std::string("IO_ASSIGN_I_R_R"),  Opcode::IO_ASSIGN_I_R_R },
+		{ std::string("IO_ASSIGN_I_R_I"),  Opcode::IO_ASSIGN_I_R_I },
+		{ std::string("IO_ASSIGN_I_I_R"),  Opcode::IO_ASSIGN_I_I_R },
+		{ std::string("IO_ASSIGN_I_I_I"),  Opcode::IO_ASSIGN_I_I_I },
         // }}}
         
         { std::string("PRINT_R"),  Opcode::PRINT_R }
@@ -344,27 +357,27 @@ namespace moss
         // Peripherals {{{
 
         // SEND {{{
-        { Opcode::SEND_I_I, { "send", { Opcode::INT_NUMBER, Opcode::NUMBER } } },
-        { Opcode::SEND_R_I, { "send", { Opcode::REGISTER, Opcode::NUMBER } } },
-        { Opcode::SEND_I_R, { "send", { Opcode::INT_NUMBER, Opcode::REGISTER } } },
-        { Opcode::SEND_R_R, { "send", { Opcode::REGISTER, Opcode::REGISTER } } },
+        { Opcode::IO_SEND_I_I, { "io_send", { Opcode::INT_NUMBER, Opcode::NUMBER } } },
+        { Opcode::IO_SEND_R_I, { "io_send", { Opcode::REGISTER, Opcode::NUMBER } } },
+        { Opcode::IO_SEND_I_R, { "io_send", { Opcode::INT_NUMBER, Opcode::REGISTER } } },
+        { Opcode::IO_SEND_R_R, { "io_send", { Opcode::REGISTER, Opcode::REGISTER } } },
         
-        { Opcode::SEND_R_I_I, { "send", { Opcode::REGISTER, Opcode::INT_NUMBER, Opcode::NUMBER } } },
-        { Opcode::SEND_R_R_I, { "send", { Opcode::REGISTER, Opcode::REGISTER, Opcode::NUMBER } } },
-        { Opcode::SEND_R_I_R, { "send", { Opcode::REGISTER, Opcode::INT_NUMBER, Opcode::REGISTER } } },
-        { Opcode::SEND_R_R_R, { "send", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
+        { Opcode::IO_SEND_R_I_I, { "io_send", { Opcode::REGISTER, Opcode::INT_NUMBER, Opcode::NUMBER } } },
+        { Opcode::IO_SEND_R_R_I, { "io_send", { Opcode::REGISTER, Opcode::REGISTER, Opcode::NUMBER } } },
+        { Opcode::IO_SEND_R_I_R, { "io_send", { Opcode::REGISTER, Opcode::INT_NUMBER, Opcode::REGISTER } } },
+        { Opcode::IO_SEND_R_R_R, { "io_send", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
         // }}}
         
         // ASSIGN {{{
-        { Opcode::ASSIGN_R_R_R, { "assign", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
-        { Opcode::ASSIGN_R_R_I, { "assign", { Opcode::REGISTER, Opcode::REGISTER, Opcode::NUMBER } } },
-        { Opcode::ASSIGN_R_I_R, { "assign", { Opcode::REGISTER, Opcode::NUMBER, Opcode::REGISTER } } },
-        { Opcode::ASSIGN_R_I_I, { "assign", { Opcode::REGISTER, Opcode::NUMBER, Opcode::NUMBER } } },
+        { Opcode::IO_ASSIGN_R_R_R, { "io_assign", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
+        { Opcode::IO_ASSIGN_R_R_I, { "io_assign", { Opcode::REGISTER, Opcode::REGISTER, Opcode::NUMBER } } },
+        { Opcode::IO_ASSIGN_R_I_R, { "io_assign", { Opcode::REGISTER, Opcode::NUMBER, Opcode::REGISTER } } },
+        { Opcode::IO_ASSIGN_R_I_I, { "io_assign", { Opcode::REGISTER, Opcode::NUMBER, Opcode::NUMBER } } },
         
-        { Opcode::ASSIGN_I_R_R, { "assign", { Opcode::NUMBER, Opcode::REGISTER, Opcode::REGISTER } } },
-        { Opcode::ASSIGN_I_R_I, { "assign", { Opcode::NUMBER, Opcode::REGISTER, Opcode::NUMBER } } },
-        { Opcode::ASSIGN_I_I_R, { "assign", { Opcode::NUMBER, Opcode::NUMBER, Opcode::REGISTER } } },
-        { Opcode::ASSIGN_I_I_I, { "assign", { Opcode::NUMBER, Opcode::NUMBER, Opcode::NUMBER } } },
+        { Opcode::IO_ASSIGN_I_R_R, { "io_assign", { Opcode::NUMBER, Opcode::REGISTER, Opcode::REGISTER } } },
+        { Opcode::IO_ASSIGN_I_R_I, { "io_assign", { Opcode::NUMBER, Opcode::REGISTER, Opcode::NUMBER } } },
+        { Opcode::IO_ASSIGN_I_I_R, { "io_assign", { Opcode::NUMBER, Opcode::NUMBER, Opcode::REGISTER } } },
+        { Opcode::IO_ASSIGN_I_I_I, { "io_assign", { Opcode::NUMBER, Opcode::NUMBER, Opcode::NUMBER } } },
         // }}}
         
         // }}}

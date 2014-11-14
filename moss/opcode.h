@@ -134,27 +134,27 @@ namespace moss
 
                 // Peripherals {{{
                 
-                // SEND {{{
-                SEND_I_I,
-                SEND_R_I,
-                SEND_I_R,
-                SEND_R_R,
+                // IO_SEND {{{
+                IO_SEND_I_I,
+                IO_SEND_R_I,
+                IO_SEND_I_R,
+                IO_SEND_R_R,
 
-                SEND_R_I_I,
-                SEND_R_R_I,
-                SEND_R_I_R,
-                SEND_R_R_R,
+                IO_SEND_R_I_I,
+                IO_SEND_R_R_I,
+                IO_SEND_R_I_R,
+                IO_SEND_R_R_R,
                 // }}}
 
-                // ASSIGN {{{
-                ASSIGN_R_R_R,
-                ASSIGN_R_R_I,
-                ASSIGN_R_I_R,
-                ASSIGN_R_I_I,
-                ASSIGN_I_R_R,
-                ASSIGN_I_R_I,
-                ASSIGN_I_I_R,
-                ASSIGN_I_I_I,
+                // IO_ASSIGN {{{
+                IO_ASSIGN_R_R_I,
+                IO_ASSIGN_R_I_R,
+                IO_ASSIGN_R_I_I,
+                IO_ASSIGN_I_R_R,
+                IO_ASSIGN_I_R_I,
+                IO_ASSIGN_I_I_R,
+                IO_ASSIGN_R_R_R,
+                IO_ASSIGN_I_I_I,
                 // }}}
 
                 // }}}
