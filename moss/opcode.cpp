@@ -87,6 +87,31 @@ namespace moss
         return std::string("Unknown flag");
     }
 
+    Opcode::NamedRegister Opcode::find_named_register(const std::string &str)
+    {
+        auto find = s_names_to_named_reg.find(str);
+        if (find != s_names_to_named_reg.end())
+        {
+            return find->second;
+        }
+        return Opcode::NAMED_UNKNOWN;
+    }
+    std::string Opcode::named_register_name(Opcode::NamedRegister flag)
+    {
+        return flag_name(static_cast<uint32_t>(flag));
+    }
+    std::string Opcode::named_register_name(uint32_t flag)
+    {
+        for (auto iter = s_names_to_named_reg.begin(); iter != s_names_to_named_reg.end(); ++iter)
+        {
+            if (iter->second == flag)
+            {
+                return iter->first;
+            }
+        }
+        return std::string("Unknown named register");
+    }
+
     // This is used by the assembler once the command and argument types have been
     // determined to get the final opcode.
 	std::map<std::string, Opcode::Command> Opcode::s_names_to_commands = {
@@ -104,19 +129,23 @@ namespace moss
 		{ std::string("MOV_R_F"), Opcode::MOV_R_F },
 		{ std::string("MOV_F_R"), Opcode::MOV_F_R },
 		{ std::string("MOV_F_I"), Opcode::MOV_F_I },
+		
+        { std::string("MOV_R_NR"), Opcode::MOV_R_NR },
+        { std::string("MOV_NR_R"), Opcode::MOV_NR_R },
+        { std::string("MOV_NR_I"), Opcode::MOV_NR_I },
 		// }}}
 
 		// Unit conversions {{{
-		{ std::string("UINT_FLOAT_R"), Opcode::UINT_FLOAT_R },
+		{ std::string("UINT_FLOAT_R"),   Opcode::UINT_FLOAT_R },
 		{ std::string("UINT_FLOAT_R_R"), Opcode::UINT_FLOAT_R_R },
-		{ std::string("FLOAT_UINT_R"), Opcode::FLOAT_UINT_R },
+		{ std::string("FLOAT_UINT_R"),   Opcode::FLOAT_UINT_R },
 		{ std::string("FLOAT_UINT_R_R"), Opcode::FLOAT_UINT_R_R },
 		// }}}
 
 		// Stack {{{
 		{ std::string("PUSH_R"), Opcode::PUSH_R },
 		{ std::string("PUSH_I"), Opcode::PUSH_I },
-		{ std::string("POP_R"), Opcode::POP_R },
+		{ std::string("POP_R"),  Opcode::POP_R },
 		// }}}
 
 		// CMP/CMPF {{{
@@ -134,101 +163,103 @@ namespace moss
 		// }}}
 
 		// ADD/ADDF {{{
-		{ std::string("ADD_R_R"), Opcode::ADD_R_R },
+		{ std::string("ADD_R_R"),   Opcode::ADD_R_R },
 		{ std::string("ADD_R_R_R"), Opcode::ADD_R_R_R },
 		{ std::string("ADD_R_R_I"), Opcode::ADD_R_R_I },
-		{ std::string("ADD_R_I"), Opcode::ADD_R_I },
+		{ std::string("ADD_R_I"),   Opcode::ADD_R_I },
 
-		{ std::string("ADDF_R_R"), Opcode::ADDF_R_R },
+		{ std::string("ADDF_R_R"),   Opcode::ADDF_R_R },
 		{ std::string("ADDF_R_R_R"), Opcode::ADDF_R_R_R },
 		{ std::string("ADDF_R_R_I"), Opcode::ADDF_R_R_I },
-		{ std::string("ADDF_R_I"), Opcode::ADDF_R_I },
+		{ std::string("ADDF_R_I"),   Opcode::ADDF_R_I },
 		// }}}
 
 		// SUB/SUBF {{{
-		{ std::string("SUB_R_R"), Opcode::SUB_R_R },
+		{ std::string("SUB_R_R"),   Opcode::SUB_R_R },
 		{ std::string("SUB_R_R_R"), Opcode::SUB_R_R_R },
 		{ std::string("SUB_R_I_R"), Opcode::SUB_R_I_R },
 		{ std::string("SUB_R_R_I"), Opcode::SUB_R_R_I },
-		{ std::string("SUB_R_I"), Opcode::SUB_R_I },
+		{ std::string("SUB_R_I"),   Opcode::SUB_R_I },
 
-		{ std::string("SUBF_R_R"), Opcode::SUBF_R_R },
+		{ std::string("SUBF_R_R"),   Opcode::SUBF_R_R },
 		{ std::string("SUBF_R_R_R"), Opcode::SUBF_R_R_R },
 		{ std::string("SUBF_R_I_R"), Opcode::SUBF_R_I_R },
 		{ std::string("SUBF_R_R_I"), Opcode::SUBF_R_R_I },
-		{ std::string("SUBF_R_I"), Opcode::SUBF_R_I },
+		{ std::string("SUBF_R_I"),   Opcode::SUBF_R_I },
 		// }}}
 
 		// INC/DEC {{{
-		{ std::string("INC_R"), Opcode::INC_R },
+		{ std::string("INC_R"),  Opcode::INC_R },
 		{ std::string("INCF_R"), Opcode::INCF_R },
-		{ std::string("DEC_R"), Opcode::DEC_R },
+		{ std::string("DEC_R"),  Opcode::DEC_R },
 		{ std::string("DECF_R"), Opcode::DECF_R },
 		// }}}
 
 		// MUL/MULF {{{
-		{ std::string("MUL_R_R"), Opcode::MUL_R_R },
+		{ std::string("MUL_R_R"),   Opcode::MUL_R_R },
 		{ std::string("MUL_R_R_R"), Opcode::MUL_R_R_R },
 		{ std::string("MUL_R_R_I"), Opcode::MUL_R_R_I },
-		{ std::string("MUL_R_I"), Opcode::MUL_R_I },
+		{ std::string("MUL_R_I"),   Opcode::MUL_R_I },
 
-		{ std::string("MULF_R_R"), Opcode::MULF_R_R },
+		{ std::string("MULF_R_R"),   Opcode::MULF_R_R },
 		{ std::string("MULF_R_R_R"), Opcode::MULF_R_R_R },
 		{ std::string("MULF_R_R_I"), Opcode::MULF_R_R_I },
-		{ std::string("MULF_R_I"), Opcode::MULF_R_I },
+		{ std::string("MULF_R_I"),   Opcode::MULF_R_I },
 		// }}}
 
 		// DIV/DIVF {{{
-		{ std::string("DIV_R_R"), Opcode::DIV_R_R },
+		{ std::string("DIV_R_R"),   Opcode::DIV_R_R },
 		{ std::string("DIV_R_R_R"), Opcode::DIV_R_R_R },
 		{ std::string("DIV_R_I_R"), Opcode::DIV_R_I_R },
 		{ std::string("DIV_R_R_I"), Opcode::DIV_R_R_I },
-		{ std::string("DIV_R_I"), Opcode::DIV_R_I },
+		{ std::string("DIV_R_I"),   Opcode::DIV_R_I },
 
-		{ std::string("DIVF_R_R"), Opcode::DIVF_R_R },
+		{ std::string("DIVF_R_R"),   Opcode::DIVF_R_R },
 		{ std::string("DIVF_R_R_R"), Opcode::DIVF_R_R_R },
 		{ std::string("DIVF_R_I_R"), Opcode::DIVF_R_I_R },
 		{ std::string("DIVF_R_R_I"), Opcode::DIVF_R_R_I },
-		{ std::string("DIVF_R_I"), Opcode::DIVF_R_I },
+		{ std::string("DIVF_R_I"),   Opcode::DIVF_R_I },
 		// }}}
 
 		// ROR/ROL {{{
-		{ std::string("ROR_R"), Opcode::ROR_R },
+		{ std::string("ROR_R"),   Opcode::ROR_R },
 		{ std::string("ROR_R_R"), Opcode::ROR_R_R },
-		{ std::string("ROL_R"), Opcode::ROL_R },
+		{ std::string("ROL_R"),   Opcode::ROL_R },
 		{ std::string("ROL_R_R"), Opcode::ROL_R_R },
 		// }}}
 
 		// SHR/SHL {{{
-		{ std::string("SHR_R"), Opcode::SHR_R },
+		{ std::string("SHR_R"),   Opcode::SHR_R },
 		{ std::string("SHR_R_R"), Opcode::SHR_R_R },
-		{ std::string("SHL_R"), Opcode::SHL_R },
+		{ std::string("SHL_R"),   Opcode::SHL_R },
 		{ std::string("SHL_R_R"), Opcode::SHL_R_R },
 		// }}}
 
 		// Peripherals {{{
 		// SEND {{{
 		{ std::string("IO_SEND_I_I"), Opcode::IO_SEND_I_I },
-        { std::string("IO_SEND_R_I"),  Opcode::IO_SEND_R_I },
-        { std::string("IO_SEND_I_R"),  Opcode::IO_SEND_I_R },
-        { std::string("IO_SEND_R_R"),  Opcode::IO_SEND_R_R },
+        { std::string("IO_SEND_R_I"), Opcode::IO_SEND_R_I },
+        { std::string("IO_SEND_I_R"), Opcode::IO_SEND_I_R },
+        { std::string("IO_SEND_R_R"), Opcode::IO_SEND_R_R },
         
-		{ std::string("IO_SEND_R_I_I"),  Opcode::IO_SEND_R_I_I },
-        { std::string("IO_SEND_R_R_I"),  Opcode::IO_SEND_R_R_I },
-        { std::string("IO_SEND_R_I_R"),  Opcode::IO_SEND_R_I_R },
-        { std::string("IO_SEND_R_R_R"),  Opcode::IO_SEND_R_R_R },
+		{ std::string("IO_SEND_R_I_I"), Opcode::IO_SEND_R_I_I },
+        { std::string("IO_SEND_R_R_I"), Opcode::IO_SEND_R_R_I },
+        { std::string("IO_SEND_R_I_R"), Opcode::IO_SEND_R_I_R },
+        { std::string("IO_SEND_R_R_R"), Opcode::IO_SEND_R_R_R },
 		// }}}
         
 		// ASSIGN {{{
-		{ std::string("IO_ASSIGN_R_R_R"),  Opcode::IO_ASSIGN_R_R_R },
-		{ std::string("IO_ASSIGN_R_R_I"),  Opcode::IO_ASSIGN_R_R_I },
-		{ std::string("IO_ASSIGN_R_I_R"),  Opcode::IO_ASSIGN_R_I_R },
-		{ std::string("IO_ASSIGN_R_I_I"),  Opcode::IO_ASSIGN_R_I_I },
+		{ std::string("IO_ASSIGN_R_R_R"), Opcode::IO_ASSIGN_R_R_R },
+		{ std::string("IO_ASSIGN_R_R_I"), Opcode::IO_ASSIGN_R_R_I },
+		{ std::string("IO_ASSIGN_R_I_R"), Opcode::IO_ASSIGN_R_I_R },
+		{ std::string("IO_ASSIGN_R_I_I"), Opcode::IO_ASSIGN_R_I_I },
 		
-		{ std::string("IO_ASSIGN_I_R_R"),  Opcode::IO_ASSIGN_I_R_R },
-		{ std::string("IO_ASSIGN_I_R_I"),  Opcode::IO_ASSIGN_I_R_I },
-		{ std::string("IO_ASSIGN_I_I_R"),  Opcode::IO_ASSIGN_I_I_R },
-		{ std::string("IO_ASSIGN_I_I_I"),  Opcode::IO_ASSIGN_I_I_I },
+		{ std::string("IO_ASSIGN_I_R_R"), Opcode::IO_ASSIGN_I_R_R },
+		{ std::string("IO_ASSIGN_I_R_I"), Opcode::IO_ASSIGN_I_R_I },
+		{ std::string("IO_ASSIGN_I_I_R"), Opcode::IO_ASSIGN_I_I_R },
+		{ std::string("IO_ASSIGN_I_I_I"), Opcode::IO_ASSIGN_I_I_I },
+        // }}}
+        
         // }}}
         
         { std::string("PRINT_R"),  Opcode::PRINT_R }
@@ -251,19 +282,23 @@ namespace moss
         { Opcode::MOV_R_F, { "mov", { Opcode::REGISTER, Opcode::FLAG } } },
         { Opcode::MOV_F_R, { "mov", { Opcode::FLAG, Opcode::REGISTER } } },
         { Opcode::MOV_F_I, { "mov", { Opcode::FLAG, Opcode::INT_NUMBER } } },
+        
+        { Opcode::MOV_R_NR, { "mov", { Opcode::REGISTER, Opcode::NAMED_REGISTER } } },
+        { Opcode::MOV_NR_R, { "mov", { Opcode::NAMED_REGISTER, Opcode::REGISTER } } },
+        { Opcode::MOV_NR_I, { "mov", { Opcode::NAMED_REGISTER, Opcode::NUMBER } } },
         // }}}
         
         // Unit conversion {{{
-        { Opcode::UINT_FLOAT_R, { "uint_float", { Opcode::REGISTER } } },
+        { Opcode::UINT_FLOAT_R,   { "uint_float", { Opcode::REGISTER } } },
         { Opcode::UINT_FLOAT_R_R, { "uint_float", { Opcode::REGISTER, Opcode::REGISTER } } },
-        { Opcode::FLOAT_UINT_R, { "float_uint", { Opcode::REGISTER } } },
+        { Opcode::FLOAT_UINT_R,   { "float_uint", { Opcode::REGISTER } } },
         { Opcode::FLOAT_UINT_R_R, { "float_uint", { Opcode::REGISTER, Opcode::REGISTER } } },
         // }}}
         
         // Stack {{{
         { Opcode::PUSH_R, { "push", { Opcode::REGISTER } } },
         { Opcode::PUSH_I, { "push", { Opcode::NUMBER } } },
-        { Opcode::POP_R, { "pop", { Opcode::REGISTER } } },
+        { Opcode::POP_R,  { "pop",  { Opcode::REGISTER } } },
         // }}}
         
         // CMP/CMPF {{{
@@ -282,75 +317,75 @@ namespace moss
         // }}}
         
         // ADD/ADDF {{{
-        { Opcode::ADD_R_R, { "add", { Opcode::REGISTER, Opcode::REGISTER } } },
-        { Opcode::ADD_R_R_R, { "add", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
-        { Opcode::ADD_R_R_I, { "add", { Opcode::REGISTER, Opcode::REGISTER, Opcode::INT_NUMBER } } },
-        { Opcode::ADD_R_I, { "add", { Opcode::REGISTER, Opcode::INT_NUMBER } } },
+        { Opcode::ADD_R_R,    { "add", { Opcode::REGISTER, Opcode::REGISTER } } },
+        { Opcode::ADD_R_R_R,  { "add", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
+        { Opcode::ADD_R_R_I,  { "add", { Opcode::REGISTER, Opcode::REGISTER, Opcode::INT_NUMBER } } },
+        { Opcode::ADD_R_I,    { "add", { Opcode::REGISTER, Opcode::INT_NUMBER } } },
         
-        { Opcode::ADDF_R_R, { "addf", { Opcode::REGISTER, Opcode::REGISTER } } },
+        { Opcode::ADDF_R_R,   { "addf", { Opcode::REGISTER, Opcode::REGISTER } } },
         { Opcode::ADDF_R_R_R, { "addf", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
         { Opcode::ADDF_R_R_I, { "addf", { Opcode::REGISTER, Opcode::REGISTER, Opcode::FLOAT_NUMBER } } },
-        { Opcode::ADDF_R_I, { "addf", { Opcode::REGISTER, Opcode::FLOAT_NUMBER } } },
+        { Opcode::ADDF_R_I,   { "addf", { Opcode::REGISTER, Opcode::FLOAT_NUMBER } } },
         // }}}
         
         // SUB/SUBF {{{
-        { Opcode::SUB_R_R, { "sub", { Opcode::REGISTER, Opcode::REGISTER } } },
-        { Opcode::SUB_R_R_R, { "sub", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
-        { Opcode::SUB_R_I_R, { "sub", { Opcode::REGISTER, Opcode::INT_NUMBER, Opcode::REGISTER } } },
-        { Opcode::SUB_R_R_I, { "sub", { Opcode::REGISTER, Opcode::REGISTER, Opcode::INT_NUMBER } } },
-        { Opcode::SUB_R_I, { "sub", { Opcode::REGISTER, Opcode::INT_NUMBER } } },
+        { Opcode::SUB_R_R,    { "sub", { Opcode::REGISTER, Opcode::REGISTER } } },
+        { Opcode::SUB_R_R_R,  { "sub", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
+        { Opcode::SUB_R_I_R,  { "sub", { Opcode::REGISTER, Opcode::INT_NUMBER, Opcode::REGISTER } } },
+        { Opcode::SUB_R_R_I,  { "sub", { Opcode::REGISTER, Opcode::REGISTER, Opcode::INT_NUMBER } } },
+        { Opcode::SUB_R_I,    { "sub", { Opcode::REGISTER, Opcode::INT_NUMBER } } },
         
-        { Opcode::SUBF_R_R, { "subf", { Opcode::REGISTER, Opcode::REGISTER } } },
+        { Opcode::SUBF_R_R,   { "subf", { Opcode::REGISTER, Opcode::REGISTER } } },
         { Opcode::SUBF_R_R_R, { "subf", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
         { Opcode::SUBF_R_I_R, { "subf", { Opcode::FLOAT_NUMBER, Opcode::REGISTER, Opcode::REGISTER } } },
         { Opcode::SUBF_R_R_I, { "subf", { Opcode::REGISTER, Opcode::REGISTER, Opcode::FLOAT_NUMBER } } },
-        { Opcode::SUBF_R_I, { "subf", { Opcode::REGISTER, Opcode::FLOAT_NUMBER } } },
+        { Opcode::SUBF_R_I,   { "subf", { Opcode::REGISTER, Opcode::FLOAT_NUMBER } } },
         // }}}
 
         // INC/DEC {{{
-        { Opcode::INC_R, { "inc", { Opcode::REGISTER } } },
+        { Opcode::INC_R,  { "inc",  { Opcode::REGISTER } } },
         { Opcode::INCF_R, { "incf", { Opcode::REGISTER } } },
-        { Opcode::DEC_R, { "dec", { Opcode::REGISTER } } },
+        { Opcode::DEC_R,  { "dec",  { Opcode::REGISTER } } },
         { Opcode::DECF_R, { "decf", { Opcode::REGISTER } } },
         // }}}
         
         // MUL/MULF {{{
-        { Opcode::MUL_R_R, { "mul", { Opcode::REGISTER, Opcode::REGISTER } } },
-        { Opcode::MUL_R_R_R, { "mul", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
-        { Opcode::MUL_R_R_I, { "mul", { Opcode::REGISTER, Opcode::REGISTER, Opcode::INT_NUMBER } } },
-        { Opcode::MUL_R_I, { "mul", { Opcode::REGISTER, Opcode::INT_NUMBER } } },
+        { Opcode::MUL_R_R,    { "mul", { Opcode::REGISTER, Opcode::REGISTER } } },
+        { Opcode::MUL_R_R_R,  { "mul", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
+        { Opcode::MUL_R_R_I,  { "mul", { Opcode::REGISTER, Opcode::REGISTER, Opcode::INT_NUMBER } } },
+        { Opcode::MUL_R_I,    { "mul", { Opcode::REGISTER, Opcode::INT_NUMBER } } },
         
-        { Opcode::MULF_R_R, { "mulf", { Opcode::REGISTER, Opcode::REGISTER } } },
+        { Opcode::MULF_R_R,   { "mulf", { Opcode::REGISTER, Opcode::REGISTER } } },
         { Opcode::MULF_R_R_R, { "mulf", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
         { Opcode::MULF_R_R_I, { "mulf", { Opcode::REGISTER, Opcode::REGISTER, Opcode::FLOAT_NUMBER } } },
-        { Opcode::MULF_R_I, { "mulf", { Opcode::REGISTER, Opcode::FLOAT_NUMBER } } },
+        { Opcode::MULF_R_I,   { "mulf", { Opcode::REGISTER, Opcode::FLOAT_NUMBER } } },
         // }}}
         
         // DIV/DIVF {{{
-        { Opcode::DIV_R_R, { "div", { Opcode::REGISTER, Opcode::REGISTER } } },
-        { Opcode::DIV_R_R_R, { "div", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
-        { Opcode::DIV_R_I_R, { "div", { Opcode::REGISTER, Opcode::INT_NUMBER, Opcode::REGISTER } } },
-        { Opcode::DIV_R_R_I, { "div", { Opcode::REGISTER, Opcode::REGISTER, Opcode::INT_NUMBER } } },
-        { Opcode::DIV_R_I, { "div", { Opcode::REGISTER, Opcode::INT_NUMBER } } },
+        { Opcode::DIV_R_R,    { "div", { Opcode::REGISTER, Opcode::REGISTER } } },
+        { Opcode::DIV_R_R_R,  { "div", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
+        { Opcode::DIV_R_I_R,  { "div", { Opcode::REGISTER, Opcode::INT_NUMBER, Opcode::REGISTER } } },
+        { Opcode::DIV_R_R_I,  { "div", { Opcode::REGISTER, Opcode::REGISTER, Opcode::INT_NUMBER } } },
+        { Opcode::DIV_R_I,    { "div", { Opcode::REGISTER, Opcode::INT_NUMBER } } },
         
-        { Opcode::DIVF_R_R, { "divf", { Opcode::REGISTER, Opcode::REGISTER } } },
+        { Opcode::DIVF_R_R,   { "divf", { Opcode::REGISTER, Opcode::REGISTER } } },
         { Opcode::DIVF_R_R_R, { "divf", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
         { Opcode::DIVF_R_I_R, { "divf", { Opcode::FLOAT_NUMBER, Opcode::REGISTER, Opcode::REGISTER } } },
         { Opcode::DIVF_R_R_I, { "divf", { Opcode::REGISTER, Opcode::REGISTER, Opcode::FLOAT_NUMBER } } },
-        { Opcode::DIVF_R_I, { "divf", { Opcode::REGISTER, Opcode::FLOAT_NUMBER } } },
+        { Opcode::DIVF_R_I,   { "divf", { Opcode::REGISTER, Opcode::FLOAT_NUMBER } } },
         // }}}
         
         // ROR/ROL {{{
-        { Opcode::ROR_R, { "ror", { Opcode::REGISTER } } },
+        { Opcode::ROR_R,   { "ror", { Opcode::REGISTER } } },
         { Opcode::ROR_R_R, { "ror", { Opcode::REGISTER, Opcode::REGISTER } } },
-        { Opcode::ROL_R, { "rol", { Opcode::REGISTER } } },
+        { Opcode::ROL_R,   { "rol", { Opcode::REGISTER } } },
         { Opcode::ROL_R_R, { "rol", { Opcode::REGISTER, Opcode::REGISTER } } },
         // }}}
         
         // SHR/SHL {{{
-        { Opcode::SHR_R, { "shr", { Opcode::REGISTER } } },
+        { Opcode::SHR_R,   { "shr", { Opcode::REGISTER } } },
         { Opcode::SHR_R_R, { "shr", { Opcode::REGISTER, Opcode::REGISTER } } },
-        { Opcode::SHL_R, { "shl", { Opcode::REGISTER } } },
+        { Opcode::SHL_R,   { "shl", { Opcode::REGISTER } } },
         { Opcode::SHL_R_R, { "shl", { Opcode::REGISTER, Opcode::REGISTER } } },
         // }}}
 
@@ -388,15 +423,15 @@ namespace moss
     // Converts opcode types to strings. Mostly for debugging the token parsing output.
     std::map<Opcode::Type, std::string> Opcode::s_type_names = {
         { Opcode::UNKNOWN_TYPE, std::string("unknown") },
-        { Opcode::COMMAND, std::string("command") },
-        { Opcode::INT_NUMBER, std::string("int_number") },
+        { Opcode::COMMAND,      std::string("command") },
+        { Opcode::INT_NUMBER,   std::string("int_number") },
         { Opcode::FLOAT_NUMBER, std::string("float_number") },
-        { Opcode::REGISTER, std::string("register") },
-        { Opcode::MEMORY, std::string("memory") },
-        { Opcode::LABEL, std::string("label") },
-        { Opcode::NUMBER, std::string("number") },
-        { Opcode::CONDITION, std::string("condition") },
-        { Opcode::FLAG, std::string("flag") }
+        { Opcode::REGISTER,     std::string("register") },
+        { Opcode::MEMORY,       std::string("memory") },
+        { Opcode::LABEL,        std::string("label") },
+        { Opcode::NUMBER,       std::string("number") },
+        { Opcode::CONDITION,    std::string("condition") },
+        { Opcode::FLAG,         std::string("flag") }
     };
     
     // For creating the command lookup key.
@@ -419,16 +454,17 @@ namespace moss
     // That is the reason why values that are invalid opcode arguments still
     // have values, just for debugging when an inevitable error occurs.
     std::map<Opcode::Type, std::string> Opcode::s_type_codes = {
-        { Opcode::UNKNOWN_TYPE, std::string("Unknown") },
-        { Opcode::COMMAND, std::string("Command") },
-        { Opcode::INT_NUMBER, std::string("I") },
-        { Opcode::FLOAT_NUMBER, std::string("I") },
-        { Opcode::REGISTER, std::string("R") },
-        { Opcode::MEMORY, std::string("M") },
-        { Opcode::LABEL, std::string("I") },
-        { Opcode::NUMBER, std::string("I") },
-        { Opcode::CONDITION, std::string("Condition") },
-        { Opcode::FLAG, std::string("F") }
+        { Opcode::UNKNOWN_TYPE,   std::string("Unknown") },
+        { Opcode::COMMAND,        std::string("Command") },
+        { Opcode::INT_NUMBER,     std::string("I") },
+        { Opcode::FLOAT_NUMBER,   std::string("I") },
+        { Opcode::REGISTER,       std::string("R") },
+        { Opcode::MEMORY,         std::string("M") },
+        { Opcode::LABEL,          std::string("I") },
+        { Opcode::NUMBER,         std::string("I") },
+        { Opcode::CONDITION,      std::string("Condition") },
+        { Opcode::FLAG,           std::string("F") },
+        { Opcode::NAMED_REGISTER, std::string("NR") }
     };
     
     // Conditional suffix lookup.
@@ -457,11 +493,17 @@ namespace moss
     // it is now recognised as a flag value. This means that labels
     // cannot be one of these values.
     std::map<std::string, Registers::Flags> Opcode::s_names_to_flags = {
-        { "ZERO", Registers::FLAG_ZERO },
+        { "ZERO",     Registers::FLAG_ZERO },
         { "NEGATIVE", Registers::FLAG_NEGATIVE },
-        { "CARRY", Registers::FLAG_CARRY },
+        { "CARRY",    Registers::FLAG_CARRY },
         { "OVERFLOW", Registers::FLAG_OVERFLOW },
-        { "MMU", Registers::FLAG_ENABLE_MMU }
+        { "MMU",      Registers::FLAG_ENABLE_MMU }
+    };
+
+    std::map<std::string, Opcode::NamedRegister> Opcode::s_names_to_named_reg = {
+        { "PROGRAM_COUNTER",    Opcode::PROGRAM_COUNTER },
+        { "STACK_POINTER",      Opcode::STACK_POINTER },
+        { "PAGE_TABLE_POINTER", Opcode::PAGE_TABLE_POINTER }
     };
 
 }

@@ -29,6 +29,10 @@ namespace moss
                 MOV_R_F,
                 MOV_F_R,
                 MOV_F_I,
+
+                MOV_R_NR,
+                MOV_NR_R,
+                MOV_NR_I,
                 // }}}
 
                 // Unit conversions {{{
@@ -175,25 +179,34 @@ namespace moss
                 LABEL,
                 NUMBER,
                 CONDITION,
-                FLAG
+                FLAG,
+                NAMED_REGISTER
             };
             // }}}
             
             // List of Conditionals {{{
             enum Conditionals
             {
-                COND_UNKNOWN =      0x0,
-                COND_NONE =         0x1,
-                COND_ANY =           1 << 28, 
-                COND_EQ =            2 << 28, 
-                COND_NE =            3 << 28, 
-                COND_LT =            4 << 28, 
-                COND_LE =            5 << 28, 
-                COND_GT =            6 << 28, 
-                COND_GE =            7 << 28,
-                COND_ALL =          0xF0000000
+                COND_UNKNOWN = 0x0,
+                COND_NONE    = 0x1,
+                COND_ANY     = 1 << 28,
+                COND_EQ      = 2 << 28,
+                COND_NE      = 3 << 28,
+                COND_LT      = 4 << 28,
+                COND_LE      = 5 << 28,
+                COND_GT      = 6 << 28,
+                COND_GE      = 7 << 28,
+                COND_ALL     = 0xF0000000
             };
             // }}}
+
+            enum NamedRegister
+            {
+                NAMED_UNKNOWN,
+                STACK_POINTER,
+                PROGRAM_COUNTER,
+                PAGE_TABLE_POINTER
+            };
 
             static Command find_command(const std::string &command_name);
             static std::string build_command_name(const std::string &command, 
@@ -209,6 +222,10 @@ namespace moss
             static Registers::Flags find_flag(const std::string &str);
             static std::string flag_name(Registers::Flags flag);
             static std::string flag_name(uint32_t flag);
+
+            static NamedRegister find_named_register(const std::string &str);
+            static std::string named_register_name(NamedRegister reg);
+            static std::string named_register_name(uint32_t reg);
             
         private:
             static std::map<std::string, Command> s_names_to_commands;
@@ -217,5 +234,6 @@ namespace moss
             static std::map<Type, std::string> s_type_codes;
             static std::map<std::string, Conditionals> s_conditional_suffix;
             static std::map<std::string, Registers::Flags> s_names_to_flags;
+            static std::map<std::string, NamedRegister> s_names_to_named_reg;
     };
 }

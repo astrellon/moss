@@ -19,32 +19,29 @@ int main(int argc, char **argv)
     moss::Memory mem(1024u);
     mem.zero();
 
+    /*
     for (int i = 0; i < 32; i++)
     {
         mem.uint_data(i, i);
     }
+    */
 
     moss::CpuArm cpu(4u);
 
     moss::TestPeripheral testPerf;
     cpu.install_peripheral(&testPerf);
 
-    cpu.registers().program_counter(64);
+    uint32_t program_start = 128;
+    cpu.registers().program_counter(program_start);
     cpu.memory(&mem);
-
-    moss::MemoryWriter<moss::Mmu> dataWriter(32, &cpu.mmu());
-    for (auto i = 0; i < 32; i++)
-    {
-        dataWriter.write(i * 4);
-    }
 
     moss::Assembler assembler;
     std::ifstream input_ss("test3.asm");
     assembler.process_stream(std::string("test3.asm"), input_ss);
     assembler.finalise();
-    assembler.write_to_memory<moss::Mmu>(&cpu.mmu(), 64);
+    assembler.write_to_memory<moss::Memory>(&mem, program_start);
 
-    moss::Disassembler::to_stream(std::cout, &cpu.mmu(), 64, 84);
+    moss::Disassembler::to_stream<moss::Memory>(std::cout, &mem, program_start, program_start + 32);
 
     try
     {

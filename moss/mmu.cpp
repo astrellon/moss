@@ -32,7 +32,16 @@ namespace moss
     {
         _memory = memory;
     }
-    
+            
+    uint32_t Mmu::table_pointer() const
+    {
+        return _table_pointer;
+    }
+    void Mmu::table_pointer(uint32_t value)
+    {
+        _table_pointer = value;
+    }
+
     void Mmu::to_stream(std::ostream &os, bool in_virtual, uint32_t start, uint32_t end) const
     {
         if (end > _memory->size())

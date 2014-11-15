@@ -91,6 +91,9 @@ namespace moss
                         case Opcode::FLAG:
                             writeU(static_cast<uint32_t>(Opcode::find_flag(line[i])));
                             break;
+                        case Opcode::NAMED_REGISTER:
+                            writeU(static_cast<uint32_t>(Opcode::find_named_register(line[i])));
+                            break;
                         default:
                             std::cout << "Unknown opcode type: " << types[i - type_index - 1] << "\n";
                     }
@@ -234,6 +237,12 @@ namespace moss
         {
             return Opcode::FLAG;
         }
+
+        if (Opcode::find_named_register(token) != Opcode::NAMED_UNKNOWN)
+        {
+            return Opcode::NAMED_REGISTER;
+        }
+
         return Opcode::LABEL;
     }
 

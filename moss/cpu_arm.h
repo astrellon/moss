@@ -38,6 +38,9 @@ namespace moss
 
             void install_peripheral(IPeripheral *perf);
 
+            uint32_t named_reg(uint32_t name) const;
+            void named_reg(uint32_t name, uint32_t value);
+
         private:
             bool _running;
             bool _enable_mmu;

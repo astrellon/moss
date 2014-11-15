@@ -78,6 +78,42 @@ namespace moss
         _peripherals[0] = perf;
     }
 
+    uint32_t CpuArm::named_reg(uint32_t name) const
+    {
+        switch (name)
+        {
+            default:
+            case Opcode::NAMED_UNKNOWN:
+                std::cout << "Cannot get, unknown named register name: " << name << "\n";
+                return 0;
+            case Opcode::STACK_POINTER:
+                return _regs.stack_pointer();
+            case Opcode::PROGRAM_COUNTER:
+                return _regs.program_counter();
+            case Opcode::PAGE_TABLE_POINTER:
+                return _mmu.table_pointer();
+        }
+    }
+    void CpuArm::named_reg(uint32_t name, uint32_t value)
+    {
+        switch (name)
+        {
+            default:
+            case Opcode::NAMED_UNKNOWN:
+                std::cout << "Cannot set, unknown named register name: " << name << "\n";
+                break;
+            case Opcode::STACK_POINTER:
+                _regs.stack_pointer(value);
+                break;
+            case Opcode::PROGRAM_COUNTER:
+                _regs.program_counter(value);
+                break;
+            case Opcode::PAGE_TABLE_POINTER:
+                _mmu.table_pointer(value);
+                break;
+        }
+    }
+
     void CpuArm::to_stream(std::ostream &os) const
     {
         os << "CpuArm running: " << is_running() << "\n";
