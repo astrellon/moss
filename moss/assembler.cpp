@@ -148,7 +148,7 @@ namespace moss
             DataWord str_value;
             for (auto i = 0u; i < str.size(); ++i)
             {
-                str_value.b[j] = str[i];
+                str_value.b[3 - j] = str[i];
                 ++j;
                 if (j >= 4)
                 {
@@ -195,7 +195,7 @@ namespace moss
     }
     void Assembler::writeS(const std::string &str)
     {
-        _string_temp[str].push_back(_index);
+        _string_temp[process_string_value(str)].push_back(_index);
         writeU(0u);
     }
 
@@ -351,5 +351,10 @@ namespace moss
             }
         }
         return static_cast<uint32_t>(atoi(str.c_str()));
+    }
+
+    std::string Assembler::process_string_value(const std::string &str)
+    {
+        return str.substr(1, str.size() - 2);
     }
 }

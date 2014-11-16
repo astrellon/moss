@@ -1122,12 +1122,13 @@ namespace moss
                     std::cout << "Num " << arg1 << "\n";
                     break;
                 case Opcode::PRINT_S:
-                    arg1 = next_pc_uint();
+                    iarg1 = next_pc_int();
                     std::cout << "Str ";
                     // Change to diferent index for string offset.
+                    iarg1 += _regs.program_counter();
                     while (true)
                     {
-                        uint32_t value = _mmu.uint_data(arg1);
+                        uint32_t value = _mmu.uint_data(iarg1++);
                         char c1 = (value >> 24) & 0xFF;
                         char c2 = (value >> 16) & 0xFF;
                         char c3 = (value >> 8) & 0xFF;

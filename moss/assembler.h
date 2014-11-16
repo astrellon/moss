@@ -39,7 +39,6 @@ namespace moss
             std::vector<DataWord> _data;
             std::map< std::string, uint32_t > _label_locations;
             std::map< std::string, std::vector<uint32_t> > _label_temp;
-            std::map< std::string, uint32_t > _string_locations;
             std::map< std::string, std::vector<uint32_t> > _string_temp;
 
             void add_label(const std::string &label);
@@ -53,6 +52,8 @@ namespace moss
             static bool is_register(const std::string &token, std::size_t index);
             static uint32_t get_register_value(const std::string &value);
             static std::string process_label(const std::string &token);
+
+            static std::string process_string_value(const std::string &str);
 
     };
 }
