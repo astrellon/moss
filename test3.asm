@@ -49,4 +49,4 @@ start:
     < INC r1
     < JMP start
 end:
-    HALT
+    PRINT "Finishing"

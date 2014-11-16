@@ -1117,6 +1117,28 @@ namespace moss
                     arg1 = next_pc_uint();
                     std::cout << "Reg " << arg1 << ": " << _regs.uint_reg(arg1) << std::endl;
                     break;
+                case Opcode::PRINT_I:
+                    arg1 = next_pc_uint();
+                    std::cout << "Num " << arg1 << "\n";
+                    break;
+                case Opcode::PRINT_S:
+                    arg1 = next_pc_uint();
+                    std::cout << "Str ";
+                    // Change to diferent index for string offset.
+                    while (true)
+                    {
+                        uint32_t value = _mmu.uint_data(arg1);
+                        char c1 = (value >> 24) & 0xFF;
+                        char c2 = (value >> 16) & 0xFF;
+                        char c3 = (value >> 8) & 0xFF;
+                        char c4 = value & 0xFF;
+                        if (c1) std::cout << c1; else break;
+                        if (c2) std::cout << c2; else break;
+                        if (c3) std::cout << c3; else break;
+                        if (c4) std::cout << c4; else break;
+                    }
+                    std::cout << "\n";
+                    break;
                 // }}}
 
             }

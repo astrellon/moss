@@ -61,6 +61,10 @@ namespace moss
                                     case Opcode::FLAG:
                                         std::cout << Opcode::flag_name(mem->uint_data(++i));
                                         break;
+                                    case Opcode::STRING:
+                                        std::cout << "<insert string here>";
+                                        ++i;
+                                        break;
                                     default:
                                         std::cout << "Unknown";
                                 }

@@ -15,6 +15,7 @@ namespace moss
         uint32_t u;
         int32_t i;
         float f;
+        uint8_t b[4];
 
         DataWord_u() : u(0u) {}
         DataWord_u(float value) : f(value) {}

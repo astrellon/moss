@@ -7,6 +7,7 @@
 #include "moss/assembler.h"
 #include "moss/disassembler.h"
 #include "moss/test_peripheral.h"
+#include "moss/common.h"
 
 #include <string>
 #include <sstream>
@@ -18,13 +19,6 @@ int main(int argc, char **argv)
 {
     moss::Memory mem(1024u);
     mem.zero();
-
-    /*
-    for (int i = 0; i < 32; i++)
-    {
-        mem.uint_data(i, i);
-    }
-    */
 
     moss::CpuArm cpu(4u);
 

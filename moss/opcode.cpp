@@ -262,7 +262,9 @@ namespace moss
         
         // }}}
         
-        { std::string("PRINT_R"),  Opcode::PRINT_R }
+        { std::string("PRINT_R"),  Opcode::PRINT_R },
+        { std::string("PRINT_I"),  Opcode::PRINT_I },
+        { std::string("PRINT_S"),  Opcode::PRINT_S }
     };
 
     // This map is used by the disassembler for converting opcode values back
@@ -417,21 +419,25 @@ namespace moss
         
         // }}}
 
-        { Opcode::PRINT_R, { "print", { Opcode::INT_NUMBER } } }
+        { Opcode::PRINT_R, { "print", { Opcode::INT_NUMBER } } },
+        { Opcode::PRINT_I, { "print", { Opcode::NUMBER } } },
+        { Opcode::PRINT_S, { "print", { Opcode::STRING } } }
     };
     
     // Converts opcode types to strings. Mostly for debugging the token parsing output.
     std::map<Opcode::Type, std::string> Opcode::s_type_names = {
-        { Opcode::UNKNOWN_TYPE, std::string("unknown") },
-        { Opcode::COMMAND,      std::string("command") },
-        { Opcode::INT_NUMBER,   std::string("int_number") },
-        { Opcode::FLOAT_NUMBER, std::string("float_number") },
-        { Opcode::REGISTER,     std::string("register") },
-        { Opcode::MEMORY,       std::string("memory") },
-        { Opcode::LABEL,        std::string("label") },
-        { Opcode::NUMBER,       std::string("number") },
-        { Opcode::CONDITION,    std::string("condition") },
-        { Opcode::FLAG,         std::string("flag") }
+        { Opcode::UNKNOWN_TYPE,   std::string("unknown") },
+        { Opcode::COMMAND,        std::string("command") },
+        { Opcode::INT_NUMBER,     std::string("int_number") },
+        { Opcode::FLOAT_NUMBER,   std::string("float_number") },
+        { Opcode::REGISTER,       std::string("register") },
+        { Opcode::MEMORY,         std::string("memory") },
+        { Opcode::LABEL,          std::string("label") },
+        { Opcode::NUMBER,         std::string("number") },
+        { Opcode::CONDITION,      std::string("condition") },
+        { Opcode::FLAG,           std::string("flag") },
+        { Opcode::NAMED_REGISTER, std::string("named_register") },
+        { Opcode::STRING,         std::string("string") }
     };
     
     // For creating the command lookup key.
@@ -465,7 +471,7 @@ namespace moss
         { Opcode::CONDITION,      std::string("Condition") },
         { Opcode::FLAG,           std::string("F") },
         { Opcode::NAMED_REGISTER, std::string("NR") },
-        { Opcode::STRING, std::string("S") }
+        { Opcode::STRING,         std::string("S") }
     };
     
     // Conditional suffix lookup.

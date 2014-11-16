@@ -88,6 +88,9 @@ namespace moss
                         case Opcode::LABEL:
                             writeL(line[i]);
                             break;
+                        case Opcode::STRING:
+                            writeS(line[i]);
+                            break;
                         case Opcode::FLAG:
                             writeU(static_cast<uint32_t>(Opcode::find_flag(line[i])));
                             break;
@@ -126,6 +129,42 @@ namespace moss
         }
 
         _label_temp.clear();
+
+        for (auto i = 0; i < 8; i++)
+        {
+            writeU(Opcode::HALT);
+        }
+        for (auto iter = _string_temp.begin(); iter != _string_temp.end(); ++iter)
+        {
+            for (auto iter2 = iter->second.begin(); iter2 != iter->second.end(); ++iter2)
+            {
+                auto index = static_cast<int32_t>(*iter2);
+                auto diff = static_cast<int32_t>(_index) - index - 1;
+                _data[*iter2].i = diff;
+            }
+
+            const std::string &str = iter->first;
+            auto j = 0u;
+            DataWord str_value;
+            for (auto i = 0u; i < str.size(); ++i)
+            {
+                str_value.b[j] = str[i];
+                ++j;
+                if (j >= 4)
+                {
+                    _data.push_back(str_value);
+                    str_value = DataWord(0u);
+                    ++_index;
+                    j = 0u;
+                }
+            }
+            if (j > 0)
+            {
+                _data.push_back(str_value);
+                ++_index;
+            }
+            writeU(0u);
+        }
         return true;
     }
 
@@ -152,6 +191,11 @@ namespace moss
     void Assembler::writeL(const std::string &label)
     {
         _label_temp[label].push_back(_index);
+        writeU(0u);
+    }
+    void Assembler::writeS(const std::string &str)
+    {
+        _string_temp[str].push_back(_index);
         writeU(0u);
     }
 
@@ -230,6 +274,12 @@ namespace moss
                 return Opcode::MEMORY;
             }
             return Opcode::UNKNOWN_TYPE;
+        }
+
+        // Is a string.
+        if (token[0] == '"' && token.back() == '"')
+        {
+            return Opcode::STRING;
         }
 
         // Is flag string

@@ -39,12 +39,15 @@ namespace moss
             std::vector<DataWord> _data;
             std::map< std::string, uint32_t > _label_locations;
             std::map< std::string, std::vector<uint32_t> > _label_temp;
+            std::map< std::string, uint32_t > _string_locations;
+            std::map< std::string, std::vector<uint32_t> > _string_temp;
 
             void add_label(const std::string &label);
             void writeU(uint32_t value);
             void writeI(int32_t value);
             void writeF(float value);
             void writeL(const std::string &label);
+            void writeS(const std::string &str);
 
             static Opcode::Type get_token_type(const std::string &token, bool is_first_token);
             static bool is_register(const std::string &token, std::size_t index);

@@ -163,7 +163,9 @@ namespace moss
 
                 // }}}
 
-                PRINT_R
+                PRINT_R,
+                PRINT_I,
+                PRINT_S
             };
             // }}}
 
