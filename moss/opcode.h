@@ -180,7 +180,8 @@ namespace moss
                 NUMBER,
                 CONDITION,
                 FLAG,
-                NAMED_REGISTER
+                NAMED_REGISTER,
+                STRING
             };
             // }}}
             

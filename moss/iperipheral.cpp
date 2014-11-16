@@ -8,5 +8,10 @@ namespace moss
         _memory_offset = offset;
         _memory_size = size;
     }
+
+    bool IPeripheral::assigned() const
+    {
+        return _memory != nullptr;
+    }
 }
 

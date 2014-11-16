@@ -464,7 +464,8 @@ namespace moss
         { Opcode::NUMBER,         std::string("I") },
         { Opcode::CONDITION,      std::string("Condition") },
         { Opcode::FLAG,           std::string("F") },
-        { Opcode::NAMED_REGISTER, std::string("NR") }
+        { Opcode::NAMED_REGISTER, std::string("NR") },
+        { Opcode::STRING, std::string("S") }
     };
     
     // Conditional suffix lookup.

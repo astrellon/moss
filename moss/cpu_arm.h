@@ -51,6 +51,8 @@ namespace moss
             
             Memory *_memory;
 
+            void io_send(uint32_t reg_index, uint32_t perf_index, uint32_t command);
+
             FORCEINLINE uint32_t next_pc_uint()
             {
                 if (_regs.enable_mmu())

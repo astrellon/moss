@@ -25,7 +25,7 @@ namespace moss
     }
     bool Utils::is_int_digit(char c)
     {
-        return c >= '0' && c <= '9';
+        return c == '-' || (c >= '0' && c <= '9');
     }
     bool Utils::is_float_digit(char c)
     {

@@ -17,6 +17,10 @@ namespace moss
         _memory(nullptr)
     {
         _regs.zero();
+        for (auto i = 0u; i < _peripherals.size(); i++)
+        {
+            _peripherals[i] = nullptr;
+        }
     }
     CpuArm::~CpuArm()
     {
@@ -135,6 +139,41 @@ namespace moss
     float CpuArm::pop_stack_float()
     {
         return _mmu.float_data(_regs.stack_pointer_pop());
+    }
+            
+    void CpuArm::io_send(uint32_t reg_index, uint32_t perf_index, uint32_t command)
+    {
+        if (command == 0)
+        {
+            if (perf_index >= _peripherals.size())
+            {
+                _regs.uint_reg(reg_index, -2);
+            }
+            else if (_peripherals[perf_index] == nullptr)
+            {
+                _regs.uint_reg(reg_index, -1);
+            }
+            else if (_peripherals[perf_index]->assigned())
+            {
+                _regs.uint_reg(reg_index, 1);
+            }
+            return;
+        }
+
+        // If there are errors here, such as out of bounds or nullptrs
+        // a fault should be raised in some future interrupt system.
+        // For now, we'll assume that there aren't any errors :|
+        // Best CPU safety!
+        if (perf_index >= _peripherals.size())
+        {
+            std::cout << "Out of bounds for peripheral: " << perf_index << "\n";
+        }
+        else if (_peripherals[perf_index] == nullptr)
+        {
+            std::cout << "Attempting to access null peripheral: " << perf_index << "\n";
+        }
+
+        _regs.uint_reg(reg_index, _peripherals[perf_index]->send_command(command));
     }
 
     void CpuArm::do_run()
@@ -911,7 +950,7 @@ namespace moss
                     // peripheral[arg1](arg2)
                     arg1 = next_pc_uint();
                     arg2 = next_pc_uint();
-                    if (meets_condition)
+                    if (meets_condition && arg1 < _peripherals.size())
                     {
                         _peripherals[arg1]->send_command(arg2);
                     }
@@ -922,14 +961,18 @@ namespace moss
                     arg2 = next_pc_uint();
                     if (meets_condition)
                     {
-                        _peripherals[_regs.uint_reg(arg1)]->send_command(arg2);
+                        arg3 = _regs.uint_reg(arg1);
+                        if (arg3 < _peripherals.size())
+                        {
+                            _peripherals[arg3]->send_command(arg2);
+                        }
                     }
                     break;
                 case Opcode::IO_SEND_I_R:
                     // peripheral[arg1](reg[arg2])
                     arg1 = next_pc_uint();
                     arg2 = next_pc_uint();
-                    if (meets_condition)
+                    if (meets_condition && arg1 < _peripherals.size())
                     {
                         _peripherals[arg1]->send_command(_regs.uint_reg(arg2));
                     }
@@ -940,7 +983,11 @@ namespace moss
                     arg2 = next_pc_uint();
                     if (meets_condition)
                     {
-                        _peripherals[_regs.uint_reg(arg1)]->send_command(_regs.uint_reg(arg2));
+                        arg3 = _regs.uint_reg(arg1);
+                        if (arg3 < _peripherals.size())
+                        {
+                            _peripherals[arg3]->send_command(_regs.uint_reg(arg2));
+                        }
                     }
                     break;
 
@@ -951,7 +998,7 @@ namespace moss
                     arg3 = next_pc_uint();
                     if (meets_condition)
                     {
-                        _regs.uint_reg(arg1, _peripherals[arg2]->send_command(arg3));
+                        io_send(arg1, arg2, arg3);
                     }
                     break;
                 case Opcode::IO_SEND_R_R_I:
@@ -961,7 +1008,7 @@ namespace moss
                     arg3 = next_pc_uint();
                     if (meets_condition)
                     {
-                        _regs.uint_reg(arg1, _peripherals[_regs.uint_reg(arg2)]->send_command(arg3));
+                        io_send(arg1, _regs.uint_reg(arg2), arg3);
                     }
                     break;
                 case Opcode::IO_SEND_R_I_R:
@@ -971,7 +1018,7 @@ namespace moss
                     arg3 = next_pc_uint();
                     if (meets_condition)
                     {
-                        _regs.uint_reg(arg1, _peripherals[arg2]->send_command(_regs.uint_reg(arg3)));
+                        io_send(arg1, arg2, _regs.uint_reg(arg3));
                     }
                     break;
                 case Opcode::IO_SEND_R_R_R:
@@ -981,7 +1028,7 @@ namespace moss
                     arg3 = next_pc_uint();
                     if (meets_condition)
                     {
-                        _regs.uint_reg(arg1, _peripherals[_regs.uint_reg(arg2)]->send_command(_regs.uint_reg(arg3)));
+                        io_send(arg1, _regs.uint_reg(arg2), _regs.uint_reg(arg3));
                     }
                     break;
 

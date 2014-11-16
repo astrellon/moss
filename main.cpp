@@ -41,7 +41,7 @@ int main(int argc, char **argv)
     assembler.finalise();
     assembler.write_to_memory<moss::Memory>(&mem, program_start);
 
-    moss::Disassembler::to_stream<moss::Memory>(std::cout, &mem, program_start, program_start + 32);
+    moss::Disassembler::to_stream<moss::Memory>(std::cout, &mem, program_start, program_start + 80);
 
     try
     {

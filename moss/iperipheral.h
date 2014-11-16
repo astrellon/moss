@@ -12,6 +12,7 @@ namespace moss
             virtual uint32_t send_command(uint32_t command) = 0;
 
             virtual void assign_memory(Memory *memory, uint32_t offset, uint32_t size);
+            virtual bool assigned() const;
 
         protected:
             Memory *_memory;

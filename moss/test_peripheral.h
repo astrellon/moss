@@ -11,7 +11,7 @@ namespace moss
 
             enum Command
             {
-                UNKNOWN,
+                UNKNOWN = 0xDEADBEEF,
                 STATUS,
                 READ,
                 WRITE
