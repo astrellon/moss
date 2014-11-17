@@ -75,6 +75,9 @@ SRCDIRS   = . moss
 # The executable file name.
 # If not specified, current directory name or `a.out' will be used.
 PROGRAM   = Moss
+ifdef NAME
+    PROGRAM = $(NAME)
+endif
 
 ifdef TESTING
     MY_CFLAGS += -DTESTING=1
