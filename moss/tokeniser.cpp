@@ -39,6 +39,7 @@ namespace moss
     {
         _has_tokens = false;
         _in_comment = false;
+        _in_string = false;
         _current_tokens.clear();
 
         std::string line;
@@ -73,12 +74,19 @@ namespace moss
 
     std::size_t Tokeniser::next_whitespace(const std::string &str, std::size_t index)
     {
-        while (index < str.size() && !Utils::is_whitespace(str[index]))
+        while (index < str.size() && (_in_string || !Utils::is_whitespace(str[index])))
         {
             if (str[index] == ';')
             {
                 _in_comment = true;
                 return index;
+            }
+            if (str[index] == '"')
+            {
+                if (index == 0 || (index > 0 && str[index - 1] != '\\'))
+                {
+                    _in_string = !_in_string;
+                }
             }
             ++index;
         }

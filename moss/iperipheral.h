@@ -9,10 +9,21 @@ namespace moss
     class IPeripheral
     {
         public:
+            IPeripheral();
+
             virtual uint32_t send_command(uint32_t command) = 0;
 
             virtual void assign_memory(Memory *memory, uint32_t offset, uint32_t size);
             virtual bool assigned() const;
+
+            enum BaseCommands
+            {
+                UNKNOWN = 0xDEADBEEF,
+                // Info status is actually hangled by the CPU.
+                // Might change that in future.
+                INFO_STATUS    = 0x0,
+                MEMORY_REQUEST = 0x1
+            };
 
         protected:
             Memory *_memory;

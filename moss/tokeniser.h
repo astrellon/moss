@@ -21,6 +21,7 @@ namespace moss
             bool _has_tokens;
             bool _end_of_stream;
             bool _in_comment;
+            bool _in_string;
 
             std::istream &_input;
             std::vector<std::string> _current_tokens;

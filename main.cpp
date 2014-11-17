@@ -53,7 +53,9 @@ int main(int argc, char **argv)
     }
     cpu.to_stream(std::cout);
 
+#ifdef _WIN32
 	std::cin.get();
+#endif
 
     return 0;
 }

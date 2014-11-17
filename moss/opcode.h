@@ -163,6 +163,11 @@ namespace moss
 
                 // }}}
 
+                // Function commands {{{
+                CALL_I,
+                RETURN,
+                // }}}
+                
                 PRINT_R,
                 PRINT_I,
                 PRINT_S
