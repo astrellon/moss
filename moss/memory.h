@@ -14,6 +14,9 @@ namespace moss
             Memory(uint32_t size);
             ~Memory();
 
+            /**
+             * Zeroes out the memeory.
+             */
             void zero();
 
             void to_stream(std::ostream &os, uint32_t start = 0, uint32_t end = -1) const;

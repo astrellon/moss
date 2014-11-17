@@ -35,7 +35,7 @@ namespace moss
     {
         for (auto i = 0u; i < _memory_size; i++)
         {
-            _memory->uint_data(_memory_offset + i, _disk[i]);
+            uint_data(i, _disk[i]);
         }
         return 0;
     }
@@ -44,7 +44,7 @@ namespace moss
         std::cout << "Writing to disk: ";
         for (auto i = 0u; i < _memory_size; i++)
         {
-            _disk[i] = _memory->uint_data(_memory_offset + i);
+            _disk[i] = uint_data(i);
             std::cout << _disk[i] << ' ';
         }
         std::cout << "\n";
