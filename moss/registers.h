@@ -14,11 +14,6 @@ namespace moss
 
             void zero();
 
-            uint32_t stack_pointer() const;
-            uint32_t stack_pointer_push();
-            uint32_t stack_pointer_pop();
-            void stack_pointer(uint32_t value);
-
             void to_stream(std::ostream &os) const;
             
             enum Flags
@@ -34,11 +29,47 @@ namespace moss
         private:
             uint32_t _flags;
             uint32_t _stack_pointer;
+            uint32_t _min_stack_pointer;
+            uint32_t _max_stack_pointer;
             uint32_t _program_counter;
             std::array<DataWord, 16> _word_regs;
 
         public:
 
+            FORCEINLINE uint32_t stack_pointer() const
+            {
+                return _stack_pointer;
+            }
+            FORCEINLINE uint32_t stack_pointer_push()
+            {
+                return _stack_pointer++;
+            }
+            FORCEINLINE uint32_t stack_pointer_pop()
+            {
+                return --_stack_pointer;
+            }
+            FORCEINLINE void stack_pointer(uint32_t value)
+            {
+                _stack_pointer = value;
+            }
+
+            FORCEINLINE uint32_t min_stack_pointer() const
+            {
+                return _min_stack_pointer;
+            }
+            FORCEINLINE void min_stack_pointer(uint32_t value)
+            {
+                _min_stack_pointer = value;
+            }
+            FORCEINLINE uint32_t max_stack_pointer() const
+            {
+                return _max_stack_pointer;
+            }
+            FORCEINLINE void max_stack_pointer(uint32_t value)
+            {
+                _max_stack_pointer = value;
+            }
+    
             FORCEINLINE uint32_t num_word_reg() const
             {
                 return static_cast<uint32_t>(_word_regs.size());

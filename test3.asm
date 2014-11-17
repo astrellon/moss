@@ -63,6 +63,7 @@ mem_start:
     MOV @r0 r3
     ADD r3 5
     INC r2
+    INC r0
     JMP mem_start
 
 mem_end:

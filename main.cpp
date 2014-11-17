@@ -17,7 +17,7 @@
 
 int main(int argc, char **argv)
 {
-    moss::Memory mem(1024u);
+    moss::Memory mem(128u * 1024u);
     mem.zero();
 
     moss::CpuArm cpu(4u);
