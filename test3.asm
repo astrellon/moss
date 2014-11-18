@@ -74,4 +74,17 @@ mem_end:
     ;< JMP start
 
 end:
+    PUSH 5
+    PUSH 8
+    CALL func_add
+    PRINT "RESULT"
+    PRINT r10
     PRINT "Finishing"
+    HALT
+
+func_add:
+    POP r7
+    POP r8
+    ADD r10 r7 r8
+
+    RETURN

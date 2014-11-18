@@ -10,6 +10,7 @@ namespace moss
         _stack_pointer(0),
         _min_stack_pointer(0),
         _max_stack_pointer(1024),
+        _code_stack_pointer(0),
         _program_counter(0)
     {
 

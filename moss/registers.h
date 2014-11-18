@@ -31,6 +31,9 @@ namespace moss
             uint32_t _stack_pointer;
             uint32_t _min_stack_pointer;
             uint32_t _max_stack_pointer;
+
+            uint32_t _code_stack_pointer;
+
             uint32_t _program_counter;
             std::array<DataWord, 16> _word_regs;
 
@@ -51,6 +54,23 @@ namespace moss
             FORCEINLINE void stack_pointer(uint32_t value)
             {
                 _stack_pointer = value;
+            }
+            
+            FORCEINLINE uint32_t code_stack_pointer() const
+            {
+                return _code_stack_pointer;
+            }
+            FORCEINLINE uint32_t code_stack_pointer_push()
+            {
+                return _code_stack_pointer++;
+            }
+            FORCEINLINE uint32_t code_stack_pointer_pop()
+            {
+                return --_code_stack_pointer;
+            }
+            FORCEINLINE void code_stack_pointer(uint32_t value)
+            {
+                _code_stack_pointer = value;
             }
 
             FORCEINLINE uint32_t min_stack_pointer() const

@@ -79,7 +79,7 @@ namespace moss
     {
         for (auto iter = s_names_to_flags.begin(); iter != s_names_to_flags.end(); ++iter)
         {
-            if (iter->second == flag)
+            if (static_cast<uint32_t>(iter->second) == flag)
             {
                 return iter->first;
             }
@@ -113,7 +113,7 @@ namespace moss
     }
 
     // This is used by the assembler once the command and argument types have been
-    // determined to get the final opcode.
+    // determined to get the final opcode. {{{
 	std::map<std::string, Opcode::Command> Opcode::s_names_to_commands = {
 		{ std::string("HALT"), Opcode::HALT },
 
@@ -262,13 +262,20 @@ namespace moss
         
         // }}}
         
+        // Function commands {{{
+        { std::string("CALL_I"),  Opcode::CALL_I },
+        { std::string("CALL_R"),  Opcode::CALL_R },
+        { std::string("RETURN"),  Opcode::RETURN },
+        // }}}
+        
         { std::string("PRINT_R"),  Opcode::PRINT_R },
         { std::string("PRINT_I"),  Opcode::PRINT_I },
         { std::string("PRINT_S"),  Opcode::PRINT_S }
     };
+    // }}}
 
     // This map is used by the disassembler for converting opcode values back
-    // into the original command name with the expected arguments. 
+    // into the original command name with the expected arguments. {{{
     std::map<Opcode::Command, std::pair<std::string, std::vector<Opcode::Type> > > Opcode::s_commands_to_types = {
         { Opcode::HALT, { "halt", {} } },
 
@@ -419,12 +426,19 @@ namespace moss
         
         // }}}
 
+        // Function commands {{{
+        { Opcode::CALL_I, { "call", { Opcode::INT_NUMBER } } },
+        { Opcode::CALL_R, { "call", { Opcode::REGISTER } } },
+        { Opcode::RETURN, { "return", { } } },
+        // }}}
+        
         { Opcode::PRINT_R, { "print", { Opcode::INT_NUMBER } } },
         { Opcode::PRINT_I, { "print", { Opcode::NUMBER } } },
         { Opcode::PRINT_S, { "print", { Opcode::STRING } } }
     };
+    // }}}
     
-    // Converts opcode types to strings. Mostly for debugging the token parsing output.
+    // Converts opcode types to strings. Mostly for debugging the token parsing output. {{{
     std::map<Opcode::Type, std::string> Opcode::s_type_names = {
         { Opcode::UNKNOWN_TYPE,   std::string("unknown") },
         { Opcode::COMMAND,        std::string("command") },
@@ -439,8 +453,9 @@ namespace moss
         { Opcode::NAMED_REGISTER, std::string("named_register") },
         { Opcode::STRING,         std::string("string") }
     };
+    // }}}
     
-    // For creating the command lookup key.
+    // For creating the command lookup key. {{{
     // Each command after being parsed into Opcode parts well then
     // be turned into a string with the COMMAND_TYPEN format.
     // For example:
@@ -473,8 +488,9 @@ namespace moss
         { Opcode::NAMED_REGISTER, std::string("NR") },
         { Opcode::STRING,         std::string("S") }
     };
+    // }}}
     
-    // Conditional suffix lookup.
+    // Conditional suffix lookup. {{{
     // Basically if the token that is expected to be the command is one of these
     // it is taken to be the conditional for that command and then the next token
     // is expected to be the command.
@@ -494,8 +510,9 @@ namespace moss
         { "GE", Opcode::COND_GE },
         { ">=", Opcode::COND_GE }
     };
+    // }}}
 
-    // Names for flags.
+    // Names for flags. {{{
     // If a token that is expected to be an argument is one of these strings
     // it is now recognised as a flag value. This means that labels
     // cannot be one of these values.
@@ -506,11 +523,15 @@ namespace moss
         { "OVERFLOW", Registers::FLAG_OVERFLOW },
         { "MMU",      Registers::FLAG_ENABLE_MMU }
     };
+    // }}}
 
+    // Names for named registers. {{{
     std::map<std::string, Opcode::NamedRegister> Opcode::s_names_to_named_reg = {
         { "PROGRAM_COUNTER",    Opcode::PROGRAM_COUNTER },
         { "STACK_POINTER",      Opcode::STACK_POINTER },
+        { "CODE_STACK_POINTER",      Opcode::CODE_STACK_POINTER },
         { "PAGE_TABLE_POINTER", Opcode::PAGE_TABLE_POINTER }
     };
+    // }}}
 
 }

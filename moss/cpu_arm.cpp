@@ -140,6 +140,15 @@ namespace moss
     {
         return _mmu.float_data(_regs.stack_pointer_pop());
     }
+    
+    void CpuArm::push_code_stack(uint32_t value)
+    {
+        _mmu.uint_data(_regs.code_stack_pointer_push(), value);
+    }
+    uint32_t CpuArm::pop_code_stack()
+    {
+        return _mmu.uint_data(_regs.code_stack_pointer_pop());
+    }
             
     void CpuArm::io_send(uint32_t reg_index, uint32_t perf_index, uint32_t command)
     {
@@ -1110,6 +1119,32 @@ namespace moss
                     break;
                 // }}}
                 
+                // }}}
+
+                // Function commands {{{
+                case Opcode::CALL_I:
+                    arg1 = next_pc_uint();
+                    if (meets_condition)
+                    {
+                        push_code_stack(_regs.program_counter());
+                        _regs.change_program_counter(arg1);
+                    }
+                    break;
+                case Opcode::CALL_R:
+                    arg1 = next_pc_uint();
+                    if (meets_condition)
+                    {
+                        push_code_stack(_regs.program_counter());
+                        _regs.change_program_counter(_regs.uint_reg(arg1));
+                    }
+                    break;
+                case Opcode::RETURN:
+                    if (meets_condition)
+                    {
+                        arg1 = pop_code_stack();
+                        _regs.program_counter(arg1 + 1);
+                    }
+                    break;
                 // }}}
 
                 // Debug commands {{{

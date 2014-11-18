@@ -27,9 +27,13 @@ namespace moss
     {
         return c == '-' || (c >= '0' && c <= '9');
     }
-    bool Utils::is_float_digit(char c)
+    bool Utils::is_float_digit(char c, bool first_char)
     {
-        return c == '.' || c == 'f' || is_int_digit(c);
+        if (!first_char && c == 'f')
+        {
+            return true;
+        }
+        return c == '.' || is_int_digit(c);
     }
     bool Utils::is_hex_digit(char c)
     {

@@ -165,6 +165,7 @@ namespace moss
 
                 // Function commands {{{
                 CALL_I,
+                CALL_R,
                 RETURN,
                 // }}}
                 
@@ -212,6 +213,7 @@ namespace moss
             {
                 NAMED_UNKNOWN,
                 STACK_POINTER,
+                CODE_STACK_POINTER,
                 PROGRAM_COUNTER,
                 PAGE_TABLE_POINTER
             };

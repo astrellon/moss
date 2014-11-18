@@ -84,6 +84,9 @@ namespace moss
             void push_stack_float(float value);
             uint32_t pop_stack();
             float pop_stack_float();
+            
+            void push_code_stack(uint32_t value);
+            uint32_t pop_code_stack();
 
             static uint32_t s_int_bit_shift;
     };

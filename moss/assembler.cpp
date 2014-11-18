@@ -25,6 +25,14 @@ namespace moss
 
     void Assembler::process_stream(const std::string &filename, std::istream &ss)
     {
+        writeU(Opcode::MOV_NR_I);
+        writeU(Opcode::STACK_POINTER);
+        writeU(0u);
+        
+        writeU(Opcode::MOV_NR_I);
+        writeU(Opcode::CODE_STACK_POINTER);
+        writeU(0u);
+        
         _tokens = new Tokeniser(ss);
 
         while (_tokens->has_tokens())
@@ -222,7 +230,7 @@ namespace moss
 
         // Is a number
         if (Utils::is_int_digit(token[0]) ||
-            Utils::is_float_digit(token[0]))
+            Utils::is_float_digit(token[0], true))
         {
             bool is_float = false;
             bool is_hex = false;
@@ -238,7 +246,7 @@ namespace moss
                     return Opcode::UNKNOWN_TYPE;
                 }
                 if (!Utils::is_int_digit(token[i]) &&
-                    !Utils::is_float_digit(token[i]) &&
+                    !Utils::is_float_digit(token[i], false) &&
                     !Utils::is_hex_digit(token[i]))
                 {
                     return Opcode::UNKNOWN_TYPE;
