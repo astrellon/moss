@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+
+<Type Name="moss::DataWord_u">
+	<DisplayString>({i}, {f}, {(moss::Opcode::Command(u))})</DisplayString>
+	<Expand>
+		<Item Name="Opcode">(moss::Opcode::Command)(u)</Item>
+	</Expand>
+
+</Type>
+
+</AutoVisualizer>
