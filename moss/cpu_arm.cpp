@@ -324,6 +324,31 @@ namespace moss
                         _regs.flag(arg1, arg2 > 0);
                     }
                     break;
+                
+				case Opcode::MOV_R_NR:
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    if (meets_condition)
+                    {
+                        _regs.uint_reg(arg1, _regs.named_register(arg2));
+                    }
+                    break;
+                case Opcode::MOV_NR_R:
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    if (meets_condition)
+                    {
+                        _regs.named_register(arg1, _regs.uint_reg(arg2));
+                    }
+                    break;
+                case Opcode::MOV_NR_I:
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    if (meets_condition)
+                    {
+                        _regs.named_register(arg1, arg2);
+                    }
+                    break;
                 // }}}
 
                 // Unit Converstions {{{
@@ -1142,7 +1167,7 @@ namespace moss
                     if (meets_condition)
                     {
                         arg1 = pop_code_stack();
-                        _regs.program_counter(arg1 + 1);
+						_regs.program_counter(arg1);
                     }
                     break;
                 // }}}

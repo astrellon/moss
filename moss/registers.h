@@ -15,6 +15,9 @@ namespace moss
             void zero();
 
             void to_stream(std::ostream &os) const;
+
+			uint32_t named_register(uint32_t reg) const;
+			void named_register(uint32_t reg, uint32_t value);
             
             enum Flags
             {

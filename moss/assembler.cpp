@@ -10,7 +10,9 @@ namespace moss
 {
     Assembler::Assembler() :
         _index(0),
-        _tokens(nullptr)
+        _tokens(nullptr),
+		_stack_pointer_index(0),
+		_code_stack_pointer_index(0)
     {
 
     }
@@ -27,10 +29,12 @@ namespace moss
     {
         writeU(Opcode::MOV_NR_I);
         writeU(Opcode::STACK_POINTER);
+		_stack_pointer_index = _index;
         writeU(0u);
         
         writeU(Opcode::MOV_NR_I);
         writeU(Opcode::CODE_STACK_POINTER);
+		_code_stack_pointer_index = _index;
         writeU(0u);
         
         _tokens = new Tokeniser(ss);
@@ -173,6 +177,9 @@ namespace moss
             }
             writeU(0u);
         }
+
+		_data[_code_stack_pointer_index].u = _index + 4;
+		_data[_stack_pointer_index].u = _index + 1028;
         return true;
     }
 

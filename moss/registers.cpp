@@ -3,6 +3,8 @@
 #include <iomanip>
 #include <stdexcept>
 
+#include "opcode.h"
+
 namespace moss
 {
     Registers::Registers() :
@@ -36,4 +38,39 @@ namespace moss
             os << "- " << std::setw(2) << i << ": " << std::setw(14) << uint_reg(i) << std::setw(14) << float_reg(i) << "\n";
         }
     }
+	uint32_t Registers::named_register(uint32_t reg) const
+	{
+		switch (reg)
+		{
+			default:
+			case Opcode::NAMED_UNKNOWN:
+				std::cout << "Unknown named register: " << reg << "\n";
+				return 0;
+			case Opcode::STACK_POINTER:
+				return _stack_pointer;
+			case Opcode::CODE_STACK_POINTER:
+				return _code_stack_pointer;
+			case Opcode::PROGRAM_COUNTER:
+				return _program_counter;
+		}
+	}
+	void Registers::named_register(uint32_t reg, uint32_t value)
+	{
+		switch (reg)
+		{
+			default:
+			case Opcode::NAMED_UNKNOWN:
+				std::cout << "Unknown named register: " << reg << "\n";
+				break;
+			case Opcode::STACK_POINTER:
+				_stack_pointer = value;
+				break;
+			case Opcode::CODE_STACK_POINTER:
+				_code_stack_pointer = value;
+				break;
+			case Opcode::PROGRAM_COUNTER:
+				_program_counter = value;
+				break;
+		}
+	}
 }

@@ -41,6 +41,9 @@ namespace moss
             std::map< std::string, std::vector<uint32_t> > _label_temp;
             std::map< std::string, std::vector<uint32_t> > _string_temp;
 
+			uint32_t _stack_pointer_index;
+			uint32_t _code_stack_pointer_index;
+
             void add_label(const std::string &label);
             void writeU(uint32_t value);
             void writeI(int32_t value);

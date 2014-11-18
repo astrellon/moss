@@ -28,7 +28,7 @@ namespace moss
     {
         IPeripheral::assign_memory(memory, offset, size);
 
-        _disk.reserve(32);
+        _disk.resize(32);
     }
 
     uint32_t TestPeripheral::read_disk()
