@@ -109,7 +109,7 @@ endif
 #CC     = gcc
 
 # The C++ program compiler.
-CXX    = clang++
+#CXX    = clang++
 
 # Un-comment the following line to compile C programs as C++ ones.
 #CC     = $(CXX)

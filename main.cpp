@@ -35,7 +35,8 @@ int main(int argc, char **argv)
     assembler.finalise();
     assembler.write_to_memory<moss::Memory>(&mem, program_start);
 
-    moss::Disassembler::to_stream<moss::Memory>(std::cout, &mem, program_start, program_start + 180);
+    auto report = assembler.report();
+    moss::Disassembler::to_stream<moss::Memory>(std::cout, &mem, program_start, program_start + report.total_size);
 
     try
     {

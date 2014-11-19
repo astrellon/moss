@@ -25,6 +25,19 @@ namespace moss
         finalise();
     }
 
+    Assembler::Report::Report() :
+        total_size(0u),
+        num_strings(0u),
+        num_labels(0u)
+    {
+
+    }
+
+    Assembler::Report Assembler::report() const
+    {
+        return _report;
+    }
+
     void Assembler::process_stream(const std::string &filename, std::istream &ss)
     {
         // Setup stack pointer
@@ -166,6 +179,7 @@ namespace moss
 
     bool Assembler::finalise()
     {
+        _report.num_labels += _label_temp.size();
         for (auto iter = _label_temp.begin(); iter != _label_temp.end(); ++iter)
         {
             auto find = _label_locations.find(iter->first);
@@ -189,6 +203,8 @@ namespace moss
         {
             writeU(Opcode::HALT);
         }
+
+        _report.num_strings += _string_temp.size();
         for (auto iter = _string_temp.begin(); iter != _string_temp.end(); ++iter)
         {
             for (auto iter2 = iter->second.begin(); iter2 != iter->second.end(); ++iter2)
@@ -220,6 +236,8 @@ namespace moss
             }
             writeU(0u);
         }
+
+        _report.total_size = _index;
 
 		_data[_code_stack_pointer_index].u = _index + 4;
 		_data[_stack_pointer_index].u = _index + 1028;

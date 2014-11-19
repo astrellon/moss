@@ -19,6 +19,16 @@ namespace moss
             Assembler();
             ~Assembler();
 
+            class Report
+            {
+                public:
+                    Report();
+
+                    uint32_t total_size;
+                    uint32_t num_strings;
+                    uint32_t num_labels;
+            };
+
             void process_stream(const std::string &filename, std::istream &ss);
             bool finalise();
 
@@ -31,6 +41,8 @@ namespace moss
                 }
             }
 
+            Report report() const;
+
             static uint32_t parse_int(const std::string &str);
 
         private:
@@ -40,6 +52,8 @@ namespace moss
             std::map< std::string, uint32_t > _label_locations;
             std::map< std::string, std::vector<uint32_t> > _label_temp;
             std::map< std::string, std::vector<uint32_t> > _string_temp;
+
+            Report _report;
 
             typedef struct
             {
