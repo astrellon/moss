@@ -285,15 +285,7 @@ namespace moss
         {
             return Opcode::UNKNOWN_TYPE;
         }
-        if (token.back() == ':')
-        {
-            return Opcode::LABEL;
-        }
-        if (token.back() == '=')
-        {
-            return Opcode::VARIABLE;
-        }
-
+        
         if (is_first_token)
         {
             if (Opcode::find_conditional(token) != Opcode::COND_UNKNOWN)
@@ -301,8 +293,17 @@ namespace moss
                 return Opcode::CONDITION;
             }
 
+            if (token.back() == ':')
+            {
+                return Opcode::LABEL;
+            }
+            if (token.back() == '=')
+            {
+                return Opcode::VARIABLE;
+            }
             return Opcode::COMMAND;
         }
+
 
         // Is a number
         if (Utils::is_int_digit(token[0]) ||
