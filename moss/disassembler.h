@@ -62,8 +62,25 @@ namespace moss
                                         std::cout << Opcode::flag_name(mem->uint_data(++i));
                                         break;
                                     case Opcode::STRING:
-                                        std::cout << "<insert string here>";
+                                        //std::cout << "<insert string here>";
                                         ++i;
+                                        {
+                                            int32_t i2 = mem->int_data(i) + i + 1;
+                                            std::cout << '"';
+                                            while (true)
+                                            {
+                                                uint32_t value = mem->uint_data(i2++);
+                                                char c1 = (value >> 24) & 0xFF;
+                                                char c2 = (value >> 16) & 0xFF;
+                                                char c3 = (value >> 8) & 0xFF;
+                                                char c4 = value & 0xFF;
+                                                if (c1) std::cout << c1; else break;
+                                                if (c2) std::cout << c2; else break;
+                                                if (c3) std::cout << c3; else break;
+                                                if (c4) std::cout << c4; else break;
+                                            }
+                                            std::cout << '"';
+                                        }
                                         break;
                                     case Opcode::NAMED_REGISTER:
                                         std::cout << Opcode::named_register_name(mem->uint_data(++i));
