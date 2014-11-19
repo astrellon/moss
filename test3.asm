@@ -11,6 +11,10 @@ mmu_start:
 
 
 ; Peripheral setup
+    perf_index=  r0
+    perf_offset= r4
+    perf_size=   r5
+    
     MOV r0 0    ; Perf index
     MOV r4 64   ; Perf memory offset
     MOV r5 32   ; Perf memory data (offset, size)
@@ -22,9 +26,11 @@ perf_start:
     ; -2: Out of bounds for peripherals
     ; -3: Other error
     IO_SEND r1 r0 0
+    PRINT "IO Send 0"
+    PRINT r0
     CMP r1 0
     == JMP perf_assign  ; Unassigned
-    
+    PRINT "Skippd jmp" 
     INC r0
     > JMP perf_start    ; Assigned
     
@@ -34,6 +40,8 @@ perf_start:
 
 perf_assign:
     PRINT "Assinging perf"
+    PRINT "IO Send 1"
+    PRINT r0
     IO_SEND r1 r0 1     ; Ask the peripheral how much memory it wants.
     
     MOV @r5 r4          ; Store the memory offset of the perf
@@ -41,6 +49,8 @@ perf_assign:
     MOV @r5 r1          ; Store the amount of memory the perf wanted.
     INC r5
     
+    PRINT "IO Assign"
+    PRINT r0
     IO_ASSIGN r0 r4 r1
     ADD r4 r1
     INC r0

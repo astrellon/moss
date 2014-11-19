@@ -189,7 +189,8 @@ namespace moss
                 CONDITION,
                 FLAG,
                 NAMED_REGISTER,
-                STRING
+                STRING,
+                VARIABLE
             };
             // }}}
             

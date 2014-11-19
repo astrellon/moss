@@ -27,11 +27,13 @@ namespace moss
 
     void Assembler::process_stream(const std::string &filename, std::istream &ss)
     {
+        // Setup stack pointer
         writeU(Opcode::MOV_NR_I);
         writeU(Opcode::STACK_POINTER);
 		_stack_pointer_index = _index;
         writeU(0u);
         
+        // Setup code stack pointer
         writeU(Opcode::MOV_NR_I);
         writeU(Opcode::CODE_STACK_POINTER);
 		_code_stack_pointer_index = _index;
@@ -78,7 +80,7 @@ namespace moss
                 {
                     std::cout << "- Before cond: " << std::hex << command;
                     command |= static_cast<uint32_t>(condition);
-                    std::cout << " | " << std::hex << command << "\n";
+                    std::cout << " | " << std::hex << command << std::dec << "\n";
                 }
                 
                 writeU(command);
@@ -117,6 +119,47 @@ namespace moss
             else if (first_type == Opcode::LABEL)
             {
                 add_label(process_label(line[0]));
+            }
+            else if (first_type == Opcode::VARIABLE)
+            {
+                if (condition != Opcode::COND_NONE)
+                {
+                    std::cout << "Cannot declare varible with conditional!\n";
+                    return;
+                }
+
+                DataWord value;
+                switch (types[0])
+                {
+                    default:
+                        std::cout << "Invalid type for variable: " << types[0] << "\n";
+                        break;
+                    case Opcode::INT_NUMBER:
+                        value.u = parse_int(line[1]);
+                        break;
+                    case Opcode::FLOAT_NUMBER:
+                        value.f = static_cast<float>(atof(line[1].c_str()));
+                        break;
+                    case Opcode::REGISTER:
+                    case Opcode::MEMORY:
+                        value.u = get_register_value(line[1]);
+                        break;
+                    case Opcode::LABEL:
+                        // TODO
+                        //writeL(line[1]);
+                        break;
+                    case Opcode::STRING:
+                        // TODO
+                        //writeS(line[1]);
+                        break;
+                    case Opcode::FLAG:
+                        value.u = static_cast<uint32_t>(Opcode::find_flag(line[1]));
+                        break;
+                    case Opcode::NAMED_REGISTER:
+                        value.u = static_cast<uint32_t>(Opcode::find_named_register(line[1]));
+                        break;
+                }
+                add_variable(process_variable(line[0]), types[0], value);
             }
         }
     }
@@ -187,6 +230,10 @@ namespace moss
     {
         _label_locations[label] = _index;
     }
+    void Assembler::add_variable(const std::string &name, Opcode::Type type, DataWord value)
+    {
+        _variables[name] = ValuePair { type, value };
+    }
 
     void Assembler::writeU(uint32_t value)
     {
@@ -223,6 +270,10 @@ namespace moss
         if (token.back() == ':')
         {
             return Opcode::LABEL;
+        }
+        if (token.back() == '=')
+        {
+            return Opcode::VARIABLE;
         }
 
         if (is_first_token)
@@ -346,6 +397,14 @@ namespace moss
     std::string Assembler::process_label(const std::string &token)
     {
         if (token.back() == ':')
+        {
+            return token.substr(0, token.size() - 1);
+        }
+        return token;
+    }
+    std::string Assembler::process_variable(const std::string &token)
+    {
+        if (token.back() == '=')
         {
             return token.substr(0, token.size() - 1);
         }

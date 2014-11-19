@@ -65,6 +65,9 @@ namespace moss
                                         std::cout << "<insert string here>";
                                         ++i;
                                         break;
+                                    case Opcode::NAMED_REGISTER:
+                                        std::cout << Opcode::named_register_name(mem->uint_data(++i));
+                                        break;
                                     default:
                                         std::cout << "Unknown";
                                 }

@@ -41,10 +41,19 @@ namespace moss
             std::map< std::string, std::vector<uint32_t> > _label_temp;
             std::map< std::string, std::vector<uint32_t> > _string_temp;
 
+            typedef struct
+            {
+                Opcode::Type type;
+                DataWord value;
+            } ValuePair;
+            std::map< std::string, ValuePair > _variables;
+
 			uint32_t _stack_pointer_index;
 			uint32_t _code_stack_pointer_index;
 
             void add_label(const std::string &label);
+            void add_variable(const std::string &name, Opcode::Type type, DataWord value);
+
             void writeU(uint32_t value);
             void writeI(int32_t value);
             void writeF(float value);
@@ -55,6 +64,7 @@ namespace moss
             static bool is_register(const std::string &token, std::size_t index);
             static uint32_t get_register_value(const std::string &value);
             static std::string process_label(const std::string &token);
+            static std::string process_variable(const std::string &name);
 
             static std::string process_string_value(const std::string &str);
 

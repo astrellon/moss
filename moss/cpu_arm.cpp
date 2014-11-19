@@ -166,6 +166,10 @@ namespace moss
             {
                 _regs.uint_reg(reg_index, 1);
             }
+            else
+            {
+                _regs.uint_reg(reg_index, 0);
+            }
             return;
         }
 
@@ -190,7 +194,6 @@ namespace moss
         float farg1 = 0.0f;
         float farg2 = 0.0f;
         int32_t iarg1 = 0;
-        int32_t iarg2 = 0;
         uint32_t arg1 = 0u;
         uint32_t arg2 = 0u;
         uint32_t arg3 = 0u;
