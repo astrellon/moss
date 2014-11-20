@@ -9,6 +9,7 @@ namespace moss
     Mmu::Mmu(uint32_t page_bit_size) :
         _page_bit_size(page_bit_size),
         _table_pointer(0),
+        _enable_mmu(false),
         _memory(nullptr)
     {
         _page_size = 1 << page_bit_size;

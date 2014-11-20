@@ -28,6 +28,7 @@ namespace moss
             uint32_t _page_bit_mask;
             uint32_t _page_size;
             uint32_t _table_pointer;
+            bool _enable_mmu;
             Memory *_memory;
 
             FORCEINLINE uint32_t translate_index(uint32_t index) const
@@ -39,29 +40,71 @@ namespace moss
             }
 
         public:
+            FORCEINLINE void enable_mmu(bool value)
+            {
+                _enable_mmu = value;
+            }
+            FORCEINLINE bool enable_mmu() const
+            {
+                return _enable_mmu;
+            }
+
             FORCEINLINE int32_t int_data(uint32_t index) const
             {
-                return _memory->int_data(translate_index(index));
+                if (_enable_mmu)
+                {
+                    return _memory->int_data(translate_index(index));
+                }
+                return _memory->int_data(index);
             }
             FORCEINLINE void int_data(uint32_t index, int32_t value)
             {
-                _memory->int_data(translate_index(index), value);
+                if (_enable_mmu)
+                {
+                    _memory->int_data(translate_index(index), value);
+                }
+                else
+                {
+                    _memory->int_data(index, value);
+                }
             }
             FORCEINLINE uint32_t uint_data(uint32_t index) const
             {
-                return _memory->uint_data(translate_index(index));
+                if (_enable_mmu)
+                {
+                    return _memory->uint_data(translate_index(index));
+                }
+                return _memory->uint_data(index);
             }
             FORCEINLINE void uint_data(uint32_t index, uint32_t value)
             {
-                _memory->uint_data(translate_index(index), value);
+                if (_enable_mmu)
+                {
+                    _memory->uint_data(translate_index(index), value);
+                }
+                else
+                {
+                    _memory->uint_data(index, value);
+                }
             }
             FORCEINLINE float float_data(uint32_t index) const
             {
-                return _memory->float_data(translate_index(index));
+                if (_enable_mmu)
+                {
+                    return _memory->float_data(translate_index(index));
+                }
+                return _memory->float_data(index);
             }
             FORCEINLINE void float_data(uint32_t index, float value)
             {
-                _memory->float_data(translate_index(index), value);
+                if (_enable_mmu)
+                {
+                    _memory->float_data(translate_index(index), value);
+                }
+                else
+                {
+                    _memory->float_data(index, value);
+                }
             }
     };
 }

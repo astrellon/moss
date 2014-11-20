@@ -55,27 +55,15 @@ namespace moss
 
             FORCEINLINE uint32_t next_pc_uint()
             {
-                if (_regs.enable_mmu())
-                {
-                    return _mmu.uint_data(_regs.program_counter_inc());
-                }
-                return _memory->uint_data(_regs.program_counter_inc());
+                return _mmu.uint_data(_regs.program_counter_inc());
             }
             FORCEINLINE int32_t next_pc_int()
             {
-                if (_regs.enable_mmu())
-                {
-                    return _mmu.int_data(_regs.program_counter_inc());
-                }
-                return _memory->int_data(_regs.program_counter_inc());
+                return _mmu.int_data(_regs.program_counter_inc());
             }
             FORCEINLINE float next_pc_float()
             {
-                if (_regs.enable_mmu())
-                {
-                    return _mmu.float_data(_regs.program_counter_inc());
-                }
-                return _memory->float_data(_regs.program_counter_inc());
+                return _mmu.float_data(_regs.program_counter_inc());
             }
 
             void do_run();

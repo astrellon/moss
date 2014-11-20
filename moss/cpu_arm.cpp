@@ -38,11 +38,11 @@ namespace moss
 
     bool CpuArm::enable_mmu() const
     {
-        return _enable_mmu;
+        return _mmu.enable_mmu();
     }
     void CpuArm::enable_mmu(bool enable)
     {
-        _enable_mmu = enable;
+        _mmu.enable_mmu(enable);
     }
 
     Mmu &CpuArm::mmu()
@@ -143,11 +143,14 @@ namespace moss
     
     void CpuArm::push_code_stack(uint32_t value)
     {
+        std::cout << "Push CS: " << value << "\n";
         _mmu.uint_data(_regs.code_stack_pointer_push(), value);
     }
     uint32_t CpuArm::pop_code_stack()
     {
-        return _mmu.uint_data(_regs.code_stack_pointer_pop());
+        uint32_t result = _mmu.uint_data(_regs.code_stack_pointer_pop());
+        std::cout << "Pop CS: " << result << "\n";
+        return result;
     }
             
     void CpuArm::io_send(uint32_t reg_index, uint32_t perf_index, uint32_t command)
