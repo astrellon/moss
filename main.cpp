@@ -8,6 +8,7 @@
 #include "moss/disassembler.h"
 #include "moss/test_peripheral.h"
 #include "moss/common.h"
+#include "moss/preprocessor.h"
 
 #include <string>
 #include <sstream>
@@ -29,14 +30,24 @@ int main(int argc, char **argv)
     cpu.registers().program_counter(program_start);
     cpu.memory(&mem);
 
-    moss::Assembler assembler;
-    std::ifstream input_ss("test3.asm");
-    assembler.process_stream(std::string("test3.asm"), input_ss);
-    assembler.finalise();
-    assembler.write_to_memory<moss::Memory>(&mem, program_start);
+    {
+        std::ifstream input_ss("test3.asm");
+        std::ofstream output_ss;
+        output_ss.open("preproc_temp.asm");
+        moss::Preprocessor preproc(input_ss, output_ss);
+        preproc.process_stream();
+    }
 
-    auto report = assembler.report();
-    moss::Disassembler::to_stream<moss::Memory>(std::cout, &mem, program_start, program_start + report.total_size);
+    {
+        moss::Assembler assembler;
+        std::ifstream input_ss("preproc_temp.asm");
+        assembler.process_stream(std::string("test3.asm"), input_ss);
+        assembler.finalise();
+        assembler.write_to_memory<moss::Memory>(&mem, program_start);
+
+        auto report = assembler.report();
+        moss::Disassembler::to_stream<moss::Memory>(std::cout, &mem, program_start, program_start + report.total_size);
+    }
 
     try
     {

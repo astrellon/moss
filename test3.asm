@@ -1,23 +1,25 @@
-; Third test tile
+; Third test file
 
 ; MMU setup
 ; Sets a 1 to 1 mapping up to 32
+#define PAGE_TABLE_SIZE 32
     MOV r0 0    ; Page table index
 mmu_start:
-    CMP r0 32
+    CMP r0 PAGE_TABLE_SIZE
     < MOV @r0 r0
     INC r0
     < JMP mmu_start
 
 
 ; Peripheral setup
-    perf_index=  r0
-    perf_offset= r4
-    perf_size=   r5
+#define perf_index  r0
+#define perf_offset r1
+#define perf_store  r2
     
-    MOV r0 0    ; Perf index
-    MOV r4 64   ; Perf memory offset
-    MOV r5 32   ; Perf memory data (offset, size)
+    MOV perf_index  0    ; Perf index
+    MOV perf_store  PAGE_TABLE_SIZE   ; Index to store the results from the IO_ASSIGNs
+    MOV perf_offset 32   ; Perf memory offset
+    ADD perf_offset 32
 perf_start:
     ; Send general port status, returns:
     ;  1: Attached and assigned
@@ -25,35 +27,30 @@ perf_start:
     ; -1: Nothing attached
     ; -2: Out of bounds for peripherals
     ; -3: Other error
-    IO_SEND r1 r0 0
-    PRINT "IO Send 0"
-    PRINT r0
-    CMP r1 0
+#define perf_result r3
+    IO_SEND perf_result perf_index 0
+    CMP perf_result 0
     == JMP perf_assign  ; Unassigned
     PRINT "Skippd jmp" 
-    INC r0
+    INC perf_index
     > JMP perf_start    ; Assigned
     
-    CMP r1 -1           ; Check if attached
+    CMP perf_result -1           ; Check if attached
     == JMP perf_start   ; Not attached, skip
     < JMP perf_end      ; At the end of the perfs
 
 perf_assign:
-    PRINT "Assinging perf"
-    PRINT "IO Send 1"
-    PRINT r0
-    IO_SEND r1 r0 1     ; Ask the peripheral how much memory it wants.
+#define perf_memory_result r4
+    IO_SEND perf_memory_result perf_index 1     ; Ask the peripheral how much memory it wants.
     
-    MOV @r5 r4          ; Store the memory offset of the perf
-    INC r5
-    MOV @r5 r1          ; Store the amount of memory the perf wanted.
-    INC r5
+    MOV @perf_store perf_offset          ; Store the memory offset of the perf
+    INC perf_store
+    MOV @perf_store perf_memory_result   ; Store the amount of memory the perf wanted.
+    INC perf_store
     
-    PRINT "IO Assign"
-    PRINT r0
-    IO_ASSIGN r0 r4 r1
-    ADD r4 r1
-    INC r0
+    IO_ASSIGN perf_index perf_offset perf_memory_result
+    ADD perf_offset perf_memory_result
+    INC perf_index
     JMP perf_start
 
 perf_end:
