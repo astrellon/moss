@@ -22,5 +22,9 @@ namespace moss
             void process_preprocessor_line(const std::vector<std::string> &line);
             void process_normal_line(const std::vector<std::string> &line);
             void add_symbol(const std::string &key, const std::string &value);
+
+            void process_stream(std::istream &ss);
+
+            static std::string process_string_value(const std::string &str);
     };
 }

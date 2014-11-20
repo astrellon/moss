@@ -239,7 +239,7 @@ namespace moss
                 // Error or Halt {{{
                     default:
                     std::cout << "Unknown OPCODE: " << opcode << " @ PC " << 
-                        (_regs.program_counter() - 1) << std::endl;
+                        std::dec << (_regs.program_counter() - 1) << std::endl;
                 case Opcode::HALT:
                     std::cout << "Halting." << std::endl;
                     stop();

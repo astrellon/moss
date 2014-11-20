@@ -5,7 +5,8 @@
 #ifdef _WIN32
 #	define FORCEINLINE __forceinline
 #else
-#	define FORCEINLINE inline
+//#	define FORCEINLINE inline
+#	define FORCEINLINE __attribute__((always_inline))
 #endif
 
 namespace moss

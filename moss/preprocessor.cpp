@@ -2,6 +2,8 @@
 
 #include "tokeniser.h"
 
+#include <fstream>
+
 namespace moss
 {
     Preprocessor::Preprocessor(std::istream &ss, std::ostream &os) :
@@ -12,7 +14,11 @@ namespace moss
 
     void Preprocessor::process_stream()
     {
-        Tokeniser tokens(_ss);
+        process_stream(_ss);
+    }
+    void Preprocessor::process_stream(std::istream &ss)
+    {
+        Tokeniser tokens(ss);
 
         while (tokens.has_tokens())
         {
@@ -41,6 +47,12 @@ namespace moss
             {
                 add_symbol(line[1], line[2]);
             }
+        }
+        else if (line[0] == "#include")
+        {
+            std::ifstream new_ss;
+            new_ss.open(process_string_value(line[1]));
+            process_stream(new_ss);
         }
     }
 
@@ -85,5 +97,10 @@ namespace moss
             std::cout << "Redefining symbol " << key << ": from " << find->second << ", to " << value << "\n";
         }
         _symbols[key] = value;
+    }
+    
+    std::string Preprocessor::process_string_value(const std::string &str)
+    {
+        return str.substr(1, str.size() - 2);
     }
 }

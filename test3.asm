@@ -1,7 +1,10 @@
 ; Third test file
 
+#include "stdmath.asm"
+
 ; MMU setup
 ; Sets a 1 to 1 mapping up to 32
+mmu_setup:
 #define PAGE_TABLE_SIZE 32
     MOV r0 0    ; Page table index
 mmu_start:
@@ -9,9 +12,11 @@ mmu_start:
     < MOV @r0 r0
     INC r0
     < JMP mmu_start
+    RETURN
 
 
 ; Peripheral setup
+perf_setup:
 #define perf_index  r0
 #define perf_offset r1
 #define perf_store  r2
@@ -54,14 +59,19 @@ perf_assign:
     JMP perf_start
 
 perf_end:
-
+    RETURN
 
 ; Main program
+main:
+    CALL mmu_setup
+    CALL perf_setup
+
     MOV r5 32
     MOV r0 @r5          ; Grab the offset of the first perf
     INC r5
     MOV r1 @r5          ; Grab the size of the first perf
 
+; Write test
     MOV r2 0
     MOV r3 5
 mem_start:
@@ -75,23 +85,21 @@ mem_start:
 
 mem_end:
     IO_SEND 0 0x12
-    ;CMP r0 0x00FFFFFF
+
+    MOV r0 0
+start:
+    CMP r0 0x00FFFFFF
     ;CMP r1 10
-    ;< INC r1
-    ;< JMP start
+    < INC r0
+    < JMP start
 
 end:
     PUSH 5
     PUSH 8
     CALL func_add
+    POP r10
     PRINT "RESULT"
     PRINT r10
     PRINT "Finishing"
     HALT
 
-func_add:
-    POP r7
-    POP r8
-    ADD r10 r7 r8
-
-    RETURN

@@ -51,6 +51,9 @@ namespace moss
         writeU(Opcode::CODE_STACK_POINTER);
 		_code_stack_pointer_index = _index;
         writeU(0u);
+
+        writeU(Opcode::JMP_I);
+        writeL("main");
         
         _tokens = new Tokeniser(ss);
 
