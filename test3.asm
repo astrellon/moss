@@ -63,6 +63,8 @@ perf_end:
 
 ; Main program
 main:
+    PRINT "PC: "
+    PRINT r2
     CALL mmu_setup
     CALL perf_setup
 

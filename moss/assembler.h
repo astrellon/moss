@@ -74,6 +74,8 @@ namespace moss
             void writeL(const std::string &label);
             void writeS(const std::string &str);
 
+            void write_setup_code();
+
             static Opcode::Type get_token_type(const std::string &token, bool is_first_token);
             static bool is_register(const std::string &token, std::size_t index);
             static uint32_t get_register_value(const std::string &value);

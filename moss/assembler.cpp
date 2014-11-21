@@ -38,9 +38,46 @@ namespace moss
         return _report;
     }
 
+    void Assembler::write_setup_code()
+    {
+        writeU(Opcode::MOV_R_NR);
+        writeU(2u);
+        writeU(Opcode::PROGRAM_COUNTER);
+
+        writeU(Opcode::MOV_R_I);
+        writeU(0u);
+        _stack_pointer_index = _index;
+        writeU(0u);
+        
+        writeU(Opcode::MOV_R_I);
+        writeU(1u);
+        _code_stack_pointer_index = _index;
+        writeU(0u);
+
+        writeU(Opcode::ADD_R_R);
+        writeU(0u);
+        writeU(2u);
+        
+        writeU(Opcode::ADD_R_R);
+        writeU(1u);
+        writeU(2u);
+
+        writeU(Opcode::MOV_NR_R);
+        writeU(Opcode::STACK_POINTER);
+        writeU(0u);
+
+        writeU(Opcode::MOV_NR_R);
+        writeU(Opcode::CODE_STACK_POINTER);
+        writeU(1u);
+
+        writeU(Opcode::JMP_I);
+        writeL("main");
+    }
+
     void Assembler::process_stream(const std::string &filename, std::istream &ss)
     {
         // Setup stack pointer
+        /*
         writeU(Opcode::MOV_NR_I);
         writeU(Opcode::STACK_POINTER);
 		_stack_pointer_index = _index;
@@ -51,10 +88,9 @@ namespace moss
         writeU(Opcode::CODE_STACK_POINTER);
 		_code_stack_pointer_index = _index;
         writeU(0u);
+        */
+        write_setup_code();
 
-        writeU(Opcode::JMP_I);
-        writeL("main");
-        
         _tokens = new Tokeniser(ss);
 
         while (_tokens->has_tokens())
