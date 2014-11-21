@@ -10,10 +10,12 @@
 namespace moss
 {
     uint32_t CpuArm::s_int_bit_shift = (sizeof(uint32_t) << 3) - 1;
+
     CpuArm::CpuArm(uint32_t page_bit_size) :
         _running(false),
         _enable_mmu(false),
         _mmu(page_bit_size),
+        _interrupt_return(0u),
         _memory(nullptr)
     {
         _regs.zero();
@@ -1178,6 +1180,30 @@ namespace moss
                     break;
                 // }}}
 
+                // Interupt commands {{{
+                case Opcode::INT_I:
+                    arg1 = next_pc_uint();
+                    if (meets_condition)
+                    {
+                        _interrupt_return = _regs.program_counter();
+                        _regs.change_program_counter(arg1);
+                    }
+                    break;
+                case Opcode::INT_R:
+                    arg1 = next_pc_uint();
+                    if (meets_condition)
+                    {
+                        _interrupt_return = _regs.program_counter();
+                        _regs.change_program_counter(_regs.uint_reg(arg1));
+                    }
+                    break;
+                case Opcode::RETI:
+                    if (meets_condition)
+                    {
+						_regs.program_counter(_interrupt_return);
+                    }
+                    break;
+                // }}}
                 // Debug commands {{{
                 case Opcode::PRINT_R:
                     arg1 = next_pc_uint();

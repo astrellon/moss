@@ -7,7 +7,6 @@
 #include <stdint.h>
 
 #include "tokeniser.h"
-#include "cpu.h"
 #include "common.h"
 #include "opcode.h"
 

@@ -1,6 +1,5 @@
 #include <iostream>
 
-#include "moss/cpu.h"
 #include "moss/cpu_arm.h"
 #include "moss/memory.h"
 #include "moss/memory_writer.h"

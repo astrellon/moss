@@ -169,6 +169,12 @@ namespace moss
                 RETURN,
                 // }}}
                 
+                // Interupt commands {{{
+                INT_R,
+                INT_I,
+                RETI,
+                // }}}
+            
                 PRINT_R,
                 PRINT_I,
                 PRINT_S

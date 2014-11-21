@@ -268,6 +268,12 @@ namespace moss
         { std::string("RETURN"),  Opcode::RETURN },
         // }}}
         
+        // Interupt commands {{{
+        { std::string("INT_I"), Opcode::INT_I },
+        { std::string("INT_R"), Opcode::INT_R },
+        { std::string("RETI"),  Opcode::RETI },
+        // }}}
+        
         { std::string("PRINT_R"),  Opcode::PRINT_R },
         { std::string("PRINT_I"),  Opcode::PRINT_I },
         { std::string("PRINT_S"),  Opcode::PRINT_S }
@@ -430,6 +436,12 @@ namespace moss
         { Opcode::CALL_I, { "call", { Opcode::INT_NUMBER } } },
         { Opcode::CALL_R, { "call", { Opcode::REGISTER } } },
         { Opcode::RETURN, { "return", { } } },
+        // }}}
+        
+        // Interupt commands {{{
+        { Opcode::INT_I, { "int", { Opcode::INT_NUMBER } } },
+        { Opcode::INT_R, { "int", { Opcode::REGISTER } } },
+        { Opcode::RETI,  { "reti", { } } },
         // }}}
         
         { Opcode::PRINT_R, { "print", { Opcode::INT_NUMBER } } },

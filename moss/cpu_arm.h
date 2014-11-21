@@ -48,6 +48,8 @@ namespace moss
             Registers _regs;
             Mmu _mmu;
             std::array<IPeripheral *, 16> _peripherals;
+            uint32_t _interrupt_return;
+            std::array<uint32_t, 16> _interrupts;
             
             Memory *_memory;
 

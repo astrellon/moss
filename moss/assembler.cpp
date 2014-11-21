@@ -76,19 +76,6 @@ namespace moss
 
     void Assembler::process_stream(const std::string &filename, std::istream &ss)
     {
-        // Setup stack pointer
-        /*
-        writeU(Opcode::MOV_NR_I);
-        writeU(Opcode::STACK_POINTER);
-		_stack_pointer_index = _index;
-        writeU(0u);
-        
-        // Setup code stack pointer
-        writeU(Opcode::MOV_NR_I);
-        writeU(Opcode::CODE_STACK_POINTER);
-		_code_stack_pointer_index = _index;
-        writeU(0u);
-        */
         write_setup_code();
 
         _tokens = new Tokeniser(ss);
