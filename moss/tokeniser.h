@@ -10,11 +10,15 @@ namespace moss
     class Tokeniser
     {
         public:
-            Tokeniser(std::istream &input);
+            Tokeniser(std::istream &input, bool include_all_lines);
 
             bool has_tokens() const;
             bool end_of_stream() const;
-            //std::string next_token();
+
+            uint32_t current_line() const;
+
+            bool include_all_lines() const;
+            
             std::vector<std::string> next_token_line();
 
         private:
@@ -22,6 +26,9 @@ namespace moss
             bool _end_of_stream;
             bool _in_comment;
             bool _in_string;
+            bool _include_all_lines;
+
+            uint32_t _current_line;
 
             std::istream &_input;
             std::vector<std::string> _current_tokens;

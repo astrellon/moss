@@ -28,6 +28,9 @@ namespace moss
                     uint32_t num_labels;
             };
 
+            bool enable_debug_symbols() const;
+            void enable_debug_symbols(bool enable);
+
             void process_stream(const std::string &filename, std::istream &ss);
             bool finalise();
 
@@ -52,6 +55,7 @@ namespace moss
             std::map< std::string, std::vector<uint32_t> > _label_temp;
             std::map< std::string, std::vector<uint32_t> > _string_temp;
 
+            bool _enable_debug_symbols;
             Report _report;
 
             typedef struct

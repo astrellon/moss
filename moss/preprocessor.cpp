@@ -18,7 +18,7 @@ namespace moss
     }
     void Preprocessor::process_stream(std::istream &ss)
     {
-        Tokeniser tokens(ss);
+        Tokeniser tokens(ss, true);
 
         while (tokens.has_tokens())
         {

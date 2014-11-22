@@ -11,6 +11,7 @@ namespace moss
     Assembler::Assembler() :
         _index(0),
         _tokens(nullptr),
+        _enable_debug_symbols(false),
 		_stack_pointer_index(0),
 		_code_stack_pointer_index(0)
     {
@@ -31,6 +32,15 @@ namespace moss
         num_labels(0u)
     {
 
+    }
+
+    bool Assembler::enable_debug_symbols() const
+    {
+        return _enable_debug_symbols;
+    }
+    void Assembler::enable_debug_symbols(bool enable)
+    {
+        _enable_debug_symbols = enable;
     }
 
     Assembler::Report Assembler::report() const
@@ -78,12 +88,12 @@ namespace moss
     {
         write_setup_code();
 
-        _tokens = new Tokeniser(ss);
+        _tokens = new Tokeniser(ss, false);
 
         while (_tokens->has_tokens())
         {
             auto line = _tokens->next_token_line();
-            std::cout << "New line\n";
+            std::cout << "New line @ " << _tokens->current_line() << "\n";
             Opcode::Type first_type = Opcode::UNKNOWN_TYPE;
             Opcode::Conditionals condition = Opcode::COND_NONE;
             uint32_t type_index = 0;

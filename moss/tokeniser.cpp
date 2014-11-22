@@ -4,10 +4,13 @@
 
 namespace moss
 {
-    Tokeniser::Tokeniser(std::istream &input) :
+    Tokeniser::Tokeniser(std::istream &input, bool include_all_lines) :
         _has_tokens(false),
         _end_of_stream(false),
         _in_comment(false),
+        _in_string(false),
+        _include_all_lines(include_all_lines),
+        _current_line(0),
         _input(input)
     {
         do
@@ -23,6 +26,11 @@ namespace moss
     bool Tokeniser::end_of_stream() const
     {
         return _end_of_stream;
+    }
+
+    uint32_t Tokeniser::current_line() const
+    {
+        return _current_line;
     }
 
     std::vector<std::string> Tokeniser::next_token_line()
@@ -45,20 +53,23 @@ namespace moss
         std::string line;
         do
         {
+            _current_line++;
+
             if (!std::getline(_input, line))
             {
                 _end_of_stream = true;
                 return;
             }
+            std::cout << "PROC LINE " << _current_line << ": >" << line << "<\n";
 
             Utils::trim_str(line);
-        } while (line.size() == 0);
+        } while (line.size() == 0 && !_include_all_lines);
 
         _has_tokens = true;
 
         auto start = 0u;
         auto end = next_whitespace(line, 0u);
-        if (_in_comment)
+        if (_in_comment && !_include_all_lines)
         {
             return;
         }
@@ -76,7 +87,7 @@ namespace moss
     {
         while (index < str.size() && (_in_string || !Utils::is_whitespace(str[index])))
         {
-            if (str[index] == ';')
+            if (!_include_all_lines && str[index] == ';')
             {
                 _in_comment = true;
                 return index;
