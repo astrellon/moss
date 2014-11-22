@@ -6,6 +6,7 @@
 #include "common.h"
 #include "opcode.h"
 #include "iperipheral.h"
+#include "debugger.h"
 
 namespace moss
 {
@@ -16,6 +17,7 @@ namespace moss
         _enable_mmu(false),
         _mmu(page_bit_size),
         _interrupt_return(0u),
+        _remote_debugger(false),
         _memory(nullptr)
     {
         _regs.zero();
@@ -65,11 +67,20 @@ namespace moss
         _memory = memory;
         _mmu.memory(memory);
     }
+    
+    bool CpuArm::remote_debugger() const
+    {
+        return _remote_debugger;
+    }
+    void CpuArm::remote_debugger(bool value)
+    {
+        _remote_debugger = value;
+    }
 
-    void CpuArm::run()
+    int32_t CpuArm::run()
     {
         _running = true;
-        do_run();
+        return do_run();
     }
     void CpuArm::stop()
     {
@@ -145,13 +156,11 @@ namespace moss
     
     void CpuArm::push_code_stack(uint32_t value)
     {
-        std::cout << "Push CS: " << value << "\n";
         _mmu.uint_data(_regs.code_stack_pointer_push(), value);
     }
     uint32_t CpuArm::pop_code_stack()
     {
         uint32_t result = _mmu.uint_data(_regs.code_stack_pointer_pop());
-        std::cout << "Pop CS: " << result << "\n";
         return result;
     }
             
@@ -194,8 +203,9 @@ namespace moss
         _regs.uint_reg(reg_index, _peripherals[perf_index]->send_command(command));
     }
 
-    void CpuArm::do_run()
+    int32_t CpuArm::do_run()
     {
+        int32_t result = 0;
         float farg1 = 0.0f;
         float farg2 = 0.0f;
         int32_t iarg1 = 0;
@@ -205,6 +215,16 @@ namespace moss
         while (_running)
         {
             uint32_t opcode = next_pc_uint();
+            if (opcode & Opcode::COND_BREAK)
+            {
+                if (_remote_debugger)
+                {
+                    _regs.program_counter_dec();
+                    stop();
+                    result = 1;
+                    break;
+                }
+            }
             bool meets_condition = opcode < Opcode::COND_ANY;
             if (!meets_condition)
             {
@@ -242,11 +262,12 @@ namespace moss
             switch (opcode)
             {
                 // Error or Halt {{{
-                    default:
+                default:
                     std::cout << "Unknown OPCODE: " << opcode << " @ PC " << 
                         std::dec << (_regs.program_counter() - 1) << std::endl;
                 case Opcode::HALT:
                     std::cout << "Halting." << std::endl;
+                    result = -1;
                     stop();
                     break;
                 // }}}
@@ -1270,5 +1291,6 @@ namespace moss
 
             }
         }
+        return result;
     }
 }

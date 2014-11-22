@@ -228,7 +228,8 @@ namespace moss
                 COND_LE      = 5 << 28,
                 COND_GT      = 6 << 28,
                 COND_GE      = 7 << 28,
-                COND_ALL     = 0xF0000000
+                COND_ALL     = 0xF0000000,
+                COND_BREAK   = 0x08000000
             };
             // }}}
 

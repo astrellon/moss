@@ -30,7 +30,10 @@ namespace moss
             Memory *memory() const;
             void memory(Memory *memory);
 
-            void run();
+            bool remote_debugger() const;
+            void remote_debugger(bool value);
+
+            int32_t run();
             void stop();
             bool is_running() const;
 
@@ -50,6 +53,7 @@ namespace moss
             std::array<IPeripheral *, 16> _peripherals;
             uint32_t _interrupt_return;
             std::array<uint32_t, 16> _interrupts;
+            bool _remote_debugger;
             
             Memory *_memory;
 
@@ -68,7 +72,7 @@ namespace moss
                 return _mmu.float_data(_regs.program_counter_inc());
             }
 
-            void do_run();
+            int32_t do_run();
 
             void push_stack(uint32_t value);
             void push_stack_float(float value);

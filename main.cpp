@@ -8,6 +8,7 @@
 #include "moss/test_peripheral.h"
 #include "moss/common.h"
 #include "moss/preprocessor.h"
+#include "moss/debugger.h"
 
 #include <string>
 #include <sstream>
@@ -48,10 +49,23 @@ int main(int argc, char **argv)
         moss::Disassembler::to_stream<moss::Memory>(std::cout, &mem, program_start, program_start + report.total_size);
     }
 
+    moss::Debugger debugger(&cpu);
+    cpu.remote_debugger(true);
+
     try
     {
 		clock_t start = clock();
-        cpu.run();
+        int cpu_result = 0;
+        do
+        {
+            cpu_result = cpu.run();
+
+            if (cpu_result == 1)
+            {
+                debugger.on_break(); 
+            }
+        }
+        while (cpu_result > 0);
 		clock_t end = clock();
 		float time = (float)(end - start) / CLOCKS_PER_SEC;
 		std::cout << "Time taken: " << time << "\n";

@@ -103,7 +103,6 @@ end:
     PRINT r10
 
     PUSH r10
-    ;CALL func_double
     INT 0
     POP r9
     PRINT "Double result"

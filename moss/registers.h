@@ -133,14 +133,16 @@ namespace moss
             {
                 return _program_counter++;
             }
+            FORCEINLINE uint32_t program_counter_dec()
+            {
+                return --_program_counter;
+            }
             FORCEINLINE void program_counter(uint32_t value)
             {
-                std::cout << "Change PC from: " << _program_counter << " to " << value << "\n";
                 _program_counter = value;
             }
             FORCEINLINE void change_program_counter(int32_t value)
             {
-                std::cout << "Change PC: " << _program_counter << " by " << value << "\n";
                 _program_counter += value;
             }
             
