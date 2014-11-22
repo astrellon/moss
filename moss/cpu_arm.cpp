@@ -489,8 +489,6 @@ namespace moss
                     break;
                 // }}}
 
-                // Branching {{{
-                
                 // JMP commands {{{
                 case Opcode::JMP_R:
                     // pc = reg[arg1]
@@ -508,8 +506,6 @@ namespace moss
                         _regs.change_program_counter(arg1);
                     }
                     break;
-                // }}}
-                
                 // }}}
 
                 // ADD Commands {{{
@@ -1180,13 +1176,49 @@ namespace moss
                     break;
                 // }}}
 
-                // Interupt commands {{{
+                // Interrupt commands {{{
+                
+                // Register interrupts {{{
+                case Opcode::REGI_I_I:
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    if (meets_condition)
+                    {
+                        _interrupts[arg1] = _regs.program_counter() + arg2;
+                    }
+                    break;
+                case Opcode::REGI_I_R:
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    if (meets_condition)
+                    {
+                        _interrupts[arg1] = _regs.program_counter() + _regs.uint_reg(arg2);
+                    }
+                    break;
+                case Opcode::REGI_R_I:
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    if (meets_condition)
+                    {
+                        _interrupts[_regs.uint_reg(arg1)] = _regs.program_counter() + arg2;
+                    }
+                    break;
+                case Opcode::REGI_R_R:
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    if (meets_condition)
+                    {
+                        _interrupts[_regs.uint_reg(arg1)] = _regs.program_counter() + _regs.uint_reg(arg2);
+                    }
+                    break;
+                // }}}
+
                 case Opcode::INT_I:
                     arg1 = next_pc_uint();
                     if (meets_condition)
                     {
                         _interrupt_return = _regs.program_counter();
-                        _regs.change_program_counter(arg1);
+                        _regs.program_counter(_interrupts[arg1]);
                     }
                     break;
                 case Opcode::INT_R:
@@ -1194,9 +1226,10 @@ namespace moss
                     if (meets_condition)
                     {
                         _interrupt_return = _regs.program_counter();
-                        _regs.change_program_counter(_regs.uint_reg(arg1));
+                        _regs.program_counter(_interrupts[_regs.uint_reg(arg1)]);
                     }
                     break;
+
                 case Opcode::RETI:
                     if (meets_condition)
                     {
@@ -1204,6 +1237,7 @@ namespace moss
                     }
                     break;
                 // }}}
+                
                 // Debug commands {{{
                 case Opcode::PRINT_R:
                     arg1 = next_pc_uint();

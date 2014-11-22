@@ -58,11 +58,23 @@ namespace moss
                 CMPF_I_R,
                 // }}}
 
-                // Branching {{{
+                // Branching commands {{{
+                
+                // JMP {{{
                 JMP_R,
                 JMP_I,
                 // }}}
 
+                // Function commands {{{
+                CALL_I,
+                CALL_R,
+                RETURN,
+                // }}}
+                
+                // }}}
+
+                // Math commands {{{
+                
                 // ADD/ADDF {{{
                 ADD_R_R,
                 ADD_R_R_R,
@@ -135,6 +147,8 @@ namespace moss
                 SHL_R,
                 SHL_R_R,
                 // }}}
+                
+                // }}}
 
                 // Peripherals {{{
                 
@@ -151,27 +165,29 @@ namespace moss
                 // }}}
 
                 // IO_ASSIGN {{{
-                IO_ASSIGN_R_R_I,
-                IO_ASSIGN_R_I_R,
-                IO_ASSIGN_R_I_I,
-                IO_ASSIGN_I_R_R,
-                IO_ASSIGN_I_R_I,
-                IO_ASSIGN_I_I_R,
-                IO_ASSIGN_R_R_R,
                 IO_ASSIGN_I_I_I,
+                IO_ASSIGN_I_I_R,
+                IO_ASSIGN_I_R_I,
+                IO_ASSIGN_I_R_R,
+                IO_ASSIGN_R_I_I,
+                IO_ASSIGN_R_I_R,
+                IO_ASSIGN_R_R_I,
+                IO_ASSIGN_R_R_R,
                 // }}}
 
-                // }}}
-
-                // Function commands {{{
-                CALL_I,
-                CALL_R,
-                RETURN,
                 // }}}
                 
-                // Interupt commands {{{
-                INT_R,
+                // Interrupt commands {{{
+                
+                // Register interrupt {{{
+                REGI_I_I,
+                REGI_I_R,
+                REGI_R_I,
+                REGI_R_R,
+                // }}}
+                
                 INT_I,
+                INT_R,
                 RETI,
                 // }}}
             

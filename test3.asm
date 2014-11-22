@@ -63,10 +63,9 @@ perf_end:
 
 ; Main program
 main:
-    PRINT "PC: "
-    PRINT r2
     CALL mmu_setup
     CALL perf_setup
+    REGI 0 func_double
 
     MOV r5 32
     MOV r0 @r5          ; Grab the offset of the first perf
@@ -102,6 +101,14 @@ end:
     POP r10
     PRINT "RESULT"
     PRINT r10
+
+    PUSH r10
+    ;CALL func_double
+    INT 0
+    POP r9
+    PRINT "Double result"
+    PRINT r9
+
     PRINT "Finishing"
     HALT
 

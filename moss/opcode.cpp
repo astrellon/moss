@@ -268,7 +268,12 @@ namespace moss
         { std::string("RETURN"),  Opcode::RETURN },
         // }}}
         
-        // Interupt commands {{{
+        // Interrupt commands {{{
+        { std::string("REGI_I_I"), Opcode::REGI_I_I },
+        { std::string("REGI_I_R"), Opcode::REGI_I_R },
+        { std::string("REGI_R_I"), Opcode::REGI_R_I },
+        { std::string("REGI_R_R"), Opcode::REGI_R_R },
+
         { std::string("INT_I"), Opcode::INT_I },
         { std::string("INT_R"), Opcode::INT_R },
         { std::string("RETI"),  Opcode::RETI },
@@ -438,7 +443,12 @@ namespace moss
         { Opcode::RETURN, { "return", { } } },
         // }}}
         
-        // Interupt commands {{{
+        // Interrupt commands {{{
+        { Opcode::REGI_I_I, { "regi", { Opcode::INT_NUMBER, Opcode::INT_NUMBER } } },
+        { Opcode::REGI_I_R, { "regi", { Opcode::INT_NUMBER, Opcode::REGISTER } } },
+        { Opcode::REGI_R_I, { "regi", { Opcode::REGISTER, Opcode::INT_NUMBER } } },
+        { Opcode::REGI_R_R, { "regi", { Opcode::REGISTER, Opcode::REGISTER } } },
+
         { Opcode::INT_I, { "int", { Opcode::INT_NUMBER } } },
         { Opcode::INT_R, { "int", { Opcode::REGISTER } } },
         { Opcode::RETI,  { "reti", { } } },
