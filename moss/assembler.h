@@ -62,8 +62,10 @@ namespace moss
             
             std::stack<Tokeniser *> _current_tokeniser;
             std::stack<std::string> _current_filename;
-            typedef std::map<uint32_t, std::pair<uint32_t, std::string> > IndexToLine;
-            std::map<std::string, IndexToLine> _debug_data;
+            //typedef std::map<uint32_t, std::pair<uint32_t, std::string> > IndexToLine;
+            //std::map<std::string, IndexToLine> _debug_data;
+            typedef std::pair<uint32_t, std::string> LineData;
+            std::map<uint32_t, LineData> _debug_data;
 
 
 			uint32_t _stack_pointer_index;
@@ -94,6 +96,5 @@ namespace moss
             static std::string process_label(const std::string &token);
 
             static std::string process_string_value(const std::string &str);
-
     };
 }
