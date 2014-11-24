@@ -7,7 +7,6 @@
 #include "moss/disassembler.h"
 #include "moss/test_peripheral.h"
 #include "moss/common.h"
-#include "moss/preprocessor.h"
 #include "moss/debugger.h"
 
 #include <string>
@@ -30,6 +29,7 @@ int main(int argc, char **argv)
     cpu.registers().program_counter(program_start);
     cpu.memory(&mem);
 
+    /*
     {
         std::ifstream input_ss("test3.asm");
         std::ofstream output_ss;
@@ -37,10 +37,11 @@ int main(int argc, char **argv)
         moss::Preprocessor preproc(input_ss, output_ss);
         preproc.process_stream();
     }
+    */
 
     {
         moss::Assembler assembler;
-        std::ifstream input_ss("preproc_temp.asm");
+        std::ifstream input_ss("test3.asm");
         assembler.process_stream(std::string("test3.asm"), input_ss);
         assembler.finalise();
         assembler.write_to_memory<moss::Memory>(&mem, program_start);

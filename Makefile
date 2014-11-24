@@ -251,9 +251,11 @@ endif
 
 clean:
 	$(RM) $(OBJS) $(PROGRAM) $(PROGRAM).exe
+	$(RM) *.d moss/*.d
 
 distclean: clean
 	$(RM) $(DEPS) TAGS
+	$(RM) *.d moss/*.d
 
 # Show help.
 help:

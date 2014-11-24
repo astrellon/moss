@@ -5,12 +5,12 @@
 
 #include <stdlib.h>
 #include <sstream>
+#include <fstream>
 
 namespace moss
 {
     Assembler::Assembler() :
         _index(0),
-        _tokens(nullptr),
         _enable_debug_symbols(false),
 		_stack_pointer_index(0),
 		_code_stack_pointer_index(0)
@@ -19,10 +19,21 @@ namespace moss
     }
     Assembler::~Assembler()
     {
-        if (_tokens != nullptr)
+        auto tokens = _current_tokeniser.top();
+        while (tokens)
         {
-            delete _tokens;
+            delete tokens;
+            _current_tokeniser.pop();
+            if (_current_tokeniser.size() > 0)
+            {
+                tokens = _current_tokeniser.top();
+            }
+            else
+            {
+                break;
+            }
         }
+            
         finalise();
     }
 
@@ -88,127 +99,59 @@ namespace moss
     {
         write_setup_code();
 
-        _tokens = new Tokeniser(ss, false);
+        process_include(filename, ss);
+    }
 
-        while (_tokens->has_tokens())
+    void Assembler::process_include(const std::string &filename, std::istream &ss)
+    {
+        _current_filename.push(filename);
+        auto tokens = new Tokeniser(ss, false);
+        _current_tokeniser.push(tokens);
+
+        while (tokens->has_tokens())
         {
-            auto line = _tokens->next_token_line();
-            std::cout << "New line @ " << _tokens->current_line() << "\n";
-            Opcode::Type first_type = Opcode::UNKNOWN_TYPE;
-            Opcode::Conditionals condition = Opcode::COND_NONE;
-            uint32_t type_index = 0;
-
-            std::vector<Opcode::Type> types;
-            bool first = true;
-            for (auto iter = line.begin(); iter != line.end(); ++iter)
+            auto line = tokens->next_token_line();
+            std::cout << "New line @ " << tokens->current_line() << "\n";
+            _debug_data[filename][_index] = std::pair<uint32_t, std::string>(
+                    tokens->current_line(), filename);
+            
+            if (line[0][0] == '#')
             {
-                Opcode::Type type = get_token_type(*iter, first);
-                std::cout << "- " << *iter << " | " << Opcode::type_name(type) << "\n";
-                
-                if (type == Opcode::CONDITION)
-                {
-                    condition = Opcode::find_conditional(*iter);
-                    type_index = 1;
-                }
-                else if (first)
-                {
-                    first_type = type;
-                    first = false;
-                }
-                else
-                {
-                    types.push_back(type);
-                }
+                // Process line as a preprocessor line (#define, #include, etc)
+                process_preprocessor_line(line);
+            }
+            else
+            {
+                // Look for defined symbols in a normal line and replace.
+                preprocess_normal_line(line);
+                // Assemble normal line
+                process_normal_line(line);
+            }
+        }
+        _current_filename.pop();
+    }
+
+    void Assembler::preprocess_normal_line(std::vector<std::string> &line)
+    {
+        for (auto i = 0u; i < line.size(); i++)
+        {
+            auto token = line[i];
+            bool is_memory = false;
+            if (token[0] == '@')
+            {
+                is_memory = true;
+                token = token.substr(1);
             }
 
-            if (first_type == Opcode::COMMAND)
+            auto find = _symbols.find(token);
+            if (find != _symbols.end())
             {
-                auto command_name = Opcode::build_command_name(line[type_index], types);
-                uint32_t command = static_cast<uint32_t>(Opcode::find_command(command_name)); 
-                if (condition != Opcode::COND_NONE)
+                auto result = find->second;
+                if (is_memory)
                 {
-                    std::cout << "- Before cond: " << std::hex << command;
-                    command |= static_cast<uint32_t>(condition);
-                    std::cout << " | " << std::hex << command << std::dec << "\n";
+                    result = std::string("@") + result;
                 }
-                
-                writeU(command);
-
-                for (auto i = type_index + 1; i < line.size(); i++)
-                {
-                    switch (types[i - type_index - 1])
-                    {
-                        case Opcode::INT_NUMBER:
-                            writeU(parse_int(line[i]));
-                            break;
-                        case Opcode::FLOAT_NUMBER:
-                            writeF(static_cast<float>(atof(line[i].c_str())));
-                            break;
-                        case Opcode::REGISTER:
-                        case Opcode::MEMORY:
-                            writeU(get_register_value(line[i]));
-                            break;
-                        case Opcode::LABEL:
-                            writeL(line[i]);
-                            break;
-                        case Opcode::STRING:
-                            writeS(line[i]);
-                            break;
-                        case Opcode::FLAG:
-                            writeU(static_cast<uint32_t>(Opcode::find_flag(line[i])));
-                            break;
-                        case Opcode::NAMED_REGISTER:
-                            writeU(static_cast<uint32_t>(Opcode::find_named_register(line[i])));
-                            break;
-                        default:
-                            std::cout << "Unknown opcode type: " << types[i - type_index - 1] << "\n";
-                    }
-                }
-            }
-            else if (first_type == Opcode::LABEL)
-            {
-                add_label(process_label(line[0]));
-            }
-            else if (first_type == Opcode::VARIABLE)
-            {
-                if (condition != Opcode::COND_NONE)
-                {
-                    std::cout << "Cannot declare varible with conditional!\n";
-                    return;
-                }
-
-                DataWord value;
-                switch (types[0])
-                {
-                    default:
-                        std::cout << "Invalid type for variable: " << types[0] << "\n";
-                        break;
-                    case Opcode::INT_NUMBER:
-                        value.u = parse_int(line[1]);
-                        break;
-                    case Opcode::FLOAT_NUMBER:
-                        value.f = static_cast<float>(atof(line[1].c_str()));
-                        break;
-                    case Opcode::REGISTER:
-                    case Opcode::MEMORY:
-                        value.u = get_register_value(line[1]);
-                        break;
-                    case Opcode::LABEL:
-                        // TODO
-                        //writeL(line[1]);
-                        break;
-                    case Opcode::STRING:
-                        // TODO
-                        //writeS(line[1]);
-                        break;
-                    case Opcode::FLAG:
-                        value.u = static_cast<uint32_t>(Opcode::find_flag(line[1]));
-                        break;
-                    case Opcode::NAMED_REGISTER:
-                        value.u = static_cast<uint32_t>(Opcode::find_named_register(line[1]));
-                        break;
-                }
-                add_variable(process_variable(line[0]), types[0], value);
+                line[i] = find->second;
             }
         }
     }
@@ -279,14 +222,121 @@ namespace moss
 		_data[_stack_pointer_index].u = _index + 1028;
         return true;
     }
+    
+    void Assembler::process_preprocessor_line(std::vector<std::string> &line)
+    {
+        if (line[0] == "#define")
+        {
+            if (line.size() < 2)
+            {
+                add_symbol(line[1], std::string(""));
+            }
+            else
+            {
+                add_symbol(line[1], line[2]);
+            }
+        }
+        else if (line[0] == "#include")
+        {
+            std::ifstream new_ss;
+            std::string filename = process_string_value(line[1]);
+            new_ss.open(filename);
+            process_include(filename, new_ss);
+        }
+    }
+
+    void Assembler::process_normal_line(std::vector<std::string> &line)
+    {
+        Opcode::Type first_type = Opcode::UNKNOWN_TYPE;
+        Opcode::Conditionals condition = Opcode::COND_NONE;
+        uint32_t type_index = 0;
+
+        std::vector<Opcode::Type> types;
+        bool first = true;
+        for (auto iter = line.begin(); iter != line.end(); ++iter)
+        {
+            Opcode::Type type = get_token_type(*iter, first);
+            std::cout << "- " << *iter << " | " << Opcode::type_name(type) << "\n";
+
+            if (type == Opcode::CONDITION)
+            {
+                condition = Opcode::find_conditional(*iter);
+                type_index = 1;
+            }
+            else if (first)
+            {
+                first_type = type;
+                first = false;
+            }
+            else
+            {
+                types.push_back(type);
+            }
+        }
+
+        if (first_type == Opcode::COMMAND)
+        {
+            auto command_name = Opcode::build_command_name(line[type_index], types);
+            uint32_t command = static_cast<uint32_t>(Opcode::find_command(command_name)); 
+            if (condition != Opcode::COND_NONE)
+            {
+                std::cout << "- Before cond: " << std::hex << command;
+                command |= static_cast<uint32_t>(condition);
+                std::cout << " | " << std::hex << command << std::dec << "\n";
+            }
+
+            writeU(command);
+
+            for (auto i = type_index + 1; i < line.size(); i++)
+            {
+                switch (types[i - type_index - 1])
+                {
+                    case Opcode::INT_NUMBER:
+                        writeU(parse_int(line[i]));
+                        break;
+                    case Opcode::FLOAT_NUMBER:
+                        writeF(static_cast<float>(atof(line[i].c_str())));
+                        break;
+                    case Opcode::REGISTER:
+                    case Opcode::MEMORY:
+                        writeU(get_register_value(line[i]));
+                        break;
+                    case Opcode::LABEL:
+                        writeL(line[i]);
+                        break;
+                    case Opcode::STRING:
+                        writeS(line[i]);
+                        break;
+                    case Opcode::FLAG:
+                        writeU(static_cast<uint32_t>(Opcode::find_flag(line[i])));
+                        break;
+                    case Opcode::NAMED_REGISTER:
+                        writeU(static_cast<uint32_t>(Opcode::find_named_register(line[i])));
+                        break;
+                    default:
+                        std::cout << "Unknown opcode type: " << types[i - type_index - 1] << "\n";
+                }
+            }
+        }
+        else if (first_type == Opcode::LABEL)
+        {
+            add_label(process_label(line[0]));
+        }
+    }
+
+    void Assembler::add_symbol(const std::string &key, const std::string &value)
+    {
+        auto find = _symbols.find(key);
+        if (find != _symbols.end())
+        {
+            std::cout << "Redefining symbol " << key << ": from " << find->second << ", to " << value << "\n";
+        }
+        _symbols[key] = value;
+    }
 
     void Assembler::add_label(const std::string &label)
     {
         _label_locations[label] = _index;
-    }
-    void Assembler::add_variable(const std::string &name, Opcode::Type type, DataWord value)
-    {
-        _variables[name] = ValuePair { type, value };
     }
 
     void Assembler::writeU(uint32_t value)
@@ -332,10 +382,6 @@ namespace moss
             if (token.back() == ':')
             {
                 return Opcode::LABEL;
-            }
-            if (token.back() == '=')
-            {
-                return Opcode::VARIABLE;
             }
             return Opcode::COMMAND;
         }
@@ -457,15 +503,7 @@ namespace moss
         }
         return token;
     }
-    std::string Assembler::process_variable(const std::string &token)
-    {
-        if (token.back() == '=')
-        {
-            return token.substr(0, token.size() - 1);
-        }
-        return token;
-    }
-
+    
     uint32_t Assembler::parse_int(const std::string &str)
     {
         if (str.size() >= 3)

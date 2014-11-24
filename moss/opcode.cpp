@@ -473,8 +473,7 @@ namespace moss
         { Opcode::CONDITION,      std::string("condition") },
         { Opcode::FLAG,           std::string("flag") },
         { Opcode::NAMED_REGISTER, std::string("named_register") },
-        { Opcode::STRING,         std::string("string") },
-        { Opcode::VARIABLE,       std::string("variable") }
+        { Opcode::STRING,         std::string("string") }
     };
     // }}}
     
@@ -509,8 +508,7 @@ namespace moss
         { Opcode::CONDITION,      std::string("Condition") },
         { Opcode::FLAG,           std::string("F") },
         { Opcode::NAMED_REGISTER, std::string("NR") },
-        { Opcode::STRING,         std::string("S") },
-        { Opcode::VARIABLE,       std::string("Variable") }
+        { Opcode::STRING,         std::string("S") }
     };
     // }}}
     

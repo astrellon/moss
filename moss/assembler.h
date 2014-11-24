@@ -4,6 +4,7 @@
 #include <vector>
 #include <map>
 #include <string>
+#include <stack>
 #include <stdint.h>
 
 #include "tokeniser.h"
@@ -49,27 +50,35 @@ namespace moss
 
         private:
             uint32_t _index;
-            Tokeniser *_tokens;
+            //Tokeniser *_tokens;
             std::vector<DataWord> _data;
             std::map< std::string, uint32_t > _label_locations;
             std::map< std::string, std::vector<uint32_t> > _label_temp;
             std::map< std::string, std::vector<uint32_t> > _string_temp;
+            std::map<std::string, std::string> _symbols;
 
             bool _enable_debug_symbols;
             Report _report;
+            
+            std::stack<Tokeniser *> _current_tokeniser;
+            std::stack<std::string> _current_filename;
+            typedef std::map<uint32_t, std::pair<uint32_t, std::string> > IndexToLine;
+            std::map<std::string, IndexToLine> _debug_data;
 
-            typedef struct
-            {
-                Opcode::Type type;
-                DataWord value;
-            } ValuePair;
-            std::map< std::string, ValuePair > _variables;
 
 			uint32_t _stack_pointer_index;
 			uint32_t _code_stack_pointer_index;
 
+            
+            void process_include(const std::string &filename, std::istream &ss);
+            // Preprocessor
+            void process_preprocessor_line(std::vector<std::string> &line);
+            void preprocess_normal_line(std::vector<std::string> &line);
+            void process_normal_line(std::vector<std::string> &line);
+            void add_symbol(const std::string &key, const std::string &value);
+
+            // Assembler
             void add_label(const std::string &label);
-            void add_variable(const std::string &name, Opcode::Type type, DataWord value);
 
             void writeU(uint32_t value);
             void writeI(int32_t value);
@@ -78,12 +87,11 @@ namespace moss
             void writeS(const std::string &str);
 
             void write_setup_code();
-
+            
             static Opcode::Type get_token_type(const std::string &token, bool is_first_token);
             static bool is_register(const std::string &token, std::size_t index);
             static uint32_t get_register_value(const std::string &value);
             static std::string process_label(const std::string &token);
-            static std::string process_variable(const std::string &name);
 
             static std::string process_string_value(const std::string &str);
 
