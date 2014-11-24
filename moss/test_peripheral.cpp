@@ -41,7 +41,7 @@ namespace moss
     }
     uint32_t TestPeripheral::write_disk()
     {
-        std::cout << "Writing to disk: ";
+        std::cout << "Writing to disk " << _memory_offset << ": ";
         for (auto i = 0u; i < _memory_size; i++)
         {
             _disk[i] = uint_data(i);

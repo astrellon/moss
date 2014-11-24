@@ -78,6 +78,7 @@ int main(int argc, char **argv)
         std::cout << "- Stopped at: " << (cpu.registers().program_counter() - 1) << "\n";
     }
     cpu.to_stream(std::cout);
+    //cpu.memory()->to_stream(std::cout, 0, 128);
 
 #ifdef _WIN32
 	std::cin.get();

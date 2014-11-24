@@ -9,7 +9,7 @@ mmu_setup:
     MOV r0 0    ; Page table index
 mmu_start:
     CMP r0 PAGE_TABLE_SIZE
-    < MOV @r0 r0
+    ;< MOV @r0 r0
     INC r0
     < JMP mmu_start
     RETURN
@@ -20,10 +20,12 @@ perf_setup:
 #define perf_index  r0
 #define perf_offset r1
 #define perf_store  r2
+#define perf_store_base r6
     
-    MOV perf_index  0    ; Perf index
-    MOV perf_store  PAGE_TABLE_SIZE   ; Index to store the results from the IO_ASSIGNs
-    MOV perf_offset 32   ; Perf memory offset
+    MOV perf_index 0               ; Perf index
+    MOV perf_store PAGE_TABLE_SIZE ; Index to store the results from the IO_ASSIGNs
+    MOV perf_store_base perf_store
+    MOV perf_offset 32             ; Perf memory offset
     ADD perf_offset 32
 perf_start:
     ; Send general port status, returns:
@@ -35,14 +37,14 @@ perf_start:
 #define perf_result r3
     IO_SEND perf_result perf_index 0
     CMP perf_result 0
-    == JMP perf_assign  ; Unassigned
-    PRINT "Skippd jmp" 
+    == JMP perf_assign ; Unassigned
+    PRINT "Skippd jmp"
     INC perf_index
-    > JMP perf_start    ; Assigned
+    > JMP perf_start   ; Assigned
     
-    CMP perf_result -1           ; Check if attached
-    == JMP perf_start   ; Not attached, skip
-    < JMP perf_end      ; At the end of the perfs
+    CMP perf_result -1 ; Check if attached
+    == JMP perf_start  ; Not attached, skip
+    < JMP perf_end     ; At the end of the perfs
 
 perf_assign:
 #define perf_memory_result r4
@@ -67,7 +69,7 @@ main:
     CALL perf_setup
     REGI 0 func_double
 
-    MOV r5 32
+    MOV r5 perf_store_base
     MOV r0 @r5          ; Grab the offset of the first perf
     INC r5
     MOV r1 @r5          ; Grab the size of the first perf

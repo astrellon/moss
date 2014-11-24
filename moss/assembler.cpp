@@ -151,7 +151,7 @@ namespace moss
                 {
                     result = std::string("@") + result;
                 }
-                line[i] = find->second;
+                line[i] = result;
             }
         }
     }
