@@ -22,7 +22,23 @@ namespace moss
 
     void Debugger::breakpoint_line(const std::string &filename, uint32_t line_number, bool set)
     {
-
+        auto program_index = _debug_data.data(filename, line_number);
+        if (program_index == -1u)
+        {
+            std::cout << "Unable to set breakpoint for: " << filename << " @ " << line_number << "\n";
+            return;
+        }
+        breakpoint(program_index, set);
+    }
+    bool Debugger::breakpoint_line(const std::string &filename, uint32_t line_number) const
+    {
+        auto program_index = _debug_data.data(filename, line_number);
+        if (program_index == -1u)
+        {
+            std::cout << "Unable to get breakpoint from: " << filename << " @ " << line_number << "\n";
+            return false;
+        }
+        return breakpoint(program_index);
     }
     void Debugger::breakpoint(uint32_t program_index, bool set)
     {

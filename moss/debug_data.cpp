@@ -32,6 +32,15 @@ namespace moss
         return _line_number;
     }
 
+    bool DebugData::LineData::operator<(const DebugData::LineData &rhs) const
+    {
+        if (_filename_index == rhs._filename_index)
+        {
+            return _line_number < rhs._line_number;
+        }
+        return _filename_index < rhs._filename_index;
+    }
+
 
     void DebugData::data(uint32_t program_index, uint32_t line_number, const std::string &filename)
     {
@@ -42,21 +51,42 @@ namespace moss
             filename_index = _filenames.size();
         }
 
-        _data[program_index] = LineData(filename_index, line_number);
+        auto data = LineData(filename_index, line_number);
+        _prog_to_files[program_index] = data;
+        _files_to_prog[data] = program_index;
     }
     void DebugData::data(uint32_t program_index, const LineData &data)
     {
-        _data[program_index] = data;
+        _prog_to_files[program_index] = data;
+        _files_to_prog[data] = program_index;
     }
 
-    DebugData::LineData DebugData::data(uint32_t program_index)
+    DebugData::LineData DebugData::data(uint32_t program_index) const
     {
-        auto find = _data.find(program_index);
-        if (find == _data.end())
+        auto find = _prog_to_files.find(program_index);
+        if (find == _prog_to_files.end())
         {
             return LineData();
         }
         return find->second;
+    }
+    uint32_t DebugData::data(const DebugData::LineData &data) const
+    {
+        auto find = _files_to_prog.find(data);
+        if (find == _files_to_prog.end())
+        {
+            return -1u;
+        }
+        return find->second;
+    }
+    uint32_t DebugData::data(const std::string &filename, uint32_t line_number) const
+    {
+        auto filename_index = find_filename(filename);
+        if (filename_index == -1u)
+        {
+            return -1u;
+        }
+        return data(LineData(filename_index,  line_number));
     }
 
     const std::vector<std::string> &DebugData::filenames() const
@@ -79,7 +109,7 @@ namespace moss
             "; The data here is made up of the index of the instruction in the program,\n"
             "; the filename index (based on the list of filenames above) and the line number.\n"
             "Data:\n";
-        for (auto iter = _data.begin(); iter != _data.end(); ++iter)
+        for (auto iter = _prog_to_files.begin(); iter != _prog_to_files.end(); ++iter)
         {
             ss  << iter->first << ' '
                 << iter->second.filename_index() << ' ' 
