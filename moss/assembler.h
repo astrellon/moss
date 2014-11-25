@@ -10,6 +10,7 @@
 #include "tokeniser.h"
 #include "common.h"
 #include "opcode.h"
+#include "debug_data.h"
 
 namespace moss
 {
@@ -59,14 +60,10 @@ namespace moss
 
             bool _enable_debug_symbols;
             Report _report;
+            DebugData _debug_data;
             
             std::stack<Tokeniser *> _current_tokeniser;
             std::stack<std::string> _current_filename;
-            //typedef std::map<uint32_t, std::pair<uint32_t, std::string> > IndexToLine;
-            //std::map<std::string, IndexToLine> _debug_data;
-            typedef std::pair<uint32_t, std::string> LineData;
-            std::map<uint32_t, LineData> _debug_data;
-
 
 			uint32_t _stack_pointer_index;
 			uint32_t _code_stack_pointer_index;

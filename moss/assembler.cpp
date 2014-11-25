@@ -112,8 +112,10 @@ namespace moss
         {
             auto line = tokens->next_token_line();
             std::cout << "New line @ " << tokens->current_line() << "\n";
-            _debug_data[_index] = std::pair<uint32_t, std::string>(
-                    tokens->current_line(), filename);
+            if (_enable_debug_symbols)
+            {
+                _debug_data.data(_index, tokens->current_line(), filename);
+            }
             
             if (line[0][0] == '#')
             {
@@ -221,12 +223,11 @@ namespace moss
 		_data[_code_stack_pointer_index].u = _index + 4;
 		_data[_stack_pointer_index].u = _index + 1028;
 
-        std::ofstream debug_out;
-        debug_out.open("debug.out");
-        for (auto iter = _debug_data.begin(); iter != _debug_data.end(); ++iter)
+        if (_enable_debug_symbols)
         {
-            debug_out << iter->first << ": ";
-            debug_out << iter->second.first << " | " << iter->second.second << "\n";
+            std::ofstream debug_out;
+            debug_out.open("debug.out");
+            _debug_data.to_stream(debug_out);
         }
         return true;
     }

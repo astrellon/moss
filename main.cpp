@@ -50,7 +50,7 @@ int main(int argc, char **argv)
         moss::Disassembler::to_stream<moss::Memory>(std::cout, &mem, program_start, program_start + report.total_size);
     }
 
-    moss::Debugger debugger(&cpu);
+    moss::Debugger debugger(&cpu, program_start);
     cpu.remote_debugger(true);
 
     try
