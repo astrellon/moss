@@ -70,13 +70,21 @@ LDFLAGS   =
 
 # The directories in which source files reside.
 # If not specified, only the current directory will be serached.
-SRCDIRS   = . moss
+SRCDIRS   = moss
 
 # The executable file name.
 # If not specified, current directory name or `a.out' will be used.
 PROGRAM   = Moss
 ifdef NAME
     PROGRAM = $(NAME)
+endif
+
+BASE_FILE = main.cpp
+BASE_HEADER = 
+
+ifdef DEBUGGER
+	BASE_FILE = debugger.cpp
+	PROGRAM = MossDB
 endif
 
 ifdef TESTING
@@ -140,6 +148,12 @@ ifeq ($(SRCDIRS),)
 endif
 SOURCES = $(foreach d,$(SRCDIRS),$(wildcard $(addprefix $(d)/*,$(SRCEXTS))))
 HEADERS = $(foreach d,$(SRCDIRS),$(wildcard $(addprefix $(d)/*,$(HDREXTS))))
+ifneq ($(BASE_FILE),)
+	SOURCES += $(BASE_FILE)
+endif
+ifneq ($(BASE_HEADER),)
+	HEADERS += $(BASE_HEADER)
+endif
 SRC_CXX = $(filter-out %.c,$(SOURCES))
 OBJS    = $(addsuffix .o, $(basename $(SOURCES)))
 DEPS    = $(OBJS:.o=.d)
@@ -159,7 +173,9 @@ LINK.cxx    = $(CXX) $(MY_CFLAGS) $(CXXFLAGS) $(CPPFLAGS) $(LDFLAGS)
 # Delete the default suffixes
 .SUFFIXES:
 
-all: $(PROGRAM)
+all:	$(PROGRAM)
+	
+	
 
 # Rules for creating dependency files (.d).
 #------------------------------------------
