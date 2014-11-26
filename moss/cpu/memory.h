@@ -4,7 +4,7 @@
 #include <iostream>
 #include <vector>
 
-#include "common.h"
+#include <moss/utils/common.h>
 
 namespace moss
 {

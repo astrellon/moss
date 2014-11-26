@@ -2,8 +2,10 @@
 
 #include <stdint.h>
 #include <array>
+#include <map>
 #include <iostream>
-#include "common.h"
+
+#include <moss/utils/common.h>
 
 namespace moss
 {
@@ -28,6 +30,10 @@ namespace moss
                 FLAG_OVERFLOW   = 0x08,
                 FLAG_ENABLE_MMU = 0x10
             };
+            
+            static Registers::Flags find_flag(const std::string &str);
+            static std::string flag_name(Registers::Flags flag);
+            static std::string flag_name(uint32_t flag);
 
         private:
             uint32_t _flags;
@@ -39,6 +45,7 @@ namespace moss
 
             uint32_t _program_counter;
             std::array<DataWord, 16> _word_regs;
+            static std::map<std::string, Flags> s_names_to_flags;
 
         public:
 

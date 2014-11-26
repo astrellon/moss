@@ -2,11 +2,11 @@
 
 #include <iostream>
 
+#include <moss/utils/common.h>
+#include <moss/base/opcode.h>
+
 #include "memory.h"
-#include "common.h"
-#include "opcode.h"
 #include "iperipheral.h"
-#include "debugger.h"
 
 namespace moss
 {

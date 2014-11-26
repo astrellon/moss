@@ -4,8 +4,6 @@
 #include <vector>
 #include <string>
 
-#include "registers.h"
-
 namespace moss
 {
     class Opcode
@@ -252,10 +250,6 @@ namespace moss
             static std::string conditional_name(Conditionals cond);
             static std::string conditional_name(uint32_t cond);
 
-            static Registers::Flags find_flag(const std::string &str);
-            static std::string flag_name(Registers::Flags flag);
-            static std::string flag_name(uint32_t flag);
-
             static NamedRegister find_named_register(const std::string &str);
             static std::string named_register_name(NamedRegister reg);
             static std::string named_register_name(uint32_t reg);
@@ -266,7 +260,6 @@ namespace moss
             static std::map<Type, std::string> s_type_names;
             static std::map<Type, std::string> s_type_codes;
             static std::map<std::string, Conditionals> s_conditional_suffix;
-            static std::map<std::string, Registers::Flags> s_names_to_flags;
             static std::map<std::string, NamedRegister> s_names_to_named_reg;
     };
 }

@@ -1,7 +1,8 @@
 #include "assembler.h"
 
-#include "common.h"
-#include "utils.h"
+#include <moss/utils/common.h>
+#include <moss/utils/utils.h>
+#include <moss/cpu/registers.h>
 
 #include <stdlib.h>
 #include <sstream>
@@ -317,7 +318,7 @@ namespace moss
                         writeS(line[i]);
                         break;
                     case Opcode::FLAG:
-                        writeU(static_cast<uint32_t>(Opcode::find_flag(line[i])));
+                        writeU(static_cast<uint32_t>(Registers::find_flag(line[i])));
                         break;
                     case Opcode::NAMED_REGISTER:
                         writeU(static_cast<uint32_t>(Opcode::find_named_register(line[i])));
@@ -459,7 +460,7 @@ namespace moss
         }
 
         // Is flag string
-        if (Opcode::find_flag(token) != Registers::FLAG_UNKNOWN)
+        if (Registers::find_flag(token) != Registers::FLAG_UNKNOWN)
         {
             return Opcode::FLAG;
         }

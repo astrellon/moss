@@ -70,7 +70,7 @@ LDFLAGS   =
 
 # The directories in which source files reside.
 # If not specified, only the current directory will be serached.
-SRCDIRS   = moss
+SRCDIRS   = moss moss/base moss/utils
 
 # The executable file name.
 # If not specified, current directory name or `a.out' will be used.
@@ -85,6 +85,15 @@ BASE_HEADER =
 ifdef DEBUGGER
 	BASE_FILE = debugger.cpp
 	PROGRAM = MossDB
+	SRCDIRS += moss/debug moss/cpu
+else
+ifdef ASSEMBLER
+	BASE_FILE = assembler.cpp
+	SRCDIRS += moss/assemble
+else
+	BASE_FILE = main.cpp
+	SRCDIRS += moss/cpu moss/assemble moss/debug
+endif
 endif
 
 ifdef TESTING

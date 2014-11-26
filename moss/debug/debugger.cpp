@@ -2,8 +2,8 @@
 
 #include <iostream>
 
-#include "cpu_arm.h"
-#include "opcode.h"
+#include <moss/cpu/cpu_arm.h>
+#include <moss/base/opcode.h>
 
 namespace moss
 {

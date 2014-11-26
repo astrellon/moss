@@ -6,7 +6,7 @@
 #include <string>
 #include <map>
 
-#include "common.h"
+#include <moss/utils/common.h>
 
 namespace moss
 {

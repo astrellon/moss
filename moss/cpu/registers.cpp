@@ -3,7 +3,7 @@
 #include <iomanip>
 #include <stdexcept>
 
-#include "opcode.h"
+#include <moss/base/opcode.h>
 
 namespace moss
 {
@@ -73,4 +73,43 @@ namespace moss
 				break;
 		}
 	}
+    
+    Registers::Flags Registers::find_flag(const std::string &str)
+    {
+        auto find = s_names_to_flags.find(str);
+        if (find != s_names_to_flags.end())
+        {
+            return find->second;
+        }
+        return Registers::FLAG_UNKNOWN;
+    }
+    std::string Registers::flag_name(Registers::Flags flag)
+    {
+        return flag_name(static_cast<uint32_t>(flag));
+    }
+    std::string Registers::flag_name(uint32_t flag)
+    {
+        for (auto iter = s_names_to_flags.begin(); iter != s_names_to_flags.end(); ++iter)
+        {
+            if (static_cast<uint32_t>(iter->second) == flag)
+            {
+                return iter->first;
+            }
+        }
+        return std::string("Unknown flag");
+    }
+
+    // Names for flags. {{{
+    // If a token that is expected to be an argument is one of these strings
+    // it is now recognised as a flag value. This means that labels
+    // cannot be one of these values.
+    std::map<std::string, Registers::Flags> Registers::s_names_to_flags = {
+        { "ZERO",     Registers::FLAG_ZERO },
+        { "NEGATIVE", Registers::FLAG_NEGATIVE },
+        { "CARRY",    Registers::FLAG_CARRY },
+        { "OVERFLOW", Registers::FLAG_OVERFLOW },
+        { "MMU",      Registers::FLAG_ENABLE_MMU }
+    };
+    // }}}
+
 }

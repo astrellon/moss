@@ -1,13 +1,13 @@
 #include <iostream>
 
-#include "moss/cpu_arm.h"
-#include "moss/memory.h"
-#include "moss/memory_writer.h"
-#include "moss/assembler.h"
-#include "moss/disassembler.h"
-#include "moss/test_peripheral.h"
-#include "moss/common.h"
-#include "moss/debugger.h"
+#include "moss/cpu/cpu_arm.h"
+#include "moss/cpu/memory.h"
+#include "moss/cpu/memory_writer.h"
+#include "moss/assemble/assembler.h"
+#include "moss/debug/disassembler.h"
+#include "moss/cpu/test_peripheral.h"
+#include "moss/utils/common.h"
+#include "moss/debug/debugger.h"
 
 #include <string>
 #include <sstream>
