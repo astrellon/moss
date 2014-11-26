@@ -29,16 +29,6 @@ int main(int argc, char **argv)
     cpu.registers().program_counter(program_start);
     cpu.memory(&mem);
 
-    /*
-    {
-        std::ifstream input_ss("test3.asm");
-        std::ofstream output_ss;
-        output_ss.open("preproc_temp.asm");
-        moss::Preprocessor preproc(input_ss, output_ss);
-        preproc.process_stream();
-    }
-    */
-
     {
         moss::Assembler assembler;
         std::ifstream input_ss("test3.asm");
@@ -51,6 +41,10 @@ int main(int argc, char **argv)
     }
 
     moss::Debugger debugger(&cpu, program_start);
+    std::ifstream input_debug;
+    input_debug.open("debug.out");
+    debugger.load_debug_data(input_debug);
+    debugger.breakpoint_line(std::string("test3.asm"), 72, true);
     cpu.remote_debugger(true);
 
     try
@@ -78,7 +72,6 @@ int main(int argc, char **argv)
         std::cout << "- Stopped at: " << (cpu.registers().program_counter() - 1) << "\n";
     }
     cpu.to_stream(std::cout);
-    //cpu.memory()->to_stream(std::cout, 0, 128);
 
 #ifdef _WIN32
 	std::cin.get();

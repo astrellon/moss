@@ -44,6 +44,16 @@ namespace moss
             uint32_t named_reg(uint32_t name) const;
             void named_reg(uint32_t name, uint32_t value);
 
+            enum DebugState
+            {
+                DEBUG_NONE,
+                DEBUG_CONTINUE,
+                DEBUG_STEP
+            };
+
+            void debug_state(DebugState state);
+            DebugState debug_state() const;
+
         private:
             bool _running;
             bool _enable_mmu;
@@ -54,6 +64,7 @@ namespace moss
             uint32_t _interrupt_return;
             std::array<uint32_t, 16> _interrupts;
             bool _remote_debugger;
+            DebugState _debug_state;
             
             Memory *_memory;
 

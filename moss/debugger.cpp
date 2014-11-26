@@ -16,7 +16,10 @@ namespace moss
 
     void Debugger::on_break()
     {
+        _cpu->debug_state(CpuArm::DEBUG_CONTINUE);
+        std::cout << "BREAK START\n";
         _cpu->to_stream(std::cout);
+        std::cout << "BREAK END\n";
     }
 
 
@@ -52,4 +55,8 @@ namespace moss
         return (opcode & Opcode::COND_BREAK) > 0;
     }
 
+    void Debugger::load_debug_data(std::istream &ss)
+    {
+        _debug_data.from_stream(ss);
+    }
 }

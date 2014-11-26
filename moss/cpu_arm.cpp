@@ -18,6 +18,7 @@ namespace moss
         _mmu(page_bit_size),
         _interrupt_return(0u),
         _remote_debugger(false),
+        _debug_state(DEBUG_NONE),
         _memory(nullptr)
     {
         _regs.zero();
@@ -131,6 +132,15 @@ namespace moss
         }
     }
 
+    void CpuArm::debug_state(CpuArm::DebugState state)
+    {
+        _debug_state = state;
+    }
+    CpuArm::DebugState CpuArm::debug_state() const
+    {
+        return _debug_state;
+    }
+
     void CpuArm::to_stream(std::ostream &os) const
     {
         os << "CpuArm running: " << is_running() << "\n";
@@ -215,16 +225,24 @@ namespace moss
         while (_running)
         {
             uint32_t opcode = next_pc_uint();
-            if (opcode & Opcode::COND_BREAK)
+            // If we're doing a single step we should break.
+            // Or if the current opcode has a breakpoint set and we're 
+            // not in a debug continue state.
+            if (_debug_state == DEBUG_STEP || 
+                (opcode & Opcode::COND_BREAK && _debug_state != DEBUG_CONTINUE))
             {
                 if (_remote_debugger)
                 {
-                    _regs.program_counter_dec();
+                    _debug_state = DEBUG_NONE;
+                    uint32_t pc = _regs.program_counter();
+                    _regs.program_counter(pc - 1);
                     stop();
                     result = 1;
                     break;
                 }
             }
+            opcode &= ~Opcode::COND_BREAK;
+
             bool meets_condition = opcode < Opcode::COND_ANY;
             if (!meets_condition)
             {
@@ -1291,6 +1309,7 @@ namespace moss
 
             }
         }
+        _debug_state = DEBUG_NONE;
         return result;
     }
 }
