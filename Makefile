@@ -84,16 +84,11 @@ BASE_HEADER =
 
 ifdef DEBUGGER
 	BASE_FILE = debugger.cpp
-	PROGRAM = MossDB
-	SRCDIRS += moss/debug moss/cpu
-else
-ifdef ASSEMBLER
-	BASE_FILE = assembler.cpp
-	SRCDIRS += moss/assemble
+	PROGRAM = Debugger
+	SRCDIRS += moss/debug moss/debug_common moss/cpu
 else
 	BASE_FILE = main.cpp
-	SRCDIRS += moss/cpu moss/assemble moss/debug
-endif
+	SRCDIRS += moss/cpu moss/assemble moss/debug moss/debug_common
 endif
 
 ifdef TESTING

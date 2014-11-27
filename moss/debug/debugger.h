@@ -1,6 +1,6 @@
 #pragma once
 
-#include "debug_data.h"
+#include <moss/debug_common/debug_data.h>
 
 namespace moss
 {

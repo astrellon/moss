@@ -20,6 +20,7 @@ namespace moss
             void zero();
 
             void to_stream(std::ostream &os, uint32_t start = 0, uint32_t end = -1) const;
+            void from_stream(std::istream &ss, uint32_t offset);
 
         private:
             uint32_t _size;

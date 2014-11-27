@@ -1294,10 +1294,10 @@ namespace moss
                     while (true)
                     {
                         uint32_t value = _mmu.uint_data(iarg1++);
-                        char c1 = (value >> 24) & 0xFF;
-                        char c2 = (value >> 16) & 0xFF;
-                        char c3 = (value >> 8) & 0xFF;
-                        char c4 = value & 0xFF;
+                        char c4 = (value >> 24) & 0xFF;
+                        char c3 = (value >> 16) & 0xFF;
+                        char c2 = (value >> 8) & 0xFF;
+                        char c1 = value & 0xFF;
                         if (c1) std::cout << c1; else break;
                         if (c2) std::cout << c2; else break;
                         if (c3) std::cout << c3; else break;

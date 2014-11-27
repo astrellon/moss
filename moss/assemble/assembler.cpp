@@ -201,7 +201,7 @@ namespace moss
             DataWord str_value;
             for (auto i = 0u; i < str.size(); ++i)
             {
-                str_value.b[3 - j] = str[i];
+                str_value.b[j] = str[i];
                 ++j;
                 if (j >= 4)
                 {
@@ -533,5 +533,14 @@ namespace moss
     std::string Assembler::process_string_value(const std::string &str)
     {
         return str.substr(1, str.size() - 2);
+    }
+
+    void Assembler::write_to_stream(std::ostream &ss)
+    {
+        for (auto i = 0u; i < _data.size(); i++)
+        {
+            //ss << _data[i].u;
+            ss.write( reinterpret_cast<const char*>(&_data[i].u), sizeof(uint32_t));
+        }
     }
 }

@@ -42,4 +42,15 @@ namespace moss
             }
         }
     }
+
+    void Memory::from_stream(std::istream &ss, uint32_t offset)
+    {
+        uint32_t i = 0u;
+        while(ss)
+        {
+            uint32_t value;
+            ss.read(reinterpret_cast<char *>(&value), sizeof(value));
+            uint_data(offset + i++, value);
+        }
+    }
 }

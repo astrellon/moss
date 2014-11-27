@@ -60,7 +60,6 @@ namespace moss
                 _end_of_stream = true;
                 return;
             }
-            std::cout << "PROC LINE " << _current_line << ": >" << line << "<\n";
 
             Utils::trim_str(line);
         } while (line.size() == 0 && !_include_all_lines);

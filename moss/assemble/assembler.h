@@ -10,7 +10,7 @@
 #include <moss/utils/tokeniser.h>
 #include <moss/utils/common.h>
 #include <moss/base/opcode.h>
-#include <moss/debug/debug_data.h>
+#include <moss/debug_common/debug_data.h>
 
 namespace moss
 {
@@ -44,6 +44,7 @@ namespace moss
                     memory->uint_data(i + offset, _data[i].u);
                 }
             }
+            void write_to_stream(std::ostream &ss);
 
             Report report() const;
 
@@ -51,7 +52,6 @@ namespace moss
 
         private:
             uint32_t _index;
-            //Tokeniser *_tokens;
             std::vector<DataWord> _data;
             std::map< std::string, uint32_t > _label_locations;
             std::map< std::string, std::vector<uint32_t> > _label_temp;
