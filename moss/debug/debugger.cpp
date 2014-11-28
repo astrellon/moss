@@ -65,6 +65,7 @@ namespace moss
     void Debugger::load_debug_config(std::istream &ss)
     {
         _debug_config.from_stream(ss);
+        _debug_config.apply_to_debugger(this);
     }
     void Debugger::save_debug_config(std::ostream &ss)
     {

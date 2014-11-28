@@ -31,6 +31,7 @@ int main(int argc, char **argv)
 
     {
         moss::Assembler assembler;
+        assembler.enable_debug_symbols(true);
         std::ifstream input_ss("test3.asm");
         assembler.process_stream(std::string("test3.asm"), input_ss);
         assembler.finalise();
@@ -52,7 +53,7 @@ int main(int argc, char **argv)
         std::ifstream input_debug_config("debug_config.out");
         if (input_debug_config)
         {
-            debugger.load_debug_data(input_debug_config);
+            debugger.load_debug_config(input_debug_config);
         }
     }
 

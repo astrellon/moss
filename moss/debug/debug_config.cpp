@@ -142,7 +142,7 @@ namespace moss
         auto filename_index  = static_cast<uint32_t>(atoi(line[0].c_str()));
         auto line_number = static_cast<uint32_t>(atoi(line[1].c_str()));
 
-        breakpoint_line(filename_index, line_number);
+        breakpoint_line(filename_index, line_number, true);
     }
 
 }

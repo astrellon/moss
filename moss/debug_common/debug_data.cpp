@@ -107,7 +107,8 @@ namespace moss
 
         ss << "\n"
             "; A list of breakpoints to set on files and line number.\n"
-            "; The filename is an index to the file list above.\n";
+            "; The filename is an index to the file list above.\n"
+            "Data:\n";
         for (auto iter = _prog_to_files.begin(); iter != _prog_to_files.end(); ++iter)
         {
             ss  << iter->first << ' '
