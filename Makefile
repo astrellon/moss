@@ -70,25 +70,14 @@ LDFLAGS   =
 
 # The directories in which source files reside.
 # If not specified, only the current directory will be serached.
-SRCDIRS   = moss moss/base moss/utils
+SRCDIRS   = moss moss/base moss/utils moss/cpu moss/assemble moss/debug moss/debug_common
 
 # The executable file name.
 # If not specified, current directory name or `a.out' will be used.
 PROGRAM   = Moss
+DEBUGGER  = Debugger
 ifdef NAME
     PROGRAM = $(NAME)
-endif
-
-BASE_FILE = main.cpp
-BASE_HEADER = 
-
-ifdef DEBUGGER
-	BASE_FILE = debugger.cpp
-	PROGRAM = Debugger
-	SRCDIRS += moss/debug moss/debug_common moss/cpu
-else
-	BASE_FILE = main.cpp
-	SRCDIRS += moss/cpu moss/assemble moss/debug moss/debug_common
 endif
 
 ifdef TESTING
@@ -152,12 +141,6 @@ ifeq ($(SRCDIRS),)
 endif
 SOURCES = $(foreach d,$(SRCDIRS),$(wildcard $(addprefix $(d)/*,$(SRCEXTS))))
 HEADERS = $(foreach d,$(SRCDIRS),$(wildcard $(addprefix $(d)/*,$(HDREXTS))))
-ifneq ($(BASE_FILE),)
-	SOURCES += $(BASE_FILE)
-endif
-ifneq ($(BASE_HEADER),)
-	HEADERS += $(BASE_HEADER)
-endif
 SRC_CXX = $(filter-out %.c,$(SOURCES))
 OBJS    = $(addsuffix .o, $(basename $(SOURCES)))
 DEPS    = $(OBJS:.o=.d)
@@ -177,9 +160,8 @@ LINK.cxx    = $(CXX) $(MY_CFLAGS) $(CXXFLAGS) $(CPPFLAGS) $(LDFLAGS)
 # Delete the default suffixes
 .SUFFIXES:
 
-all:	$(PROGRAM)
-	
-	
+
+all:	$(PROGRAM) $(DEBUGGER)
 
 # Rules for creating dependency files (.d).
 #------------------------------------------
@@ -252,14 +234,24 @@ tags: $(HEADERS) $(SOURCES)
 ctags: $(HEADERS) $(SOURCES)
 	$(CTAGS) $(CTAGSFLAGS) $(HEADERS) $(SOURCES)
 
+
 # Rules for generating the executable.
 #-------------------------------------
-$(PROGRAM):$(OBJS)
+$(PROGRAM):$(OBJS) main.o
 ifeq ($(SRC_CXX),)              # C program
-	$(LINK.c)   $(OBJS) $(MY_LIBS) -o $@
+	$(LINK.c)   $(OBJS) main.o $(MY_LIBS) -o $@
 	@echo Type ./$@ to execute the program.
 else                            # C++ program
-	$(LINK.cxx) $(OBJS) $(MY_LIBS) -o $@
+	$(LINK.cxx) $(OBJS) main.o $(MY_LIBS) -o $@
+	@echo Type ./$@ to execute the program.
+endif
+
+$(DEBUGGER):$(OBJS) debugger.o
+ifeq ($(SRC_CXX),)              # C program
+	$(LINK.c)   $(OBJS) debugger.o $(MY_LIBS) -o $@
+	@echo Type ./$@ to execute the program.
+else                            # C++ program
+	$(LINK.cxx) $(OBJS) debugger.o $(MY_LIBS) -o $@
 	@echo Type ./$@ to execute the program.
 endif
 
@@ -270,12 +262,10 @@ endif
 endif
 
 clean:
-	$(RM) $(OBJS) $(PROGRAM) $(PROGRAM).exe
-	$(RM) *.d moss/*.d
+	$(RM) $(OBJS) $(PROGRAM) $(PROGRAM).exe $(DEBUGGER)
 
 distclean: clean
 	$(RM) $(DEPS) TAGS
-	$(RM) *.d moss/*.d
 
 # Show help.
 help:
@@ -299,6 +289,7 @@ help:
 # Show variables (for debug use only.)
 show:
 	@echo 'PROGRAM     :' $(PROGRAM)
+	@echo 'DEBUGGER    :' $(DEBUGGER)
 	@echo 'SRCDIRS     :' $(SRCDIRS)
 	@echo 'HEADERS     :' $(HEADERS)
 	@echo 'SOURCES     :' $(SOURCES)
