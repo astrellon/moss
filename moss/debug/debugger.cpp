@@ -31,6 +31,8 @@ namespace moss
             std::cout << "Unable to set breakpoint for: " << filename << " @ " << line_number << "\n";
             return;
         }
+
+        _debug_config.breakpoint_line(filename, line_number, set);
         breakpoint(program_index, set);
     }
     bool Debugger::breakpoint_line(const std::string &filename, uint32_t line_number) const
@@ -58,5 +60,14 @@ namespace moss
     void Debugger::load_debug_data(std::istream &ss)
     {
         _debug_data.from_stream(ss);
+    }
+
+    void Debugger::load_debug_config(std::istream &ss)
+    {
+        _debug_config.from_stream(ss);
+    }
+    void Debugger::save_debug_config(std::ostream &ss)
+    {
+        _debug_config.to_stream(ss);
     }
 }

@@ -41,10 +41,21 @@ int main(int argc, char **argv)
     }
 
     moss::Debugger debugger(&cpu, program_start);
-    std::ifstream input_debug;
-    input_debug.open("debug.out");
-    debugger.load_debug_data(input_debug);
-    debugger.breakpoint_line(std::string("test3.asm"), 72, true);
+    {
+        // Load debug symbols into debugger.
+        std::ifstream input_debug("debug.out");
+        debugger.load_debug_data(input_debug);
+    }
+    
+    {
+        // Load debug config data.
+        std::ifstream input_debug_config("debug_config.out");
+        if (input_debug_config)
+        {
+            debugger.load_debug_data(input_debug_config);
+        }
+    }
+
     cpu.remote_debugger(true);
 
     try
@@ -72,6 +83,11 @@ int main(int argc, char **argv)
         std::cout << "- Stopped at: " << (cpu.registers().program_counter() - 1) << "\n";
     }
     cpu.to_stream(std::cout);
+
+    {
+        std::ofstream output_debug_config("debug_config.out"); 
+        debugger.save_debug_config(output_debug_config);
+    }
 
 #ifdef _WIN32
 	std::cin.get();

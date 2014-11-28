@@ -1,6 +1,7 @@
 #pragma once
 
 #include <moss/debug_common/debug_data.h>
+#include <moss/debug/debug_config.h>
 
 namespace moss
 {
@@ -20,11 +21,15 @@ namespace moss
 
             void load_debug_data(std::istream &ss);
 
+            void load_debug_config(std::istream &ss);
+            void save_debug_config(std::ostream &ss);
+
         protected:
             CpuArm *_cpu;
 
             uint32_t _program_offset;
             DebugData _debug_data;
+            DebugConfig _debug_config;
 
     };
 }

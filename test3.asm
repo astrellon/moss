@@ -91,8 +91,8 @@ mem_end:
 
     MOV r0 0
 start:
-    ;CMP r0 0x00FFFFFF
-    CMP r0 10
+    CMP r0 0x00FFFFFF
+    ;CMP r0 10
     < INC r0
     < JMP start
 
