@@ -1,10 +1,9 @@
 #include <iostream>
 
 #include <moss/utils/tokeniser.h>
+#include <moss/utils/utils.h>
 
 int main(int argc, char **argv)
 {
-
-    std::cout << "Debugger yo\n";
     return 0;
 }

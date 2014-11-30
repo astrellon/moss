@@ -15,11 +15,13 @@ Building
 Should build fine with any g++ version that supports c++0x
 
     make
-    ./Moss
+    ./Moss file.asm
+    ./Debugger file.asm
 
 Defaults to building in debug mode, to build for release:
 
     make RELEASE=yes
-    ./Moss
+    ./Moss file.asm
+    ./Debugger file.asm
 
 In theory should work with MSVC but hasn't been tested.

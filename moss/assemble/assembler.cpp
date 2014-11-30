@@ -55,6 +55,15 @@ namespace moss
         _enable_debug_symbols = enable;
     }
 
+    const std::string &Assembler::debug_symbol_filename() const
+    {
+        return _debug_symbol_filename;
+    }
+    void Assembler::debug_symbol_filename(const std::string &filename)
+    {
+        _debug_symbol_filename = filename;
+    }
+
     Assembler::Report Assembler::report() const
     {
         return _report;
@@ -224,10 +233,9 @@ namespace moss
 		_data[_code_stack_pointer_index].u = _index + 4;
 		_data[_stack_pointer_index].u = _index + 1028;
 
-        if (_enable_debug_symbols)
+        if (_enable_debug_symbols && !_debug_symbol_filename.empty())
         {
-            std::ofstream debug_out;
-            debug_out.open("debug.out");
+            std::ofstream debug_out(_debug_symbol_filename);
             _debug_data.to_stream(debug_out);
         }
         return true;

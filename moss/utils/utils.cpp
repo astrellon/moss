@@ -39,4 +39,14 @@ namespace moss
     {
         return (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F') || is_int_digit(c);
     }
+            
+    std::string Utils::replace_ext(const std::string &input, const std::string &ext)
+    {
+        auto index = input.find_last_of('.'); 
+        if (index == std::string::npos)
+        {
+            return input + std::string(".") + ext;
+        }
+        return input.substr(0, index + 1) + ext;
+    }
 }

@@ -33,6 +33,9 @@ namespace moss
             bool enable_debug_symbols() const;
             void enable_debug_symbols(bool enable);
 
+            const std::string &debug_symbol_filename() const;
+            void debug_symbol_filename(const std::string &filename);
+
             void process_stream(const std::string &filename, std::istream &ss);
             bool finalise();
 
@@ -59,6 +62,7 @@ namespace moss
             std::map<std::string, std::string> _symbols;
 
             bool _enable_debug_symbols;
+            std::string _debug_symbol_filename;
             Report _report;
             DebugData _debug_data;
             
