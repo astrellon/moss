@@ -5,6 +5,8 @@
 #include <moss/cpu/cpu_arm.h>
 #include <moss/base/opcode.h>
 
+#include <climits>
+
 namespace moss
 {
     Debugger::Debugger(CpuArm *cpu, uint32_t program_offset) :
@@ -26,7 +28,7 @@ namespace moss
     void Debugger::breakpoint_line(const std::string &filename, uint32_t line_number, bool set)
     {
         auto program_index = _debug_data.data(filename, line_number);
-        if (program_index == -1u)
+        if (program_index == UINT32_MAX)
         {
             std::cout << "Unable to set breakpoint for: " << filename << " @ " << line_number << "\n";
             return;
@@ -38,7 +40,7 @@ namespace moss
     bool Debugger::breakpoint_line(const std::string &filename, uint32_t line_number) const
     {
         auto program_index = _debug_data.data(filename, line_number);
-        if (program_index == -1u)
+        if (program_index == UINT32_MAX)
         {
             std::cout << "Unable to get breakpoint from: " << filename << " @ " << line_number << "\n";
             return false;

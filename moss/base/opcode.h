@@ -4,6 +4,8 @@
 #include <vector>
 #include <string>
 
+#include <stdint.h>
+
 namespace moss
 {
     class Opcode

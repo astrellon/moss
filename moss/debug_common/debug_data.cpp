@@ -1,6 +1,7 @@
 #include "debug_data.h"
 
 #include <moss/utils/tokeniser.h>
+#include <climits>
 
 namespace moss
 {
@@ -11,8 +12,8 @@ namespace moss
     }
     
     DebugData::LineData::LineData() :
-        _filename_index(-1u),
-        _line_number(-1u)
+        _filename_index(UINT32_MAX),
+        _line_number(UINT32_MAX)
     {
 
     }
@@ -45,7 +46,7 @@ namespace moss
     void DebugData::data(uint32_t program_index, uint32_t line_number, const std::string &filename)
     {
         uint32_t filename_index = find_filename(filename); 
-        if (filename_index == -1u)
+        if (filename_index == UINT32_MAX)
         {
             _filenames.push_back(filename);
             filename_index = _filenames.size();
@@ -75,16 +76,16 @@ namespace moss
         auto find = _files_to_prog.find(data);
         if (find == _files_to_prog.end())
         {
-            return -1u;
+            return UINT32_MAX;
         }
         return find->second;
     }
     uint32_t DebugData::data(const std::string &filename, uint32_t line_number) const
     {
         auto filename_index = find_filename(filename);
-        if (filename_index == -1u)
+        if (filename_index == UINT32_MAX)
         {
-            return -1u;
+            return UINT32_MAX;
         }
         return data(LineData(filename_index,  line_number));
     }
@@ -171,6 +172,6 @@ namespace moss
                 return i;
             }
         }
-        return -1u;
+        return UINT32_MAX;
     }
 }

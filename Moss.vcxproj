@@ -10,6 +10,42 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="moss\assemble\assembler.cpp" />
+    <ClCompile Include="moss\base\opcode.cpp" />
+    <ClCompile Include="moss\cpu\cpu_arm.cpp" />
+    <ClCompile Include="moss\cpu\iperipheral.cpp" />
+    <ClCompile Include="moss\cpu\memory.cpp" />
+    <ClCompile Include="moss\cpu\memory_writer.cpp" />
+    <ClCompile Include="moss\cpu\mmu.cpp" />
+    <ClCompile Include="moss\cpu\registers.cpp" />
+    <ClCompile Include="moss\cpu\test_peripheral.cpp" />
+    <ClCompile Include="moss\debug\debugger.cpp" />
+    <ClCompile Include="moss\debug\debug_config.cpp" />
+    <ClCompile Include="moss\debug\disassembler.cpp" />
+    <ClCompile Include="moss\debug_common\debug_data.cpp" />
+    <ClCompile Include="moss\utils\tokeniser.cpp" />
+    <ClCompile Include="moss\utils\utils.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="moss\assemble\assembler.h" />
+    <ClInclude Include="moss\base\opcode.h" />
+    <ClInclude Include="moss\cpu\cpu_arm.h" />
+    <ClInclude Include="moss\cpu\iperipheral.h" />
+    <ClInclude Include="moss\cpu\memory.h" />
+    <ClInclude Include="moss\cpu\memory_writer.h" />
+    <ClInclude Include="moss\cpu\mmu.h" />
+    <ClInclude Include="moss\cpu\registers.h" />
+    <ClInclude Include="moss\cpu\test_peripheral.h" />
+    <ClInclude Include="moss\debug\debugger.h" />
+    <ClInclude Include="moss\debug\debug_config.h" />
+    <ClInclude Include="moss\debug\disassembler.h" />
+    <ClInclude Include="moss\debug_common\debug_data.h" />
+    <ClInclude Include="moss\utils\common.h" />
+    <ClInclude Include="moss\utils\tokeniser.h" />
+    <ClInclude Include="moss\utils\utils.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{816C0D77-D7F4-46F2-AB1F-4F3F824E3B4C}</ProjectGuid>
     <RootNamespace>Moss</RootNamespace>
@@ -38,7 +74,12 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>./;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>./;$(IncludePath)</IncludePath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -64,44 +105,6 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="moss\assembler.cpp" />
-    <ClCompile Include="moss\cpu.cpp" />
-    <ClCompile Include="moss\cpu_arm.cpp" />
-    <ClCompile Include="moss\disassembler.cpp" />
-    <ClCompile Include="moss\iperipheral.cpp" />
-    <ClCompile Include="moss\memory.cpp" />
-    <ClCompile Include="moss\memory_writer.cpp" />
-    <ClCompile Include="moss\mmu.cpp" />
-    <ClCompile Include="moss\opcode.cpp" />
-    <ClCompile Include="moss\registers.cpp" />
-    <ClCompile Include="moss\test_peripheral.cpp" />
-    <ClCompile Include="moss\thread.cpp" />
-    <ClCompile Include="moss\tokeniser.cpp" />
-    <ClCompile Include="moss\utils.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="moss\assembler.h" />
-    <ClInclude Include="moss\common.h" />
-    <ClInclude Include="moss\cpu.h" />
-    <ClInclude Include="moss\cpu_arm.h" />
-    <ClInclude Include="moss\disassembler.h" />
-    <ClInclude Include="moss\iperipheral.h" />
-    <ClInclude Include="moss\memory.h" />
-    <ClInclude Include="moss\memory_writer.h" />
-    <ClInclude Include="moss\mmu.h" />
-    <ClInclude Include="moss\opcode.h" />
-    <ClInclude Include="moss\registers.h" />
-    <ClInclude Include="moss\test_peripheral.h" />
-    <ClInclude Include="moss\thread.h" />
-    <ClInclude Include="moss\tokeniser.h" />
-    <ClInclude Include="moss\utils.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="test2.asm" />
-    <None Include="test3.asm" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

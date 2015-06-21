@@ -3,6 +3,8 @@
 #include <moss/debug/debugger.h>
 #include <moss/utils/tokeniser.h>
 
+#include <climits>
+
 namespace moss
 {
     DebugConfig::DebugConfig()
@@ -13,7 +15,7 @@ namespace moss
     void DebugConfig::breakpoint_line(const std::string &filename, uint32_t line_number, bool set)
     {
         auto filename_index = find_filename(filename);
-        if (filename_index == -1u)
+        if (filename_index == UINT32_MAX)
         {
             filename_index = _filenames.size();
             _filenames.push_back(filename);
@@ -24,7 +26,7 @@ namespace moss
     bool DebugConfig::breakpoint_line(const std::string &filename, uint32_t line_number) const
     {
         auto filename_index = find_filename(filename);
-        if (filename_index == -1u)
+        if (filename_index == UINT32_MAX)
         {
             return false;
         }
@@ -128,7 +130,7 @@ namespace moss
                 return i;
             }
         }
-        return -1u;
+        return UINT32_MAX;
     }
 
     void DebugConfig::read_data(const std::vector<std::string> &line)

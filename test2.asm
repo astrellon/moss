@@ -1,8 +1,10 @@
 ; Second test tile
+
+main:
     MOV r0 0
 start:
     CMP r0 0x00FFFFFF
-    JGE end
+    >= JMP end
     INC r0
     JMP start
 end:

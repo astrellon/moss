@@ -41,6 +41,10 @@ int main(int argc, char **argv)
     if (filename.empty())
     {
         std::cout << "No filename given.\n";
+#ifdef _WIN32
+        std::cin.get();
+#endif
+
         return -1;
     }
 

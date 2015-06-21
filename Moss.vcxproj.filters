@@ -1,119 +1,126 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    <Filter Include="moss">
+      <UniqueIdentifier>{b76a5094-5b66-403d-b306-bf5f897a4e25}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    <Filter Include="moss\assemble">
+      <UniqueIdentifier>{fecdb7f7-bba3-45e8-8acd-9bd32f327a82}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    <Filter Include="moss\base">
+      <UniqueIdentifier>{6e6f1ff5-aba6-45bb-919a-ab3be0946d57}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="moss\cpu">
+      <UniqueIdentifier>{fe76d89d-7939-455f-8b83-f32a1f95100d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="moss\debug">
+      <UniqueIdentifier>{ebbc97c9-ef9e-4ea8-93bd-6972c6de7058}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="moss\debug_common">
+      <UniqueIdentifier>{8229e9c8-4594-4546-a1ad-389f5325928d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="moss\utils">
+      <UniqueIdentifier>{39025c3b-4951-4092-ba28-9599688a41db}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="moss\cpu.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="moss\assemble\assembler.cpp">
+      <Filter>moss\assemble</Filter>
     </ClCompile>
-    <ClCompile Include="moss\memory.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="moss\base\opcode.cpp">
+      <Filter>moss\base</Filter>
     </ClCompile>
-    <ClCompile Include="moss\mmu.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="moss\cpu\cpu_arm.cpp">
+      <Filter>moss\cpu</Filter>
     </ClCompile>
-    <ClCompile Include="moss\registers.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="moss\cpu\iperipheral.cpp">
+      <Filter>moss\cpu</Filter>
     </ClCompile>
-    <ClCompile Include="moss\thread.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="moss\cpu\memory.cpp">
+      <Filter>moss\cpu</Filter>
     </ClCompile>
-    <ClCompile Include="moss\assembler.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="moss\cpu\memory_writer.cpp">
+      <Filter>moss\cpu</Filter>
     </ClCompile>
-    <ClCompile Include="moss\disassembler.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="moss\cpu\mmu.cpp">
+      <Filter>moss\cpu</Filter>
     </ClCompile>
-    <ClCompile Include="moss\memory_writer.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="moss\cpu\registers.cpp">
+      <Filter>moss\cpu</Filter>
     </ClCompile>
-    <ClCompile Include="moss\opcode.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="moss\cpu\test_peripheral.cpp">
+      <Filter>moss\cpu</Filter>
     </ClCompile>
-    <ClCompile Include="moss\tokeniser.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="moss\debug\debug_config.cpp">
+      <Filter>moss\debug</Filter>
     </ClCompile>
-    <ClCompile Include="moss\utils.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="moss\debug\debugger.cpp">
+      <Filter>moss\debug</Filter>
+    </ClCompile>
+    <ClCompile Include="moss\debug\disassembler.cpp">
+      <Filter>moss\debug</Filter>
+    </ClCompile>
+    <ClCompile Include="moss\debug_common\debug_data.cpp">
+      <Filter>moss\debug_common</Filter>
+    </ClCompile>
+    <ClCompile Include="moss\utils\tokeniser.cpp">
+      <Filter>moss\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="moss\utils\utils.cpp">
+      <Filter>moss\utils</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="moss\cpu_arm.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="moss\test_peripheral.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="moss\iperipheral.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>moss</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="moss\cpu.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="moss\assemble\assembler.h">
+      <Filter>moss\assemble</Filter>
     </ClInclude>
-    <ClInclude Include="moss\memory.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="moss\base\opcode.h">
+      <Filter>moss\base</Filter>
     </ClInclude>
-    <ClInclude Include="moss\mmu.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="moss\cpu\cpu_arm.h">
+      <Filter>moss\cpu</Filter>
     </ClInclude>
-    <ClInclude Include="moss\registers.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="moss\cpu\iperipheral.h">
+      <Filter>moss\cpu</Filter>
     </ClInclude>
-    <ClInclude Include="moss\thread.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="moss\cpu\memory.h">
+      <Filter>moss\cpu</Filter>
     </ClInclude>
-    <ClInclude Include="moss\assembler.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="moss\cpu\memory_writer.h">
+      <Filter>moss\cpu</Filter>
     </ClInclude>
-    <ClInclude Include="moss\common.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="moss\cpu\mmu.h">
+      <Filter>moss\cpu</Filter>
     </ClInclude>
-    <ClInclude Include="moss\disassembler.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="moss\cpu\registers.h">
+      <Filter>moss\cpu</Filter>
     </ClInclude>
-    <ClInclude Include="moss\memory_writer.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="moss\cpu\test_peripheral.h">
+      <Filter>moss\cpu</Filter>
     </ClInclude>
-    <ClInclude Include="moss\opcode.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="moss\debug\debug_config.h">
+      <Filter>moss\debug</Filter>
     </ClInclude>
-    <ClInclude Include="moss\tokeniser.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="moss\debug\debugger.h">
+      <Filter>moss\debug</Filter>
     </ClInclude>
-    <ClInclude Include="moss\utils.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="moss\debug\disassembler.h">
+      <Filter>moss\debug</Filter>
     </ClInclude>
-    <ClInclude Include="moss\cpu_arm.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="moss\debug_common\debug_data.h">
+      <Filter>moss\debug_common</Filter>
     </ClInclude>
-    <ClInclude Include="moss\iperipheral.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="moss\utils\common.h">
+      <Filter>moss\utils</Filter>
     </ClInclude>
-    <ClInclude Include="moss\test_peripheral.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="moss\utils\tokeniser.h">
+      <Filter>moss\utils</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="test2.asm">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="test3.asm">
-      <Filter>Source Files</Filter>
-    </None>
+    <ClInclude Include="moss\utils\utils.h">
+      <Filter>moss\utils</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
