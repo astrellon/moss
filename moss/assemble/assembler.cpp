@@ -121,7 +121,7 @@ namespace moss
         while (tokens->has_tokens())
         {
             auto line = tokens->next_token_line();
-            std::cout << "New line @ " << tokens->current_line() << "\n";
+            //std::cout << "New line @ " << tokens->current_line() << "\n";
             if (_enable_debug_symbols)
             {
                 _debug_data.data(_index, tokens->current_line(), filename);
@@ -208,9 +208,25 @@ namespace moss
             const std::string &str = iter->first;
             auto j = 0u;
             DataWord str_value;
+            auto escaped = false;
             for (auto i = 0u; i < str.size(); ++i)
             {
-                str_value.b[j] = str[i];
+                auto c = str[i];
+                if (c == '\\' && !escaped)
+                {
+                    escaped = true;
+                    continue;
+                }
+
+                if (escaped)
+                {
+                    if (c == 'n')
+                    {
+                        c = '\n';
+                    }
+                    escaped = false;
+                }
+                str_value.b[j] = c;
                 ++j;
                 if (j >= 4)
                 {
@@ -274,7 +290,7 @@ namespace moss
         for (auto iter = line.begin(); iter != line.end(); ++iter)
         {
             Opcode::Type type = get_token_type(*iter, first);
-            std::cout << "- " << *iter << " | " << Opcode::type_name(type) << "\n";
+            //std::cout << "- " << *iter << " | " << Opcode::type_name(type) << "\n";
 
             if (type == Opcode::CONDITION)
             {
@@ -298,9 +314,9 @@ namespace moss
             uint32_t command = static_cast<uint32_t>(Opcode::find_command(command_name)); 
             if (condition != Opcode::COND_NONE)
             {
-                std::cout << "- Before cond: " << std::hex << command;
+                //std::cout << "- Before cond: " << std::hex << command;
                 command |= static_cast<uint32_t>(condition);
-                std::cout << " | " << std::hex << command << std::dec << "\n";
+                //std::cout << " | " << std::hex << command << std::dec << "\n";
             }
 
             writeU(command);

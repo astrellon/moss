@@ -191,9 +191,22 @@ namespace moss
                 RETI,
                 // }}}
             
+                // Debugging commands {{{
+                // Print to screen {{{
                 PRINT_R,
                 PRINT_I,
-                PRINT_S
+                PRINT_S,
+                
+                PRINTF_R,
+                PRINTF_I,
+                // }}}
+
+                // Get input from keyboad {{{
+                INPUT_R,
+                INPUTF_R,
+                // }}}
+                
+                // }}}
             };
             // }}}
 

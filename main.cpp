@@ -72,10 +72,10 @@ int main(int argc, char **argv)
         assembler.finalise();
         assembler.write_to_memory<moss::Memory>(&mem, program_start);
         std::ofstream output_binary(output_file);
-        assembler.write_to_stream(output_binary);
+        //assembler.write_to_stream(output_binary);
 
         auto report = assembler.report();
-        moss::Disassembler::to_stream<moss::Memory>(std::cout, &mem, program_start, program_start + report.total_size);
+        //moss::Disassembler::to_stream<moss::Memory>(std::cout, &mem, program_start, program_start + report.total_size);
     }
 
     moss::Debugger debugger(&cpu, program_start);
@@ -95,7 +95,9 @@ int main(int argc, char **argv)
     }
 
     cpu.remote_debugger(true);
+    auto total_time = 0.0f;
 
+    std::cout << "--- Starting CPU run ---\n";
     try
     {
 		clock_t start = clock();
@@ -111,8 +113,7 @@ int main(int argc, char **argv)
         }
         while (cpu_result > 0);
 		clock_t end = clock();
-		float time = (float)(end - start) / CLOCKS_PER_SEC;
-		std::cout << "Time taken: " << time << "\n";
+		total_time = (float)(end - start) / CLOCKS_PER_SEC;
     }
     catch (std::exception e)
     {
@@ -120,6 +121,9 @@ int main(int argc, char **argv)
         std::cout << "- Message: " << e.what() << "\n";
         std::cout << "- Stopped at: " << (cpu.registers().program_counter() - 1) << "\n";
     }
+
+    std::cout << "\n--- CPU Info at halt ---\n";
+    std::cout << "Time taken: " << total_time << "\n";
     cpu.to_stream(std::cout);
 
     {

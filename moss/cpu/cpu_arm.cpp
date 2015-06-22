@@ -1278,17 +1278,17 @@ namespace moss
                 // }}}
                 
                 // Debug commands {{{
+                // Print to screen {{{
                 case Opcode::PRINT_R:
                     arg1 = next_pc_uint();
-                    std::cout << "Reg " << arg1 << ": " << _regs.uint_reg(arg1) << std::endl;
+                    std::cout << _regs.uint_reg(arg1);
                     break;
                 case Opcode::PRINT_I:
                     arg1 = next_pc_uint();
-                    std::cout << "Num " << arg1 << "\n";
+                    std::cout << arg1;
                     break;
                 case Opcode::PRINT_S:
                     iarg1 = next_pc_int();
-                    std::cout << "Str ";
                     // Change to diferent index for string offset.
                     iarg1 += _regs.program_counter();
                     while (true)
@@ -1303,8 +1303,31 @@ namespace moss
                         if (c3) std::cout << c3; else break;
                         if (c4) std::cout << c4; else break;
                     }
-                    std::cout << "\n";
                     break;
+                
+                case Opcode::PRINTF_R:
+                    arg1 = next_pc_uint();
+                    std::cout << _regs.float_reg(arg1);
+                    break;
+                case Opcode::PRINTF_I:
+                    farg1 = next_pc_float();
+                    std::cout << farg1;
+                    break;
+                // }}}
+                
+                // Input from keyboard {{{ 
+                case Opcode::INPUT_R:
+                    arg1 = next_pc_uint();
+                    std::cin >> arg2;
+                    _regs.uint_reg(arg1, arg2);
+                    break;
+                case Opcode::INPUTF_R:
+                    arg1 = next_pc_uint();
+                    std::cin >> farg1;
+                    _regs.float_reg(arg1, farg1);
+                    break;
+                // }}}
+                
                 // }}}
 
             }

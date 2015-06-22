@@ -256,7 +256,13 @@ namespace moss
         
         { std::string("PRINT_R"),  Opcode::PRINT_R },
         { std::string("PRINT_I"),  Opcode::PRINT_I },
-        { std::string("PRINT_S"),  Opcode::PRINT_S }
+        { std::string("PRINT_S"),  Opcode::PRINT_S },
+        
+        { std::string("PRINTF_R"),  Opcode::PRINTF_R },
+        { std::string("PRINTF_I"),  Opcode::PRINTF_I },
+        
+        { std::string("INPUT_R"),  Opcode::INPUT_R },
+        { std::string("INPUTF_R"),  Opcode::INPUTF_R },
     };
     // }}}
 
@@ -429,9 +435,15 @@ namespace moss
         { Opcode::RETI,  { "reti", { } } },
         // }}}
         
-        { Opcode::PRINT_R, { "print", { Opcode::INT_NUMBER } } },
-        { Opcode::PRINT_I, { "print", { Opcode::NUMBER } } },
-        { Opcode::PRINT_S, { "print", { Opcode::STRING } } }
+        { Opcode::PRINT_R, { "print", { Opcode::REGISTER } } },
+        { Opcode::PRINT_I, { "print", { Opcode::INT_NUMBER } } },
+        { Opcode::PRINT_S, { "print", { Opcode::STRING } } },
+        
+        { Opcode::PRINTF_R, { "printf", { Opcode::REGISTER } } },
+        { Opcode::PRINTF_I, { "printf", { Opcode::FLOAT_NUMBER } } },
+        
+        { Opcode::INPUT_R, { "input", { Opcode::REGISTER } } },
+        { Opcode::INPUTF_R, { "inputf", { Opcode::REGISTER } } },
     };
     // }}}
     

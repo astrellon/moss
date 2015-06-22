@@ -38,7 +38,7 @@ perf_start:
     IO_SEND perf_result perf_index 0
     CMP perf_result 0
     == JMP perf_assign ; Unassigned
-    PRINT "Skippd jmp"
+    PRINT "Skippd jmp\n"
     INC perf_index
     > JMP perf_start   ; Assigned
     
@@ -101,15 +101,17 @@ end:
     PUSH 8
     CALL func_add
     POP r10
-    PRINT "RESULT"
+    PRINT "Add result "
     PRINT r10
+    PRINT "\n"
 
     PUSH r10
     INT 0
     POP r9
-    PRINT "Double result"
+    PRINT "Double result "
     PRINT r9
+    PRINT "\n"
 
-    PRINT "Finishing"
+    PRINT "Finishing\n"
     HALT
 
