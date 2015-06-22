@@ -87,8 +87,9 @@ namespace moss
         return std::string("Unknown named register");
     }
 
+    // Names to commands {{{
     // This is used by the assembler once the command and argument types have been
-    // determined to get the final opcode. {{{
+    // determined to get the final opcode.
 	std::map<std::string, Opcode::Command> Opcode::s_names_to_commands = {
 		{ std::string("HALT"), Opcode::HALT },
 
@@ -268,186 +269,189 @@ namespace moss
     };
     // }}}
 
+    // Commands to types {{{
     // This map is used by the disassembler for converting opcode values back
-    // into the original command name with the expected arguments. {{{
+    // into the original command name with the expected arguments. 
     std::map<Opcode::Command, std::pair<std::string, std::vector<Opcode::Type> > > Opcode::s_commands_to_types = {
-        { Opcode::HALT, { "halt", {} } },
+        { Opcode::HALT, { "HALT", {} } },
 
         // MOV {{{
-        { Opcode::MOV_R_R, { "mov", { Opcode::REGISTER, Opcode::REGISTER } } },
-        { Opcode::MOV_R_I, { "mov", { Opcode::REGISTER, Opcode::NUMBER } } },
-        { Opcode::MOV_M_R, { "mov", { Opcode::MEMORY, Opcode::REGISTER } } },
+        { Opcode::MOV_R_R, { "MOV", { Opcode::REGISTER, Opcode::REGISTER } } },
+        { Opcode::MOV_R_I, { "MOV", { Opcode::REGISTER, Opcode::NUMBER } } },
+        { Opcode::MOV_M_R, { "MOV", { Opcode::MEMORY, Opcode::REGISTER } } },
        
-        { Opcode::MOV_R_M, { "mov", { Opcode::REGISTER, Opcode::MEMORY } } },
-        { Opcode::MOV_M_I, { "mov", { Opcode::MEMORY, Opcode::NUMBER } } },
-        { Opcode::MOV_M_M, { "mov", { Opcode::MEMORY, Opcode::MEMORY } } },
+        { Opcode::MOV_R_M, { "MOV", { Opcode::REGISTER, Opcode::MEMORY } } },
+        { Opcode::MOV_M_I, { "MOV", { Opcode::MEMORY, Opcode::NUMBER } } },
+        { Opcode::MOV_M_M, { "MOV", { Opcode::MEMORY, Opcode::MEMORY } } },
         
-        { Opcode::MOV_R_F, { "mov", { Opcode::REGISTER, Opcode::FLAG } } },
-        { Opcode::MOV_F_R, { "mov", { Opcode::FLAG, Opcode::REGISTER } } },
-        { Opcode::MOV_F_I, { "mov", { Opcode::FLAG, Opcode::INT_NUMBER } } },
+        { Opcode::MOV_R_F, { "MOV", { Opcode::REGISTER, Opcode::FLAG } } },
+        { Opcode::MOV_F_R, { "MOV", { Opcode::FLAG, Opcode::REGISTER } } },
+        { Opcode::MOV_F_I, { "MOV", { Opcode::FLAG, Opcode::INT_NUMBER } } },
         
-        { Opcode::MOV_R_NR, { "mov", { Opcode::REGISTER, Opcode::NAMED_REGISTER } } },
-        { Opcode::MOV_NR_R, { "mov", { Opcode::NAMED_REGISTER, Opcode::REGISTER } } },
-        { Opcode::MOV_NR_I, { "mov", { Opcode::NAMED_REGISTER, Opcode::NUMBER } } },
+        { Opcode::MOV_R_NR, { "MOV", { Opcode::REGISTER, Opcode::NAMED_REGISTER } } },
+        { Opcode::MOV_NR_R, { "MOV", { Opcode::NAMED_REGISTER, Opcode::REGISTER } } },
+        { Opcode::MOV_NR_I, { "MOV", { Opcode::NAMED_REGISTER, Opcode::NUMBER } } },
         // }}}
         
         // Unit conversion {{{
-        { Opcode::UINT_FLOAT_R,   { "uint_float", { Opcode::REGISTER } } },
-        { Opcode::UINT_FLOAT_R_R, { "uint_float", { Opcode::REGISTER, Opcode::REGISTER } } },
-        { Opcode::FLOAT_UINT_R,   { "float_uint", { Opcode::REGISTER } } },
-        { Opcode::FLOAT_UINT_R_R, { "float_uint", { Opcode::REGISTER, Opcode::REGISTER } } },
+        { Opcode::UINT_FLOAT_R,   { "UINT_FLOAT", { Opcode::REGISTER } } },
+        { Opcode::UINT_FLOAT_R_R, { "UINT_FLOAT", { Opcode::REGISTER, Opcode::REGISTER } } },
+        { Opcode::FLOAT_UINT_R,   { "FLOAT_UINT", { Opcode::REGISTER } } },
+        { Opcode::FLOAT_UINT_R_R, { "FLOAT_UINT", { Opcode::REGISTER, Opcode::REGISTER } } },
         // }}}
         
         // Stack {{{
-        { Opcode::PUSH_R, { "push", { Opcode::REGISTER } } },
-        { Opcode::PUSH_I, { "push", { Opcode::NUMBER } } },
-        { Opcode::POP_R,  { "pop",  { Opcode::REGISTER } } },
+        { Opcode::PUSH_R, { "PUSH", { Opcode::REGISTER } } },
+        { Opcode::PUSH_I, { "PUSH", { Opcode::NUMBER } } },
+        { Opcode::POP_R,  { "POP",  { Opcode::REGISTER } } },
         // }}}
         
         // CMP/CMPF {{{
-        { Opcode::CMP_R_R, { "cmp", { Opcode::REGISTER, Opcode::REGISTER } } },
-        { Opcode::CMP_R_I, { "cmp", { Opcode::REGISTER, Opcode::INT_NUMBER } } }, 
-        { Opcode::CMP_I_R, { "cmp", { Opcode::INT_NUMBER, Opcode::REGISTER } } },
+        { Opcode::CMP_R_R, { "CMP", { Opcode::REGISTER, Opcode::REGISTER } } },
+        { Opcode::CMP_R_I, { "CMP", { Opcode::REGISTER, Opcode::INT_NUMBER } } }, 
+        { Opcode::CMP_I_R, { "CMP", { Opcode::INT_NUMBER, Opcode::REGISTER } } },
         
-        { Opcode::CMPF_R_R, { "cmpf", { Opcode::REGISTER, Opcode::REGISTER } } },
-        { Opcode::CMPF_R_I, { "cmpf", { Opcode::REGISTER, Opcode::FLOAT_NUMBER } } },
-        { Opcode::CMPF_I_R, { "cmpf", { Opcode::FLOAT_NUMBER, Opcode::REGISTER } } },
+        { Opcode::CMPF_R_R, { "CMPF", { Opcode::REGISTER, Opcode::REGISTER } } },
+        { Opcode::CMPF_R_I, { "CMPF", { Opcode::REGISTER, Opcode::FLOAT_NUMBER } } },
+        { Opcode::CMPF_I_R, { "CMPF", { Opcode::FLOAT_NUMBER, Opcode::REGISTER } } },
         // }}}
         
         // Branching {{{
-        { Opcode::JMP_R, { "jmp", { Opcode::REGISTER } } },
-        { Opcode::JMP_I, { "jmp", { Opcode::INT_NUMBER } } },
+        { Opcode::JMP_R, { "JMP", { Opcode::REGISTER } } },
+        { Opcode::JMP_I, { "JMP", { Opcode::INT_NUMBER } } },
         // }}}
         
         // ADD/ADDF {{{
-        { Opcode::ADD_R_R,    { "add", { Opcode::REGISTER, Opcode::REGISTER } } },
-        { Opcode::ADD_R_R_R,  { "add", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
-        { Opcode::ADD_R_R_I,  { "add", { Opcode::REGISTER, Opcode::REGISTER, Opcode::INT_NUMBER } } },
-        { Opcode::ADD_R_I,    { "add", { Opcode::REGISTER, Opcode::INT_NUMBER } } },
+        { Opcode::ADD_R_R,    { "ADD", { Opcode::REGISTER, Opcode::REGISTER } } },
+        { Opcode::ADD_R_R_R,  { "ADD", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
+        { Opcode::ADD_R_R_I,  { "ADD", { Opcode::REGISTER, Opcode::REGISTER, Opcode::INT_NUMBER } } },
+        { Opcode::ADD_R_I,    { "ADD", { Opcode::REGISTER, Opcode::INT_NUMBER } } },
         
-        { Opcode::ADDF_R_R,   { "addf", { Opcode::REGISTER, Opcode::REGISTER } } },
-        { Opcode::ADDF_R_R_R, { "addf", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
-        { Opcode::ADDF_R_R_I, { "addf", { Opcode::REGISTER, Opcode::REGISTER, Opcode::FLOAT_NUMBER } } },
-        { Opcode::ADDF_R_I,   { "addf", { Opcode::REGISTER, Opcode::FLOAT_NUMBER } } },
+        { Opcode::ADDF_R_R,   { "ADDF", { Opcode::REGISTER, Opcode::REGISTER } } },
+        { Opcode::ADDF_R_R_R, { "ADDF", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
+        { Opcode::ADDF_R_R_I, { "ADDF", { Opcode::REGISTER, Opcode::REGISTER, Opcode::FLOAT_NUMBER } } },
+        { Opcode::ADDF_R_I,   { "ADDF", { Opcode::REGISTER, Opcode::FLOAT_NUMBER } } },
         // }}}
         
         // SUB/SUBF {{{
-        { Opcode::SUB_R_R,    { "sub", { Opcode::REGISTER, Opcode::REGISTER } } },
-        { Opcode::SUB_R_R_R,  { "sub", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
-        { Opcode::SUB_R_I_R,  { "sub", { Opcode::REGISTER, Opcode::INT_NUMBER, Opcode::REGISTER } } },
-        { Opcode::SUB_R_R_I,  { "sub", { Opcode::REGISTER, Opcode::REGISTER, Opcode::INT_NUMBER } } },
-        { Opcode::SUB_R_I,    { "sub", { Opcode::REGISTER, Opcode::INT_NUMBER } } },
+        { Opcode::SUB_R_R,    { "SUB", { Opcode::REGISTER, Opcode::REGISTER } } },
+        { Opcode::SUB_R_R_R,  { "SUB", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
+        { Opcode::SUB_R_I_R,  { "SUB", { Opcode::REGISTER, Opcode::INT_NUMBER, Opcode::REGISTER } } },
+        { Opcode::SUB_R_R_I,  { "SUB", { Opcode::REGISTER, Opcode::REGISTER, Opcode::INT_NUMBER } } },
+        { Opcode::SUB_R_I,    { "SUB", { Opcode::REGISTER, Opcode::INT_NUMBER } } },
         
-        { Opcode::SUBF_R_R,   { "subf", { Opcode::REGISTER, Opcode::REGISTER } } },
-        { Opcode::SUBF_R_R_R, { "subf", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
-        { Opcode::SUBF_R_I_R, { "subf", { Opcode::FLOAT_NUMBER, Opcode::REGISTER, Opcode::REGISTER } } },
-        { Opcode::SUBF_R_R_I, { "subf", { Opcode::REGISTER, Opcode::REGISTER, Opcode::FLOAT_NUMBER } } },
-        { Opcode::SUBF_R_I,   { "subf", { Opcode::REGISTER, Opcode::FLOAT_NUMBER } } },
+        { Opcode::SUBF_R_R,   { "SUBF", { Opcode::REGISTER, Opcode::REGISTER } } },
+        { Opcode::SUBF_R_R_R, { "SUBF", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
+        { Opcode::SUBF_R_I_R, { "SUBF", { Opcode::FLOAT_NUMBER, Opcode::REGISTER, Opcode::REGISTER } } },
+        { Opcode::SUBF_R_R_I, { "SUBF", { Opcode::REGISTER, Opcode::REGISTER, Opcode::FLOAT_NUMBER } } },
+        { Opcode::SUBF_R_I,   { "SUBF", { Opcode::REGISTER, Opcode::FLOAT_NUMBER } } },
         // }}}
 
         // INC/DEC {{{
-        { Opcode::INC_R,  { "inc",  { Opcode::REGISTER } } },
-        { Opcode::INCF_R, { "incf", { Opcode::REGISTER } } },
-        { Opcode::DEC_R,  { "dec",  { Opcode::REGISTER } } },
-        { Opcode::DECF_R, { "decf", { Opcode::REGISTER } } },
+        { Opcode::INC_R,  { "INC",  { Opcode::REGISTER } } },
+        { Opcode::INCF_R, { "INCF", { Opcode::REGISTER } } },
+        { Opcode::DEC_R,  { "DEC",  { Opcode::REGISTER } } },
+        { Opcode::DECF_R, { "DECF", { Opcode::REGISTER } } },
         // }}}
         
         // MUL/MULF {{{
-        { Opcode::MUL_R_R,    { "mul", { Opcode::REGISTER, Opcode::REGISTER } } },
-        { Opcode::MUL_R_R_R,  { "mul", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
-        { Opcode::MUL_R_R_I,  { "mul", { Opcode::REGISTER, Opcode::REGISTER, Opcode::INT_NUMBER } } },
-        { Opcode::MUL_R_I,    { "mul", { Opcode::REGISTER, Opcode::INT_NUMBER } } },
+        { Opcode::MUL_R_R,    { "MUL", { Opcode::REGISTER, Opcode::REGISTER } } },
+        { Opcode::MUL_R_R_R,  { "MUL", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
+        { Opcode::MUL_R_R_I,  { "MUL", { Opcode::REGISTER, Opcode::REGISTER, Opcode::INT_NUMBER } } },
+        { Opcode::MUL_R_I,    { "MUL", { Opcode::REGISTER, Opcode::INT_NUMBER } } },
         
-        { Opcode::MULF_R_R,   { "mulf", { Opcode::REGISTER, Opcode::REGISTER } } },
-        { Opcode::MULF_R_R_R, { "mulf", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
-        { Opcode::MULF_R_R_I, { "mulf", { Opcode::REGISTER, Opcode::REGISTER, Opcode::FLOAT_NUMBER } } },
-        { Opcode::MULF_R_I,   { "mulf", { Opcode::REGISTER, Opcode::FLOAT_NUMBER } } },
+        { Opcode::MULF_R_R,   { "MULF", { Opcode::REGISTER, Opcode::REGISTER } } },
+        { Opcode::MULF_R_R_R, { "MULF", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
+        { Opcode::MULF_R_R_I, { "MULF", { Opcode::REGISTER, Opcode::REGISTER, Opcode::FLOAT_NUMBER } } },
+        { Opcode::MULF_R_I,   { "MULF", { Opcode::REGISTER, Opcode::FLOAT_NUMBER } } },
         // }}}
         
         // DIV/DIVF {{{
-        { Opcode::DIV_R_R,    { "div", { Opcode::REGISTER, Opcode::REGISTER } } },
-        { Opcode::DIV_R_R_R,  { "div", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
-        { Opcode::DIV_R_I_R,  { "div", { Opcode::REGISTER, Opcode::INT_NUMBER, Opcode::REGISTER } } },
-        { Opcode::DIV_R_R_I,  { "div", { Opcode::REGISTER, Opcode::REGISTER, Opcode::INT_NUMBER } } },
-        { Opcode::DIV_R_I,    { "div", { Opcode::REGISTER, Opcode::INT_NUMBER } } },
+        { Opcode::DIV_R_R,    { "DIV", { Opcode::REGISTER, Opcode::REGISTER } } },
+        { Opcode::DIV_R_R_R,  { "DIV", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
+        { Opcode::DIV_R_I_R,  { "DIV", { Opcode::REGISTER, Opcode::INT_NUMBER, Opcode::REGISTER } } },
+        { Opcode::DIV_R_R_I,  { "DIV", { Opcode::REGISTER, Opcode::REGISTER, Opcode::INT_NUMBER } } },
+        { Opcode::DIV_R_I,    { "DIV", { Opcode::REGISTER, Opcode::INT_NUMBER } } },
         
-        { Opcode::DIVF_R_R,   { "divf", { Opcode::REGISTER, Opcode::REGISTER } } },
-        { Opcode::DIVF_R_R_R, { "divf", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
-        { Opcode::DIVF_R_I_R, { "divf", { Opcode::FLOAT_NUMBER, Opcode::REGISTER, Opcode::REGISTER } } },
-        { Opcode::DIVF_R_R_I, { "divf", { Opcode::REGISTER, Opcode::REGISTER, Opcode::FLOAT_NUMBER } } },
-        { Opcode::DIVF_R_I,   { "divf", { Opcode::REGISTER, Opcode::FLOAT_NUMBER } } },
+        { Opcode::DIVF_R_R,   { "DIVF", { Opcode::REGISTER, Opcode::REGISTER } } },
+        { Opcode::DIVF_R_R_R, { "DIVF", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
+        { Opcode::DIVF_R_I_R, { "DIVF", { Opcode::FLOAT_NUMBER, Opcode::REGISTER, Opcode::REGISTER } } },
+        { Opcode::DIVF_R_R_I, { "DIVF", { Opcode::REGISTER, Opcode::REGISTER, Opcode::FLOAT_NUMBER } } },
+        { Opcode::DIVF_R_I,   { "DIVF", { Opcode::REGISTER, Opcode::FLOAT_NUMBER } } },
         // }}}
         
         // ROR/ROL {{{
-        { Opcode::ROR_R,   { "ror", { Opcode::REGISTER } } },
-        { Opcode::ROR_R_R, { "ror", { Opcode::REGISTER, Opcode::REGISTER } } },
-        { Opcode::ROL_R,   { "rol", { Opcode::REGISTER } } },
-        { Opcode::ROL_R_R, { "rol", { Opcode::REGISTER, Opcode::REGISTER } } },
+        { Opcode::ROR_R,   { "ROR", { Opcode::REGISTER } } },
+        { Opcode::ROR_R_R, { "ROR", { Opcode::REGISTER, Opcode::REGISTER } } },
+        { Opcode::ROL_R,   { "ROL", { Opcode::REGISTER } } },
+        { Opcode::ROL_R_R, { "ROL", { Opcode::REGISTER, Opcode::REGISTER } } },
         // }}}
         
         // SHR/SHL {{{
-        { Opcode::SHR_R,   { "shr", { Opcode::REGISTER } } },
-        { Opcode::SHR_R_R, { "shr", { Opcode::REGISTER, Opcode::REGISTER } } },
-        { Opcode::SHL_R,   { "shl", { Opcode::REGISTER } } },
-        { Opcode::SHL_R_R, { "shl", { Opcode::REGISTER, Opcode::REGISTER } } },
+        { Opcode::SHR_R,   { "SHR", { Opcode::REGISTER } } },
+        { Opcode::SHR_R_R, { "SHR", { Opcode::REGISTER, Opcode::REGISTER } } },
+        { Opcode::SHL_R,   { "SHL", { Opcode::REGISTER } } },
+        { Opcode::SHL_R_R, { "SHL", { Opcode::REGISTER, Opcode::REGISTER } } },
         // }}}
 
         // Peripherals {{{
 
         // SEND {{{
-        { Opcode::IO_SEND_I_I, { "io_send", { Opcode::INT_NUMBER, Opcode::NUMBER } } },
-        { Opcode::IO_SEND_R_I, { "io_send", { Opcode::REGISTER, Opcode::NUMBER } } },
-        { Opcode::IO_SEND_I_R, { "io_send", { Opcode::INT_NUMBER, Opcode::REGISTER } } },
-        { Opcode::IO_SEND_R_R, { "io_send", { Opcode::REGISTER, Opcode::REGISTER } } },
+        { Opcode::IO_SEND_I_I, { "IO_SEND", { Opcode::INT_NUMBER, Opcode::NUMBER } } },
+        { Opcode::IO_SEND_R_I, { "IO_SEND", { Opcode::REGISTER, Opcode::NUMBER } } },
+        { Opcode::IO_SEND_I_R, { "IO_SEND", { Opcode::INT_NUMBER, Opcode::REGISTER } } },
+        { Opcode::IO_SEND_R_R, { "IO_SEND", { Opcode::REGISTER, Opcode::REGISTER } } },
         
-        { Opcode::IO_SEND_R_I_I, { "io_send", { Opcode::REGISTER, Opcode::INT_NUMBER, Opcode::NUMBER } } },
-        { Opcode::IO_SEND_R_R_I, { "io_send", { Opcode::REGISTER, Opcode::REGISTER, Opcode::NUMBER } } },
-        { Opcode::IO_SEND_R_I_R, { "io_send", { Opcode::REGISTER, Opcode::INT_NUMBER, Opcode::REGISTER } } },
-        { Opcode::IO_SEND_R_R_R, { "io_send", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
+        { Opcode::IO_SEND_R_I_I, { "IO_SEND", { Opcode::REGISTER, Opcode::INT_NUMBER, Opcode::NUMBER } } },
+        { Opcode::IO_SEND_R_R_I, { "IO_SEND", { Opcode::REGISTER, Opcode::REGISTER, Opcode::NUMBER } } },
+        { Opcode::IO_SEND_R_I_R, { "IO_SEND", { Opcode::REGISTER, Opcode::INT_NUMBER, Opcode::REGISTER } } },
+        { Opcode::IO_SEND_R_R_R, { "IO_SEND", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
         // }}}
         
         // ASSIGN {{{
-        { Opcode::IO_ASSIGN_R_R_R, { "io_assign", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
-        { Opcode::IO_ASSIGN_R_R_I, { "io_assign", { Opcode::REGISTER, Opcode::REGISTER, Opcode::NUMBER } } },
-        { Opcode::IO_ASSIGN_R_I_R, { "io_assign", { Opcode::REGISTER, Opcode::NUMBER, Opcode::REGISTER } } },
-        { Opcode::IO_ASSIGN_R_I_I, { "io_assign", { Opcode::REGISTER, Opcode::NUMBER, Opcode::NUMBER } } },
+        { Opcode::IO_ASSIGN_R_R_R, { "IO_ASSIGN", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
+        { Opcode::IO_ASSIGN_R_R_I, { "IO_ASSIGN", { Opcode::REGISTER, Opcode::REGISTER, Opcode::NUMBER } } },
+        { Opcode::IO_ASSIGN_R_I_R, { "IO_ASSIGN", { Opcode::REGISTER, Opcode::NUMBER, Opcode::REGISTER } } },
+        { Opcode::IO_ASSIGN_R_I_I, { "IO_ASSIGN", { Opcode::REGISTER, Opcode::NUMBER, Opcode::NUMBER } } },
         
-        { Opcode::IO_ASSIGN_I_R_R, { "io_assign", { Opcode::NUMBER, Opcode::REGISTER, Opcode::REGISTER } } },
-        { Opcode::IO_ASSIGN_I_R_I, { "io_assign", { Opcode::NUMBER, Opcode::REGISTER, Opcode::NUMBER } } },
-        { Opcode::IO_ASSIGN_I_I_R, { "io_assign", { Opcode::NUMBER, Opcode::NUMBER, Opcode::REGISTER } } },
-        { Opcode::IO_ASSIGN_I_I_I, { "io_assign", { Opcode::NUMBER, Opcode::NUMBER, Opcode::NUMBER } } },
+        { Opcode::IO_ASSIGN_I_R_R, { "IO_ASSIGN", { Opcode::NUMBER, Opcode::REGISTER, Opcode::REGISTER } } },
+        { Opcode::IO_ASSIGN_I_R_I, { "IO_ASSIGN", { Opcode::NUMBER, Opcode::REGISTER, Opcode::NUMBER } } },
+        { Opcode::IO_ASSIGN_I_I_R, { "IO_ASSIGN", { Opcode::NUMBER, Opcode::NUMBER, Opcode::REGISTER } } },
+        { Opcode::IO_ASSIGN_I_I_I, { "IO_ASSIGN", { Opcode::NUMBER, Opcode::NUMBER, Opcode::NUMBER } } },
         // }}}
         
         // }}}
 
         // Function commands {{{
-        { Opcode::CALL_I, { "call", { Opcode::INT_NUMBER } } },
-        { Opcode::CALL_R, { "call", { Opcode::REGISTER } } },
-        { Opcode::RETURN, { "return", { } } },
+        { Opcode::CALL_I, { "CALL", { Opcode::INT_NUMBER } } },
+        { Opcode::CALL_R, { "CALL", { Opcode::REGISTER } } },
+        { Opcode::RETURN, { "RETURN", { } } },
         // }}}
         
         // Interrupt commands {{{
-        { Opcode::REGI_I_I, { "regi", { Opcode::INT_NUMBER, Opcode::INT_NUMBER } } },
-        { Opcode::REGI_I_R, { "regi", { Opcode::INT_NUMBER, Opcode::REGISTER } } },
-        { Opcode::REGI_R_I, { "regi", { Opcode::REGISTER, Opcode::INT_NUMBER } } },
-        { Opcode::REGI_R_R, { "regi", { Opcode::REGISTER, Opcode::REGISTER } } },
+        { Opcode::REGI_I_I, { "REGI", { Opcode::INT_NUMBER, Opcode::INT_NUMBER } } },
+        { Opcode::REGI_I_R, { "REGI", { Opcode::INT_NUMBER, Opcode::REGISTER } } },
+        { Opcode::REGI_R_I, { "REGI", { Opcode::REGISTER, Opcode::INT_NUMBER } } },
+        { Opcode::REGI_R_R, { "REGI", { Opcode::REGISTER, Opcode::REGISTER } } },
 
-        { Opcode::INT_I, { "int", { Opcode::INT_NUMBER } } },
-        { Opcode::INT_R, { "int", { Opcode::REGISTER } } },
-        { Opcode::RETI,  { "reti", { } } },
+        { Opcode::INT_I, { "INT", { Opcode::INT_NUMBER } } },
+        { Opcode::INT_R, { "INT", { Opcode::REGISTER } } },
+        { Opcode::RETI,  { "RETI", { } } },
         // }}}
         
-        { Opcode::PRINT_R, { "print", { Opcode::REGISTER } } },
-        { Opcode::PRINT_I, { "print", { Opcode::INT_NUMBER } } },
-        { Opcode::PRINT_S, { "print", { Opcode::STRING } } },
+        // Debugging commands {{{
+        { Opcode::PRINT_R, { "PRINT", { Opcode::REGISTER } } },
+        { Opcode::PRINT_I, { "PRINT", { Opcode::INT_NUMBER } } },
+        { Opcode::PRINT_S, { "PRINT", { Opcode::STRING } } },
         
-        { Opcode::PRINTF_R, { "printf", { Opcode::REGISTER } } },
-        { Opcode::PRINTF_I, { "printf", { Opcode::FLOAT_NUMBER } } },
+        { Opcode::PRINTF_R, { "PRINTF", { Opcode::REGISTER } } },
+        { Opcode::PRINTF_I, { "PRINTF", { Opcode::FLOAT_NUMBER } } },
         
-        { Opcode::INPUT_R, { "input", { Opcode::REGISTER } } },
-        { Opcode::INPUTF_R, { "inputf", { Opcode::REGISTER } } },
+        { Opcode::INPUT_R, { "INPUT", { Opcode::REGISTER } } },
+        { Opcode::INPUTF_R, { "INPUTF", { Opcode::REGISTER } } },
         
-        { Opcode::TIME_R, { "time", { Opcode::REGISTER } } },
+        { Opcode::TIME_R, { "TIME", { Opcode::REGISTER } } },
+        // }}}
     };
     // }}}
     
