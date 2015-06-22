@@ -75,7 +75,7 @@ int main(int argc, char **argv)
         //assembler.write_to_stream(output_binary);
 
         auto report = assembler.report();
-        //moss::Disassembler::to_stream<moss::Memory>(std::cout, &mem, program_start, program_start + report.total_size);
+        moss::Disassembler::to_stream<moss::Memory>(std::cout, &mem, program_start, program_start + report.total_size);
     }
 
     moss::Debugger debugger(&cpu, program_start);

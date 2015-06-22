@@ -284,9 +284,12 @@ namespace moss
                     std::cout << "Unknown OPCODE: " << opcode << " @ PC " << 
                         std::dec << (_regs.program_counter() - 1) << std::endl;
                 case Opcode::HALT:
-                    std::cout << "Halting." << std::endl;
-                    result = -1;
-                    stop();
+                    if (meets_condition)
+                    {
+                        std::cout << "Halting." << std::endl;
+                        result = -1;
+                        stop();
+                    }
                     break;
                 // }}}
 
@@ -1281,11 +1284,17 @@ namespace moss
                 // Print to screen {{{
                 case Opcode::PRINT_R:
                     arg1 = next_pc_uint();
-                    std::cout << _regs.uint_reg(arg1);
+                    if (meets_condition)
+                    {
+                        std::cout << _regs.uint_reg(arg1);
+                    }
                     break;
                 case Opcode::PRINT_I:
                     arg1 = next_pc_uint();
-                    std::cout << arg1;
+                    if (meets_condition)
+                    {
+                        std::cout << arg1;
+                    }
                     break;
                 case Opcode::PRINT_S:
                     iarg1 = next_pc_int();
@@ -1298,36 +1307,55 @@ namespace moss
                         char c3 = (value >> 16) & 0xFF;
                         char c2 = (value >> 8) & 0xFF;
                         char c1 = value & 0xFF;
-                        if (c1) std::cout << c1; else break;
-                        if (c2) std::cout << c2; else break;
-                        if (c3) std::cout << c3; else break;
-                        if (c4) std::cout << c4; else break;
+                        if (c1) { if (meets_condition)std::cout << c1; } else break;
+                        if (c2) { if (meets_condition)std::cout << c2; } else break;
+                        if (c3) { if (meets_condition)std::cout << c3; } else break;
+                        if (c4) { if (meets_condition)std::cout << c4; } else break;
                     }
                     break;
                 
                 case Opcode::PRINTF_R:
                     arg1 = next_pc_uint();
-                    std::cout << _regs.float_reg(arg1);
+                    if (meets_condition)
+                    {
+                        std::cout << _regs.float_reg(arg1);
+                    }
                     break;
                 case Opcode::PRINTF_I:
                     farg1 = next_pc_float();
-                    std::cout << farg1;
+                    if (meets_condition)
+                    {
+                        std::cout << farg1;
+                    }
                     break;
                 // }}}
                 
                 // Input from keyboard {{{ 
                 case Opcode::INPUT_R:
                     arg1 = next_pc_uint();
-                    std::cin >> arg2;
-                    _regs.uint_reg(arg1, arg2);
+                    if (meets_condition)
+                    {
+                        std::cin >> arg2;
+                        _regs.uint_reg(arg1, arg2);
+                    }
                     break;
                 case Opcode::INPUTF_R:
                     arg1 = next_pc_uint();
-                    std::cin >> farg1;
-                    _regs.float_reg(arg1, farg1);
+                    if (meets_condition)
+                    {
+                        std::cin >> farg1;
+                        _regs.float_reg(arg1, farg1);
+                    }
                     break;
                 // }}}
                 
+                case Opcode::TIME_R:
+                    arg1 = next_pc_uint();
+                    if (meets_condition)
+                    {
+                        _regs.uint_reg(arg1, time(NULL));
+                    }
+                    break;
                 // }}}
 
             }

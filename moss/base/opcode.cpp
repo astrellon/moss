@@ -263,6 +263,8 @@ namespace moss
         
         { std::string("INPUT_R"),  Opcode::INPUT_R },
         { std::string("INPUTF_R"),  Opcode::INPUTF_R },
+        
+        { std::string("TIME_R"),  Opcode::TIME_R },
     };
     // }}}
 
@@ -444,6 +446,8 @@ namespace moss
         
         { Opcode::INPUT_R, { "input", { Opcode::REGISTER } } },
         { Opcode::INPUTF_R, { "inputf", { Opcode::REGISTER } } },
+        
+        { Opcode::TIME_R, { "time", { Opcode::REGISTER } } },
     };
     // }}}
     

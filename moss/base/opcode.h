@@ -206,6 +206,10 @@ namespace moss
                 INPUTF_R,
                 // }}}
                 
+                // Get the time {{{
+                TIME_R,
+                // }}}
+                
                 // }}}
             };
             // }}}
