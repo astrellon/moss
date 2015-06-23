@@ -273,9 +273,11 @@ namespace moss
     // This map is used by the disassembler for converting opcode values back
     // into the original command name with the expected arguments. 
     std::map<Opcode::Command, std::pair<std::string, std::vector<Opcode::Type> > > Opcode::s_commands_to_types = {
+        // Halt
         { Opcode::HALT, { "HALT", {} } },
 
         // MOV {{{
+        // MOVE COMMAND
         { Opcode::MOV_R_R, { "MOV", { Opcode::REGISTER, Opcode::REGISTER } } },
         { Opcode::MOV_R_I, { "MOV", { Opcode::REGISTER, Opcode::NUMBER } } },
         { Opcode::MOV_M_R, { "MOV", { Opcode::MEMORY, Opcode::REGISTER } } },
@@ -294,39 +296,48 @@ namespace moss
         // }}}
         
         // Unit conversion {{{
+        // UNIT TO FLOAT
         { Opcode::UINT_FLOAT_R,   { "UINT_FLOAT", { Opcode::REGISTER } } },
         { Opcode::UINT_FLOAT_R_R, { "UINT_FLOAT", { Opcode::REGISTER, Opcode::REGISTER } } },
+        // FLOAT TO UNIT
         { Opcode::FLOAT_UINT_R,   { "FLOAT_UINT", { Opcode::REGISTER } } },
         { Opcode::FLOAT_UINT_R_R, { "FLOAT_UINT", { Opcode::REGISTER, Opcode::REGISTER } } },
         // }}}
         
         // Stack {{{
+        // PUSH ONTO STACK
         { Opcode::PUSH_R, { "PUSH", { Opcode::REGISTER } } },
         { Opcode::PUSH_I, { "PUSH", { Opcode::NUMBER } } },
+        // POP OFF STACK
         { Opcode::POP_R,  { "POP",  { Opcode::REGISTER } } },
         // }}}
         
         // CMP/CMPF {{{
+        // Compare ints
         { Opcode::CMP_R_R, { "CMP", { Opcode::REGISTER, Opcode::REGISTER } } },
         { Opcode::CMP_R_I, { "CMP", { Opcode::REGISTER, Opcode::INT_NUMBER } } }, 
         { Opcode::CMP_I_R, { "CMP", { Opcode::INT_NUMBER, Opcode::REGISTER } } },
         
+        // Compare floats
         { Opcode::CMPF_R_R, { "CMPF", { Opcode::REGISTER, Opcode::REGISTER } } },
         { Opcode::CMPF_R_I, { "CMPF", { Opcode::REGISTER, Opcode::FLOAT_NUMBER } } },
         { Opcode::CMPF_I_R, { "CMPF", { Opcode::FLOAT_NUMBER, Opcode::REGISTER } } },
         // }}}
         
         // Branching {{{
+        // Jump!
         { Opcode::JMP_R, { "JMP", { Opcode::REGISTER } } },
         { Opcode::JMP_I, { "JMP", { Opcode::INT_NUMBER } } },
         // }}}
         
         // ADD/ADDF {{{
+        // Add ints
         { Opcode::ADD_R_R,    { "ADD", { Opcode::REGISTER, Opcode::REGISTER } } },
         { Opcode::ADD_R_R_R,  { "ADD", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
         { Opcode::ADD_R_R_I,  { "ADD", { Opcode::REGISTER, Opcode::REGISTER, Opcode::INT_NUMBER } } },
         { Opcode::ADD_R_I,    { "ADD", { Opcode::REGISTER, Opcode::INT_NUMBER } } },
         
+        // Add floats
         { Opcode::ADDF_R_R,   { "ADDF", { Opcode::REGISTER, Opcode::REGISTER } } },
         { Opcode::ADDF_R_R_R, { "ADDF", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
         { Opcode::ADDF_R_R_I, { "ADDF", { Opcode::REGISTER, Opcode::REGISTER, Opcode::FLOAT_NUMBER } } },
@@ -334,12 +345,14 @@ namespace moss
         // }}}
         
         // SUB/SUBF {{{
+        // Subtract ints
         { Opcode::SUB_R_R,    { "SUB", { Opcode::REGISTER, Opcode::REGISTER } } },
         { Opcode::SUB_R_R_R,  { "SUB", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
         { Opcode::SUB_R_I_R,  { "SUB", { Opcode::REGISTER, Opcode::INT_NUMBER, Opcode::REGISTER } } },
         { Opcode::SUB_R_R_I,  { "SUB", { Opcode::REGISTER, Opcode::REGISTER, Opcode::INT_NUMBER } } },
         { Opcode::SUB_R_I,    { "SUB", { Opcode::REGISTER, Opcode::INT_NUMBER } } },
         
+        // Subtract floats
         { Opcode::SUBF_R_R,   { "SUBF", { Opcode::REGISTER, Opcode::REGISTER } } },
         { Opcode::SUBF_R_R_R, { "SUBF", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
         { Opcode::SUBF_R_I_R, { "SUBF", { Opcode::FLOAT_NUMBER, Opcode::REGISTER, Opcode::REGISTER } } },
@@ -348,18 +361,24 @@ namespace moss
         // }}}
 
         // INC/DEC {{{
+        // Increment ints
         { Opcode::INC_R,  { "INC",  { Opcode::REGISTER } } },
+        // Increment floats
         { Opcode::INCF_R, { "INCF", { Opcode::REGISTER } } },
+        // Decrement ints
         { Opcode::DEC_R,  { "DEC",  { Opcode::REGISTER } } },
+        // Decrement floats
         { Opcode::DECF_R, { "DECF", { Opcode::REGISTER } } },
         // }}}
         
         // MUL/MULF {{{
+        // Multiply ints
         { Opcode::MUL_R_R,    { "MUL", { Opcode::REGISTER, Opcode::REGISTER } } },
         { Opcode::MUL_R_R_R,  { "MUL", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
         { Opcode::MUL_R_R_I,  { "MUL", { Opcode::REGISTER, Opcode::REGISTER, Opcode::INT_NUMBER } } },
         { Opcode::MUL_R_I,    { "MUL", { Opcode::REGISTER, Opcode::INT_NUMBER } } },
         
+        // Multiply floats
         { Opcode::MULF_R_R,   { "MULF", { Opcode::REGISTER, Opcode::REGISTER } } },
         { Opcode::MULF_R_R_R, { "MULF", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
         { Opcode::MULF_R_R_I, { "MULF", { Opcode::REGISTER, Opcode::REGISTER, Opcode::FLOAT_NUMBER } } },
@@ -367,12 +386,14 @@ namespace moss
         // }}}
         
         // DIV/DIVF {{{
+        // Divide ints
         { Opcode::DIV_R_R,    { "DIV", { Opcode::REGISTER, Opcode::REGISTER } } },
         { Opcode::DIV_R_R_R,  { "DIV", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
         { Opcode::DIV_R_I_R,  { "DIV", { Opcode::REGISTER, Opcode::INT_NUMBER, Opcode::REGISTER } } },
         { Opcode::DIV_R_R_I,  { "DIV", { Opcode::REGISTER, Opcode::REGISTER, Opcode::INT_NUMBER } } },
         { Opcode::DIV_R_I,    { "DIV", { Opcode::REGISTER, Opcode::INT_NUMBER } } },
         
+        // Divide floats
         { Opcode::DIVF_R_R,   { "DIVF", { Opcode::REGISTER, Opcode::REGISTER } } },
         { Opcode::DIVF_R_R_R, { "DIVF", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
         { Opcode::DIVF_R_I_R, { "DIVF", { Opcode::FLOAT_NUMBER, Opcode::REGISTER, Opcode::REGISTER } } },
@@ -381,15 +402,21 @@ namespace moss
         // }}}
         
         // ROR/ROL {{{
+        // Rotate right
         { Opcode::ROR_R,   { "ROR", { Opcode::REGISTER } } },
         { Opcode::ROR_R_R, { "ROR", { Opcode::REGISTER, Opcode::REGISTER } } },
+        
+        // Rotate left
         { Opcode::ROL_R,   { "ROL", { Opcode::REGISTER } } },
         { Opcode::ROL_R_R, { "ROL", { Opcode::REGISTER, Opcode::REGISTER } } },
         // }}}
         
         // SHR/SHL {{{
+        // Shift right
         { Opcode::SHR_R,   { "SHR", { Opcode::REGISTER } } },
         { Opcode::SHR_R_R, { "SHR", { Opcode::REGISTER, Opcode::REGISTER } } },
+        
+        // Shift left
         { Opcode::SHL_R,   { "SHL", { Opcode::REGISTER } } },
         { Opcode::SHL_R_R, { "SHL", { Opcode::REGISTER, Opcode::REGISTER } } },
         // }}}
@@ -397,6 +424,7 @@ namespace moss
         // Peripherals {{{
 
         // SEND {{{
+        // Send IO
         { Opcode::IO_SEND_I_I, { "IO_SEND", { Opcode::INT_NUMBER, Opcode::NUMBER } } },
         { Opcode::IO_SEND_R_I, { "IO_SEND", { Opcode::REGISTER, Opcode::NUMBER } } },
         { Opcode::IO_SEND_I_R, { "IO_SEND", { Opcode::INT_NUMBER, Opcode::REGISTER } } },
@@ -409,6 +437,7 @@ namespace moss
         // }}}
         
         // ASSIGN {{{
+        // Assign IO
         { Opcode::IO_ASSIGN_R_R_R, { "IO_ASSIGN", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
         { Opcode::IO_ASSIGN_R_R_I, { "IO_ASSIGN", { Opcode::REGISTER, Opcode::REGISTER, Opcode::NUMBER } } },
         { Opcode::IO_ASSIGN_R_I_R, { "IO_ASSIGN", { Opcode::REGISTER, Opcode::NUMBER, Opcode::REGISTER } } },
@@ -423,33 +452,45 @@ namespace moss
         // }}}
 
         // Function commands {{{
+        // Function call
         { Opcode::CALL_I, { "CALL", { Opcode::INT_NUMBER } } },
         { Opcode::CALL_R, { "CALL", { Opcode::REGISTER } } },
+
+        // Function return
         { Opcode::RETURN, { "RETURN", { } } },
         // }}}
         
         // Interrupt commands {{{
+        // Register interrupt
         { Opcode::REGI_I_I, { "REGI", { Opcode::INT_NUMBER, Opcode::INT_NUMBER } } },
         { Opcode::REGI_I_R, { "REGI", { Opcode::INT_NUMBER, Opcode::REGISTER } } },
         { Opcode::REGI_R_I, { "REGI", { Opcode::REGISTER, Opcode::INT_NUMBER } } },
         { Opcode::REGI_R_R, { "REGI", { Opcode::REGISTER, Opcode::REGISTER } } },
 
+        // Trigger int
         { Opcode::INT_I, { "INT", { Opcode::INT_NUMBER } } },
         { Opcode::INT_R, { "INT", { Opcode::REGISTER } } },
+
+        // Retriii
         { Opcode::RETI,  { "RETI", { } } },
         // }}}
         
         // Debugging commands {{{
+        // Print ints and strings command
         { Opcode::PRINT_R, { "PRINT", { Opcode::REGISTER } } },
         { Opcode::PRINT_I, { "PRINT", { Opcode::INT_NUMBER } } },
         { Opcode::PRINT_S, { "PRINT", { Opcode::STRING } } },
         
+        // Print floats
         { Opcode::PRINTF_R, { "PRINTF", { Opcode::REGISTER } } },
         { Opcode::PRINTF_I, { "PRINTF", { Opcode::FLOAT_NUMBER } } },
         
+        // Input int
         { Opcode::INPUT_R, { "INPUT", { Opcode::REGISTER } } },
+        // Input float
         { Opcode::INPUTF_R, { "INPUTF", { Opcode::REGISTER } } },
         
+        // Get the current time as a uint
         { Opcode::TIME_R, { "TIME", { Opcode::REGISTER } } },
         // }}}
     };
