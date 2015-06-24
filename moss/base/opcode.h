@@ -36,10 +36,10 @@ namespace moss
                 // }}}
 
                 // Unit conversions {{{
-                UINT_FLOAT_R,
-                UINT_FLOAT_R_R,
-                FLOAT_UINT_R,
-                FLOAT_UINT_R_R,
+                INT_FLOAT_R,
+                INT_FLOAT_R_R,
+                FLOAT_INT_R,
+                FLOAT_INT_R_R,
                 // }}}
 
                 // Stack {{{

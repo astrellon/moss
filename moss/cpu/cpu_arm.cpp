@@ -402,38 +402,38 @@ namespace moss
                 // }}}
 
                 // Unit Converstions {{{
-                case Opcode::UINT_FLOAT_R:
+                case Opcode::INT_FLOAT_R:
                     arg1 = next_pc_uint();
                     if (meets_condition)
                     {
-                        uint32_t value = _regs.uint_reg(arg1);
+                        int32_t value = _regs.int_reg(arg1);
                         _regs.float_reg(arg1, static_cast<float>(value));
                     }
                     break;
-                case Opcode::UINT_FLOAT_R_R:
+                case Opcode::INT_FLOAT_R_R:
                     arg1 = next_pc_uint();
                     arg2 = next_pc_uint();
                     if (meets_condition)
                     {
-                        uint32_t value = _regs.uint_reg(arg2);
+                        int32_t value = _regs.int_reg(arg2);
                         _regs.float_reg(arg1, static_cast<float>(value));
                     }
                     break;
-                case Opcode::FLOAT_UINT_R:
+                case Opcode::FLOAT_INT_R:
                     arg1 = next_pc_uint();
                     if (meets_condition)
                     {
                         float value = _regs.float_reg(arg1);
-                        _regs.uint_reg(arg1, static_cast<uint32_t>(value));
+                        _regs.int_reg(arg1, static_cast<int32_t>(value));
                     }
                     break;
-                case Opcode::FLOAT_UINT_R_R:
+                case Opcode::FLOAT_INT_R_R:
                     arg1 = next_pc_uint();
                     arg2 = next_pc_uint();
                     if (meets_condition)
                     {
                         float value = _regs.float_reg(arg2);
-                        _regs.uint_reg(arg1, static_cast<uint32_t>(value));
+                        _regs.int_reg(arg1, static_cast<int32_t>(value));
                     }
                     break;
                 // }}}

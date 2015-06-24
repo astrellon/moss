@@ -112,10 +112,10 @@ namespace moss
 		// }}}
 
 		// Unit conversions {{{
-		{ std::string("UINT_FLOAT_R"),   Opcode::UINT_FLOAT_R },
-		{ std::string("UINT_FLOAT_R_R"), Opcode::UINT_FLOAT_R_R },
-		{ std::string("FLOAT_UINT_R"),   Opcode::FLOAT_UINT_R },
-		{ std::string("FLOAT_UINT_R_R"), Opcode::FLOAT_UINT_R_R },
+		{ std::string("INT_FLOAT_R"),   Opcode::INT_FLOAT_R },
+		{ std::string("INT_FLOAT_R_R"), Opcode::INT_FLOAT_R_R },
+		{ std::string("FLOAT_INT_R"),   Opcode::FLOAT_INT_R },
+		{ std::string("FLOAT_INT_R_R"), Opcode::FLOAT_INT_R_R },
 		// }}}
 
 		// Stack {{{
@@ -277,7 +277,13 @@ namespace moss
         { Opcode::HALT, { "HALT", {} } },
 
         // MOV {{{
-        // MOVE COMMAND
+        /** 
+         * The MOV command is used to move data around between registers and memory.
+         * It can also be used to set registers and memory to a hardcoded value.
+         * For example:
+         * MOV r0 5
+         * This will set register 0 to 5.
+         */
         { Opcode::MOV_R_R, { "MOV", { Opcode::REGISTER, Opcode::REGISTER } } },
         { Opcode::MOV_R_I, { "MOV", { Opcode::REGISTER, Opcode::NUMBER } } },
         { Opcode::MOV_M_R, { "MOV", { Opcode::MEMORY, Opcode::REGISTER } } },
@@ -296,48 +302,105 @@ namespace moss
         // }}}
         
         // Unit conversion {{{
-        // UNIT TO FLOAT
-        { Opcode::UINT_FLOAT_R,   { "UINT_FLOAT", { Opcode::REGISTER } } },
-        { Opcode::UINT_FLOAT_R_R, { "UINT_FLOAT", { Opcode::REGISTER, Opcode::REGISTER } } },
-        // FLOAT TO UNIT
-        { Opcode::FLOAT_UINT_R,   { "FLOAT_UINT", { Opcode::REGISTER } } },
-        { Opcode::FLOAT_UINT_R_R, { "FLOAT_UINT", { Opcode::REGISTER, Opcode::REGISTER } } },
+        /**
+         * Converts a int register value into a float value.
+         * Either storing the result in the same register or in another register.
+         */
+        { Opcode::INT_FLOAT_R,   { "INT_FLOAT", { Opcode::REGISTER } } },
+        { Opcode::INT_FLOAT_R_R, { "INT_FLOAT", { Opcode::REGISTER, Opcode::REGISTER } } },
+        /**
+         * Converts a float register value into a int value.
+         * Either storing the result in the same register or in another register.
+         */
+        { Opcode::FLOAT_INT_R,   { "FLOAT_INT", { Opcode::REGISTER } } },
+        { Opcode::FLOAT_INT_R_R, { "FLOAT_INT", { Opcode::REGISTER, Opcode::REGISTER } } },
         // }}}
         
         // Stack {{{
-        // PUSH ONTO STACK
+        /**
+         * Pushes either a number or a register value onto the stack.
+         * It doesn't matter what kind of value it is.
+         */
         { Opcode::PUSH_R, { "PUSH", { Opcode::REGISTER } } },
         { Opcode::PUSH_I, { "PUSH", { Opcode::NUMBER } } },
-        // POP OFF STACK
+        /**
+         * Pops the top most value off the stack into a register.
+         */
         { Opcode::POP_R,  { "POP",  { Opcode::REGISTER } } },
         // }}}
         
         // CMP/CMPF {{{
-        // Compare ints
+        /**
+         * Compare operation. Once this has been performed between a register and/or
+         * an integer number, conditional operators can be used to either execute or 
+         * ignore subsequent commands.
+         *
+         * For example:
+         * MOV r0 5
+         * CMP r0 10
+         * > INC r0     ; Won't run because 5 is not greater than 10
+         * < DEC r0     ; Will run because 5 is less than 10
+         * == INC r0    ; Won't run because 5 does not equal 10
+         * != DEC r0    ; Will run because 5 does not equal 10
+         *
+         * PRINT r0     ; Will output 3 because the two DEC commands executed.
+         */
         { Opcode::CMP_R_R, { "CMP", { Opcode::REGISTER, Opcode::REGISTER } } },
         { Opcode::CMP_R_I, { "CMP", { Opcode::REGISTER, Opcode::INT_NUMBER } } }, 
         { Opcode::CMP_I_R, { "CMP", { Opcode::INT_NUMBER, Opcode::REGISTER } } },
         
-        // Compare floats
+        /**
+         * Compare operation. Once this has been performed between a register and/or
+         * a float number, conditional operators can be used to either execute or
+         * ignore subsequent commands.
+         *
+         * For example:
+         * MOV r0 5.5
+         * CMPF r0 10.2
+         * > ADDF r0 1.5    ; Won't run because 5.5 is not greater than 10.2
+         * < SUBF r0 1.5    ; Will run because 5.5 is less than 10.2
+         * == ADDF r0 1.5   ; Won't run because 5.5 does not equal 10.2
+         * != SUBF r0 1.5   ; Will run because 5.5 does not equal 10.2
+         *
+         * PRINTF r0        ; Will output 2.5 because the two SUBF commands executed.
+         */
         { Opcode::CMPF_R_R, { "CMPF", { Opcode::REGISTER, Opcode::REGISTER } } },
         { Opcode::CMPF_R_I, { "CMPF", { Opcode::REGISTER, Opcode::FLOAT_NUMBER } } },
         { Opcode::CMPF_I_R, { "CMPF", { Opcode::FLOAT_NUMBER, Opcode::REGISTER } } },
         // }}}
         
         // Branching {{{
-        // Jump!
+        /**
+         * Changes the location of the instruction pointer.
+         * Usually used to jump to a label, but can be used to just to any number.
+         *
+         * For example:
+         * MOV r0 5
+         * JMP skip     ; Jumps to the skip label
+         * MOV r0 10    ; Will be jumped over
+         * skip:
+         * PRINT r0     ; Will print 5
+         */
         { Opcode::JMP_R, { "JMP", { Opcode::REGISTER } } },
         { Opcode::JMP_I, { "JMP", { Opcode::INT_NUMBER } } },
         // }}}
         
         // ADD/ADDF {{{
-        // Add ints
+        /**
+         * Add two integer values together.
+         * Either storing the result in the first register, or storing the result in 
+         * another register.
+         */
         { Opcode::ADD_R_R,    { "ADD", { Opcode::REGISTER, Opcode::REGISTER } } },
         { Opcode::ADD_R_R_R,  { "ADD", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
         { Opcode::ADD_R_R_I,  { "ADD", { Opcode::REGISTER, Opcode::REGISTER, Opcode::INT_NUMBER } } },
         { Opcode::ADD_R_I,    { "ADD", { Opcode::REGISTER, Opcode::INT_NUMBER } } },
         
-        // Add floats
+        /**
+         * Add two floats values together.
+         * Either storing the result in the first register, or storing the result in 
+         * another register.
+         */
         { Opcode::ADDF_R_R,   { "ADDF", { Opcode::REGISTER, Opcode::REGISTER } } },
         { Opcode::ADDF_R_R_R, { "ADDF", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
         { Opcode::ADDF_R_R_I, { "ADDF", { Opcode::REGISTER, Opcode::REGISTER, Opcode::FLOAT_NUMBER } } },
@@ -345,14 +408,18 @@ namespace moss
         // }}}
         
         // SUB/SUBF {{{
-        // Subtract ints
+        /**
+         * Subtract two ints from each other.
+         */
         { Opcode::SUB_R_R,    { "SUB", { Opcode::REGISTER, Opcode::REGISTER } } },
         { Opcode::SUB_R_R_R,  { "SUB", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
         { Opcode::SUB_R_I_R,  { "SUB", { Opcode::REGISTER, Opcode::INT_NUMBER, Opcode::REGISTER } } },
         { Opcode::SUB_R_R_I,  { "SUB", { Opcode::REGISTER, Opcode::REGISTER, Opcode::INT_NUMBER } } },
         { Opcode::SUB_R_I,    { "SUB", { Opcode::REGISTER, Opcode::INT_NUMBER } } },
         
-        // Subtract floats
+        /**
+         * Subtract two floats from each other.
+         */
         { Opcode::SUBF_R_R,   { "SUBF", { Opcode::REGISTER, Opcode::REGISTER } } },
         { Opcode::SUBF_R_R_R, { "SUBF", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
         { Opcode::SUBF_R_I_R, { "SUBF", { Opcode::FLOAT_NUMBER, Opcode::REGISTER, Opcode::REGISTER } } },
@@ -361,24 +428,36 @@ namespace moss
         // }}}
 
         // INC/DEC {{{
-        // Increment ints
+        /**
+         * Increment an integer register by one.
+         */
         { Opcode::INC_R,  { "INC",  { Opcode::REGISTER } } },
-        // Increment floats
+        /**
+         * Increment a float register by one.
+         */
         { Opcode::INCF_R, { "INCF", { Opcode::REGISTER } } },
-        // Decrement ints
+        /**
+         * Decrements an integer register by one.
+         */
         { Opcode::DEC_R,  { "DEC",  { Opcode::REGISTER } } },
-        // Decrement floats
+        /**
+         * Decrements a float register by one.
+         */
         { Opcode::DECF_R, { "DECF", { Opcode::REGISTER } } },
         // }}}
         
         // MUL/MULF {{{
-        // Multiply ints
+        /**
+         * Multiply two integers together.
+         */
         { Opcode::MUL_R_R,    { "MUL", { Opcode::REGISTER, Opcode::REGISTER } } },
         { Opcode::MUL_R_R_R,  { "MUL", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
         { Opcode::MUL_R_R_I,  { "MUL", { Opcode::REGISTER, Opcode::REGISTER, Opcode::INT_NUMBER } } },
         { Opcode::MUL_R_I,    { "MUL", { Opcode::REGISTER, Opcode::INT_NUMBER } } },
         
-        // Multiply floats
+        /**
+         * Multiply two floats together.
+         */
         { Opcode::MULF_R_R,   { "MULF", { Opcode::REGISTER, Opcode::REGISTER } } },
         { Opcode::MULF_R_R_R, { "MULF", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
         { Opcode::MULF_R_R_I, { "MULF", { Opcode::REGISTER, Opcode::REGISTER, Opcode::FLOAT_NUMBER } } },
@@ -386,14 +465,18 @@ namespace moss
         // }}}
         
         // DIV/DIVF {{{
-        // Divide ints
+        /**
+         * Divide two integers.
+         */
         { Opcode::DIV_R_R,    { "DIV", { Opcode::REGISTER, Opcode::REGISTER } } },
         { Opcode::DIV_R_R_R,  { "DIV", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
         { Opcode::DIV_R_I_R,  { "DIV", { Opcode::REGISTER, Opcode::INT_NUMBER, Opcode::REGISTER } } },
         { Opcode::DIV_R_R_I,  { "DIV", { Opcode::REGISTER, Opcode::REGISTER, Opcode::INT_NUMBER } } },
         { Opcode::DIV_R_I,    { "DIV", { Opcode::REGISTER, Opcode::INT_NUMBER } } },
         
-        // Divide floats
+        /**
+         * Divide two floats.
+         */
         { Opcode::DIVF_R_R,   { "DIVF", { Opcode::REGISTER, Opcode::REGISTER } } },
         { Opcode::DIVF_R_R_R, { "DIVF", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
         { Opcode::DIVF_R_I_R, { "DIVF", { Opcode::FLOAT_NUMBER, Opcode::REGISTER, Opcode::REGISTER } } },
@@ -402,21 +485,29 @@ namespace moss
         // }}}
         
         // ROR/ROL {{{
-        // Rotate right
+        /**
+         * Bit shift rotate right.
+         */
         { Opcode::ROR_R,   { "ROR", { Opcode::REGISTER } } },
         { Opcode::ROR_R_R, { "ROR", { Opcode::REGISTER, Opcode::REGISTER } } },
         
-        // Rotate left
+        /**
+         * Bit shift rotate left.
+         */
         { Opcode::ROL_R,   { "ROL", { Opcode::REGISTER } } },
         { Opcode::ROL_R_R, { "ROL", { Opcode::REGISTER, Opcode::REGISTER } } },
         // }}}
         
         // SHR/SHL {{{
-        // Shift right
+        /**
+         * Bit shift right.
+         */
         { Opcode::SHR_R,   { "SHR", { Opcode::REGISTER } } },
         { Opcode::SHR_R_R, { "SHR", { Opcode::REGISTER, Opcode::REGISTER } } },
         
-        // Shift left
+        /**
+         * Bit shift left.
+         */
         { Opcode::SHL_R,   { "SHL", { Opcode::REGISTER } } },
         { Opcode::SHL_R_R, { "SHL", { Opcode::REGISTER, Opcode::REGISTER } } },
         // }}}
@@ -424,7 +515,10 @@ namespace moss
         // Peripherals {{{
 
         // SEND {{{
-        // Send IO
+        /**
+         * Send data to a port.
+         * Alternatively send data to a port and save the response to a register.
+         */
         { Opcode::IO_SEND_I_I, { "IO_SEND", { Opcode::INT_NUMBER, Opcode::NUMBER } } },
         { Opcode::IO_SEND_R_I, { "IO_SEND", { Opcode::REGISTER, Opcode::NUMBER } } },
         { Opcode::IO_SEND_I_R, { "IO_SEND", { Opcode::INT_NUMBER, Opcode::REGISTER } } },
@@ -437,7 +531,9 @@ namespace moss
         // }}}
         
         // ASSIGN {{{
-        // Assign IO
+        /**
+         * Assigning memory to a port.
+         */
         { Opcode::IO_ASSIGN_R_R_R, { "IO_ASSIGN", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
         { Opcode::IO_ASSIGN_R_R_I, { "IO_ASSIGN", { Opcode::REGISTER, Opcode::REGISTER, Opcode::NUMBER } } },
         { Opcode::IO_ASSIGN_R_I_R, { "IO_ASSIGN", { Opcode::REGISTER, Opcode::NUMBER, Opcode::REGISTER } } },
@@ -452,45 +548,65 @@ namespace moss
         // }}}
 
         // Function commands {{{
-        // Function call
+        /**
+         * Function call
+         */
         { Opcode::CALL_I, { "CALL", { Opcode::INT_NUMBER } } },
         { Opcode::CALL_R, { "CALL", { Opcode::REGISTER } } },
 
-        // Function return
+        /**
+         * Function return
+         */
         { Opcode::RETURN, { "RETURN", { } } },
         // }}}
         
         // Interrupt commands {{{
-        // Register interrupt
+        /**
+         * Register interrupt
+         */
         { Opcode::REGI_I_I, { "REGI", { Opcode::INT_NUMBER, Opcode::INT_NUMBER } } },
         { Opcode::REGI_I_R, { "REGI", { Opcode::INT_NUMBER, Opcode::REGISTER } } },
         { Opcode::REGI_R_I, { "REGI", { Opcode::REGISTER, Opcode::INT_NUMBER } } },
         { Opcode::REGI_R_R, { "REGI", { Opcode::REGISTER, Opcode::REGISTER } } },
 
-        // Trigger int
+        /**
+         * Trigger int
+         */
         { Opcode::INT_I, { "INT", { Opcode::INT_NUMBER } } },
         { Opcode::INT_R, { "INT", { Opcode::REGISTER } } },
 
-        // Retriii
+        /**
+         * Return from interrupt.
+         */
         { Opcode::RETI,  { "RETI", { } } },
         // }}}
         
         // Debugging commands {{{
-        // Print ints and strings command
+        /**
+         * Print ints and strings command
+         */
         { Opcode::PRINT_R, { "PRINT", { Opcode::REGISTER } } },
         { Opcode::PRINT_I, { "PRINT", { Opcode::INT_NUMBER } } },
         { Opcode::PRINT_S, { "PRINT", { Opcode::STRING } } },
         
-        // Print floats
+        /**
+         * Print floats
+         */
         { Opcode::PRINTF_R, { "PRINTF", { Opcode::REGISTER } } },
         { Opcode::PRINTF_I, { "PRINTF", { Opcode::FLOAT_NUMBER } } },
         
-        // Input int
+        /**
+         * Get integer from keyboard.
+         */
         { Opcode::INPUT_R, { "INPUT", { Opcode::REGISTER } } },
-        // Input float
+        /**
+         * Get float from keyboard.
+         */
         { Opcode::INPUTF_R, { "INPUTF", { Opcode::REGISTER } } },
         
-        // Get the current time as a uint
+        /**
+         * Get the current time as a uint and store it in a register.
+         */
         { Opcode::TIME_R, { "TIME", { Opcode::REGISTER } } },
         // }}}
     };

@@ -23,12 +23,11 @@ class OpCodeParser:
         bracketEnd = self.fileContents.find("};", commandsIndex);
         self.commandContents = self.fileContents[bracketStart + 1:bracketEnd];
 
-        isComment = re.compile('^\s*\/\/')
-
+        inComment = False
         lastComment = None
 
         for line in self.commandContents.splitlines():
-            if OpCode.opcodeRegex.match(line) is not None:
+            if not inComment and OpCode.opcodeRegex.match(line) is not None:
                 opcode = self.parseOpcodeLine(line)
                 family = self.getOpCodeFamily(opcode.name)
                 family.opcodes.append(opcode)
@@ -37,8 +36,23 @@ class OpCodeParser:
                     family.comment = lastComment
                     lastComment = None
 
-            elif isComment.match(line) is not None:
-                lastComment = line
+            else:
+                if not inComment and line.find("/*") >= 0:
+                    inComment = True
+                    print("Now in comment: ", line)
+                    lastComment = line
+
+                    if line.find("*/") >= 0:
+                        print("Also ending comment")
+                        inComment = False
+
+                elif inComment:
+                    lastComment += line
+                    print("More comment: ", line)
+
+                    if line.find("*/") >= 0:
+                        print("End comment")
+                        inComment = False
 
         for key in self.opcodeFamilies:
             f = self.opcodeFamilies[key]

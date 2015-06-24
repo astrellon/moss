@@ -2,16 +2,16 @@
 #define number_of_dice r3
 #define number_of_sides r4
 #define rand_seed r10
-#define max_uint r5
+#define max_int r5
 
 main:
     ; Seed random number generator
     TIME rand_seed
     
     ; Max uint value
-    MOV max_uint 0xFFFFFFFF
+    MOV max_int 0x7FFFFFFF
     ; Max uint value as a float
-    UINT_FLOAT max_uint
+    INT_FLOAT max_int
 
     PRINT "Enter number of dice: "
     INPUT number_of_dice
@@ -54,7 +54,7 @@ roll_dice:
     MULF r1 r2
 
     ; Floor sides by converting to int
-    FLOAT_UINT r1
+    FLOAT_INT r1
 
     ; Add one
     INC r1
@@ -67,9 +67,10 @@ roll_dice:
 rand:
     MUL rand_seed 1103515245
     ADD rand_seed 12345
+    SHL rand_seed
 
-    UINT_FLOAT rand_seed
-    DIVF rand_seed max_uint
+    INT_FLOAT rand_seed
+    DIVF rand_seed max_int
     
     PUSH rand_seed
     RETURN
