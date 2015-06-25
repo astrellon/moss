@@ -32,10 +32,10 @@ namespace moss
             "- PC: " << program_counter() << "\n"
             "- SP: " << stack_pointer() << "\n"
             ;
-        os << std::setw(5) << "Reg:" << std::setw(15) << "UINT" << std::setw(15) << "FLOAT\n";
+        os << std::setw(5) << "Reg:" << std::setw(15) << "INT" << std::setw(15) << "FLOAT\n";
         for (auto i = 0u; i < num_word_reg(); i++)
         {
-            os << "- " << std::setw(2) << i << ": " << std::setw(14) << uint_reg(i) << std::setw(14) << float_reg(i) << "\n";
+            os << "- " << std::setw(2) << i << ": " << std::setw(14) << int_reg(i) << std::setw(14) << float_reg(i) << "\n";
         }
     }
 	uint32_t Registers::named_register(uint32_t reg) const

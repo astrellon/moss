@@ -68,7 +68,7 @@ namespace moss
             
             Memory *_memory;
 
-            void io_send(uint32_t reg_index, uint32_t perf_index, uint32_t command);
+            void io_send(uint32_t reg_index, uint32_t perf_index, int32_t command);
 
             FORCEINLINE uint32_t next_pc_uint()
             {
@@ -85,9 +85,9 @@ namespace moss
 
             int32_t do_run();
 
-            void push_stack(uint32_t value);
+            void push_stack(int32_t value);
             void push_stack_float(float value);
-            uint32_t pop_stack();
+            int32_t pop_stack();
             float pop_stack_float();
             
             void push_code_stack(uint32_t value);

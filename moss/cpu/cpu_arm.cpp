@@ -147,13 +147,13 @@ namespace moss
         _regs.to_stream(os);
     }
 
-    void CpuArm::push_stack(uint32_t value)
+    void CpuArm::push_stack(int32_t value)
     {
-        _mmu.uint_data(_regs.stack_pointer_push(), value);
+        _mmu.int_data(_regs.stack_pointer_push(), value);
     }
-    uint32_t CpuArm::pop_stack()
+    int32_t CpuArm::pop_stack()
     {
-        return _mmu.uint_data(_regs.stack_pointer_pop());
+        return _mmu.int_data(_regs.stack_pointer_pop());
     }
     void CpuArm::push_stack_float(float value)
     {
@@ -174,25 +174,25 @@ namespace moss
         return result;
     }
             
-    void CpuArm::io_send(uint32_t reg_index, uint32_t perf_index, uint32_t command)
+    void CpuArm::io_send(uint32_t reg_index, uint32_t perf_index, int32_t command)
     {
         if (command == 0)
         {
             if (perf_index >= _peripherals.size())
             {
-                _regs.uint_reg(reg_index, -2);
+                _regs.int_reg(reg_index, -2);
             }
             else if (_peripherals[perf_index] == nullptr)
             {
-                _regs.uint_reg(reg_index, -1);
+                _regs.int_reg(reg_index, -1);
             }
             else if (_peripherals[perf_index]->assigned())
             {
-                _regs.uint_reg(reg_index, 1);
+                _regs.int_reg(reg_index, 1);
             }
             else
             {
-                _regs.uint_reg(reg_index, 0);
+                _regs.int_reg(reg_index, 0);
             }
             return;
         }
@@ -210,7 +210,7 @@ namespace moss
             std::cout << "Attempting to access null peripheral: " << perf_index << "\n";
         }
 
-        _regs.uint_reg(reg_index, _peripherals[perf_index]->send_command(command));
+        _regs.int_reg(reg_index, _peripherals[perf_index]->send_command(command));
     }
 
     int32_t CpuArm::do_run()
@@ -218,7 +218,10 @@ namespace moss
         int32_t result = 0;
         float farg1 = 0.0f;
         float farg2 = 0.0f;
+        float farg3 = 0.0f;
         int32_t iarg1 = 0;
+        int32_t iarg2 = 0;
+        int32_t iarg3 = 0;
         uint32_t arg1 = 0u;
         uint32_t arg2 = 0u;
         uint32_t arg3 = 0u;
@@ -297,19 +300,19 @@ namespace moss
                 case Opcode::MOV_R_R:
                     // reg[arg1] = reg[arg2]
                     arg1 = next_pc_uint();
-                    arg2 = next_pc_uint();
+                    arg2 = next_pc_int();
                     if (meets_condition)
                     {
-                        _regs.uint_reg(arg1, _regs.uint_reg(arg2));
+                        _regs.int_reg(arg1, _regs.int_reg(arg2));
                     }
                     break;
                 case Opcode::MOV_R_I:
                     // reg[arg1] = arg2
                     arg1 = next_pc_uint();
-                    arg2 = next_pc_uint();
+                    iarg2 = next_pc_int();
                     if (meets_condition)
                     {
-                        _regs.uint_reg(arg1, arg2);
+                        _regs.uint_reg(arg1, iarg2);
                     }
                     break;
 
@@ -319,7 +322,7 @@ namespace moss
                     arg2 = next_pc_uint();
                     if (meets_condition)
                     {
-                        _mmu.uint_data(_regs.uint_reg(arg1), _regs.uint_reg(arg2));
+                        _mmu.int_data(_regs.uint_reg(arg1), _regs.int_reg(arg2));
                     }
                     break;
                 case Opcode::MOV_R_M:
@@ -328,16 +331,16 @@ namespace moss
                     arg2 = next_pc_uint();
                     if (meets_condition)
                     {
-                        _regs.uint_reg(arg1, _mmu.uint_data(_regs.uint_reg(arg2)));
+                        _regs.uint_reg(arg1, _mmu.uint_data(_regs.int_reg(arg2)));
                     }
                     break;
                 case Opcode::MOV_M_I:
                     // mem[reg[arg1]] = arg2
                     arg1 = next_pc_uint();
-                    arg2 = next_pc_uint();
+                    iarg2 = next_pc_int();
                     if (meets_condition)
                     {
-                        _mmu.uint_data(_regs.uint_reg(arg1), arg2);
+                        _mmu.uint_data(_regs.uint_reg(arg1), iarg2);
                     }
                     break;
                 case Opcode::MOV_M_M:
@@ -346,7 +349,7 @@ namespace moss
                     arg2 = next_pc_uint();
                     if (meets_condition)
                     {
-                        _mmu.uint_data(_regs.uint_reg(arg1), _mmu.uint_data(_regs.uint_reg(arg2)));
+                        _mmu.uint_data(_regs.uint_reg(arg1), _mmu.uint_data(_regs.int_reg(arg2)));
                     }
                     break;
 
@@ -471,27 +474,27 @@ namespace moss
                     arg2 = next_pc_uint();
                     if (meets_condition)
                     {
-                        arg3 = _regs.uint_reg(arg1) - _regs.uint_reg(arg2);
+                        arg3 = _regs.int_reg(arg1) - _regs.int_reg(arg2);
                         _regs.zero_flag(arg3 == 0);
                         _regs.neg_flag(arg3 & 0x80000000);
                     }
                     break;
                 case Opcode::CMP_R_I:
                     arg1 = next_pc_uint();
-                    arg2 = next_pc_uint();
+                    iarg2 = next_pc_int();
                     if (meets_condition)
                     {
-                        arg3 = _regs.uint_reg(arg1) - arg2;
+                        arg3 = _regs.int_reg(arg1) - iarg2;
                         _regs.zero_flag(arg3 == 0);
                         _regs.neg_flag(arg3 & 0x80000000);
                     }
                     break;
                 case Opcode::CMP_I_R:
-                    arg1 = next_pc_uint();
+                    iarg1 = next_pc_int();
                     arg2 = next_pc_uint();
                     if (meets_condition)
                     {
-                        arg3 = arg1 - _regs.uint_reg(arg2);
+                        arg3 = iarg1 - _regs.int_reg(arg2);
                         _regs.zero_flag(arg3 == 0);
                         _regs.neg_flag(arg3 & 0x80000000);
                     }
@@ -557,7 +560,7 @@ namespace moss
                     arg2 = next_pc_uint();
                     if (meets_condition)
                     {
-                        _regs.uint_reg(arg1, _regs.uint_reg(arg1) + _regs.uint_reg(arg2));
+                        _regs.int_reg(arg1, _regs.int_reg(arg1) + _regs.int_reg(arg2));
                     }
                     break;
                 case Opcode::ADD_R_R_R:
@@ -567,26 +570,26 @@ namespace moss
                     arg3 = next_pc_uint();
                     if (meets_condition)
                     {
-                        _regs.uint_reg(arg1, _regs.uint_reg(arg2) + _regs.uint_reg(arg3));
+                        _regs.int_reg(arg1, _regs.int_reg(arg2) + _regs.int_reg(arg3));
                     }
                     break;
                 case Opcode::ADD_R_R_I:
                     // reg[arg1] = reg[arg2] + arg3
                     arg1 = next_pc_uint();
                     arg2 = next_pc_uint();
-                    arg3 = next_pc_uint();
+                    iarg3 = next_pc_int();
                     if (meets_condition)
                     {
-                        _regs.uint_reg(arg1, _regs.uint_reg(arg2) + arg3);
+                        _regs.int_reg(arg1, _regs.int_reg(arg2) + iarg3);
                     }
                     break;
                 case Opcode::ADD_R_I:
                     // reg[arg1] += arg2
                     arg1 = next_pc_uint();
-                    arg2 = next_pc_uint();
+                    iarg2 = next_pc_int();
                     if (meets_condition)
                     {
-                        _regs.uint_reg(arg1, _regs.uint_reg(arg1) + arg2);
+                        _regs.int_reg(arg1, _regs.int_reg(arg1) + iarg2);
                     }
                     break;
                 // }}}
@@ -615,10 +618,10 @@ namespace moss
                     // reg[arg1] = reg[arg2] + arg3
                     arg1 = next_pc_uint();
                     arg2 = next_pc_uint();
-                    arg3 = next_pc_uint();
+                    farg3 = next_pc_float();
                     if (meets_condition)
                     {
-                        _regs.float_reg(arg1, _regs.float_reg(arg2) + arg3);
+                        _regs.float_reg(arg1, _regs.float_reg(arg2) + farg3);
                     }
                     break;
                 case Opcode::ADDF_R_I:
@@ -627,7 +630,7 @@ namespace moss
                     farg2 = next_pc_float();
                     if (meets_condition)
                     {
-                        _regs.float_reg(arg1, _regs.float_reg(arg1) + arg2);
+                        _regs.float_reg(arg1, _regs.float_reg(arg1) + farg2);
                     }
                     break;
                 // }}}
@@ -639,7 +642,7 @@ namespace moss
                     arg2 = next_pc_uint();
                     if (meets_condition)
                     {
-                        _regs.uint_reg(arg1, _regs.uint_reg(arg1) - _regs.uint_reg(arg2));
+                        _regs.int_reg(arg1, _regs.int_reg(arg1) - _regs.int_reg(arg2));
                     }
                     break;
                 case Opcode::SUB_R_R_R:
@@ -649,36 +652,36 @@ namespace moss
                     arg3 = next_pc_uint();
                     if (meets_condition)
                     {
-                        _regs.uint_reg(arg1, _regs.uint_reg(arg2) - _regs.uint_reg(arg3));
+                        _regs.int_reg(arg1, _regs.int_reg(arg2) - _regs.int_reg(arg3));
                     }
                     break;
                 case Opcode::SUB_R_I_R:
                     // reg[arg1] = arg2 - reg[arg3]
                     arg1 = next_pc_uint();
-                    arg2 = next_pc_uint();
+                    iarg2 = next_pc_int();
                     arg3 = next_pc_uint();
                     if (meets_condition)
                     {
-                        _regs.uint_reg(arg1, arg2 - _regs.uint_reg(arg3));
+                        _regs.int_reg(arg1, iarg2 - _regs.int_reg(arg3));
                     }
                     break;
                 case Opcode::SUB_R_R_I:
                     // reg[arg1] = reg[arg2] - arg3
                     arg1 = next_pc_uint();
                     arg2 = next_pc_uint();
-                    arg3 = next_pc_uint();
+                    iarg3 = next_pc_int();
                     if (meets_condition)
                     {
-                        _regs.uint_reg(arg1, _regs.uint_reg(arg2) - arg3);
+                        _regs.int_reg(arg1, _regs.int_reg(arg2) - iarg3);
                     }
                     break;
                 case Opcode::SUB_R_I:
                     // reg[arg1] -= arg2
                     arg1 = next_pc_uint();
-                    arg2 = next_pc_uint();
+                    iarg2 = next_pc_int();
                     if (meets_condition)
                     {
-                        _regs.uint_reg(arg1, _regs.uint_reg(arg1) - arg2);
+                        _regs.int_reg(arg1, _regs.int_reg(arg1) - iarg2);
                     }
                     break;
                 // }}}
@@ -706,21 +709,21 @@ namespace moss
                 case Opcode::SUBF_R_I_R:
                     // reg[arg1] = arg2 - reg[arg3]
                     arg1 = next_pc_uint();
-                    farg1 = next_pc_float();
+                    farg2 = next_pc_float();
                     arg3 = next_pc_uint();
                     if (meets_condition)
                     {
-                        _regs.float_reg(arg1, farg1 - _regs.float_reg(arg3));
+                        _regs.float_reg(arg1, farg2 - _regs.float_reg(arg3));
                     }
                     break;
                 case Opcode::SUBF_R_R_I:
                     // reg[arg1] = reg[arg2] - arg3
                     arg1 = next_pc_uint();
                     arg2 = next_pc_uint();
-                    farg1 = next_pc_float();
+                    farg3 = next_pc_float();
                     if (meets_condition)
                     {
-                        _regs.float_reg(arg1, _regs.float_reg(arg2) - farg1);
+                        _regs.float_reg(arg1, _regs.float_reg(arg2) - farg3);
                     }
                     break;
                 case Opcode::SUBF_R_I:
@@ -740,7 +743,7 @@ namespace moss
                     arg1 = next_pc_uint();
                     if (meets_condition)
                     {
-                        _regs.uint_reg(arg1, _regs.uint_reg(arg1) + 1);
+                        _regs.int_reg(arg1, _regs.int_reg(arg1) + 1);
                     }
                     break;
                 case Opcode::INCF_R:
@@ -756,7 +759,7 @@ namespace moss
                     arg1 = next_pc_uint();
                     if (meets_condition)
                     {
-                        _regs.uint_reg(arg1, _regs.uint_reg(arg1) - 1);
+                        _regs.int_reg(arg1, _regs.int_reg(arg1) - 1);
                     }
                     break;
                 case Opcode::DECF_R:
@@ -776,7 +779,7 @@ namespace moss
                     arg2 = next_pc_uint();
                     if (meets_condition)
                     {
-                        _regs.uint_reg(arg1, _regs.uint_reg(arg1) * _regs.uint_reg(arg2));
+                        _regs.int_reg(arg1, _regs.int_reg(arg1) * _regs.int_reg(arg2));
                     }
                     break;
                 case Opcode::MUL_R_R_R:
@@ -786,26 +789,26 @@ namespace moss
                     arg3 = next_pc_uint();
                     if (meets_condition)
                     {
-                        _regs.uint_reg(arg1, _regs.uint_reg(arg2) * _regs.uint_reg(arg3));
+                        _regs.int_reg(arg1, _regs.int_reg(arg2) * _regs.int_reg(arg3));
                     }
                     break;
                 case Opcode::MUL_R_R_I:
                     // reg[arg1] = reg[arg2] * arg3
                     arg1 = next_pc_uint();
                     arg2 = next_pc_uint();
-                    arg3 = next_pc_uint();
+                    iarg3 = next_pc_int();
                     if (meets_condition)
                     {
-                        _regs.uint_reg(arg1, _regs.uint_reg(arg2) * arg3);
+                        _regs.int_reg(arg1, _regs.int_reg(arg2) * iarg3);
                     }
                     break;
                 case Opcode::MUL_R_I:
                     // reg[arg1] *= arg2
                     arg1 = next_pc_uint();
-                    arg2 = next_pc_uint();
+                    iarg2 = next_pc_int();
                     if (meets_condition)
                     {
-                        _regs.uint_reg(arg1, _regs.uint_reg(arg1) * arg2);
+                        _regs.int_reg(arg1, _regs.int_reg(arg1) * iarg2);
                     }
                     break;
                 // }}}
@@ -834,10 +837,10 @@ namespace moss
                     // reg[arg1] = reg[arg2] * arg3
                     arg1 = next_pc_uint();
                     arg2 = next_pc_uint();
-                    farg1 = next_pc_float();
+                    farg3 = next_pc_float();
                     if (meets_condition)
                     {
-                        _regs.float_reg(arg1, _regs.float_reg(arg2) * farg1);
+                        _regs.float_reg(arg1, _regs.float_reg(arg2) * farg3);
                     }
                     break;
                 case Opcode::MULF_R_I:
@@ -874,30 +877,30 @@ namespace moss
                 case Opcode::DIV_R_I_R:
                     // reg[arg1] = arg2 / reg[arg3]
                     arg1 = next_pc_uint();
-                    arg2 = next_pc_uint();
+                    iarg2 = next_pc_int();
                     arg3 = next_pc_uint();
                     if (meets_condition)
                     {
-                        _regs.uint_reg(arg1, arg2 / _regs.uint_reg(arg3));
+                        _regs.uint_reg(arg1, iarg2 / _regs.uint_reg(arg3));
                     }
                     break;
                 case Opcode::DIV_R_R_I:
                     // reg[arg1] = reg[arg2] / arg3
                     arg1 = next_pc_uint();
                     arg2 = next_pc_uint();
-                    arg3 = next_pc_uint();
+                    iarg3 = next_pc_int();
                     if (meets_condition)
                     {
-                        _regs.uint_reg(arg1, _regs.uint_reg(arg2) / arg3);
+                        _regs.uint_reg(arg1, _regs.uint_reg(arg2) / iarg3);
                     }
                     break;
                 case Opcode::DIV_R_I:
                     // reg[arg1] /= arg2
                     arg1 = next_pc_uint();
-                    arg2 = next_pc_uint();
+                    iarg2 = next_pc_int();
                     if (meets_condition)
                     {
-                        _regs.uint_reg(arg1, _regs.uint_reg(arg1) / arg2);
+                        _regs.uint_reg(arg1, _regs.uint_reg(arg1) / iarg2);
                     }
                     break;
                 // }}}
@@ -925,7 +928,7 @@ namespace moss
                 case Opcode::DIVF_R_I_R:
                     // reg[arg1] = arg2 / reg[arg3]
                     arg1 = next_pc_uint();
-                    farg2 = next_pc_uint();
+                    farg2 = next_pc_float();
                     arg3 = next_pc_uint();
                     if (meets_condition)
                     {
@@ -936,10 +939,10 @@ namespace moss
                     // reg[arg1] = reg[arg2] / arg3
                     arg1 = next_pc_uint();
                     arg2 = next_pc_uint();
-                    farg1 = next_pc_uint();
+                    farg3 = next_pc_float();
                     if (meets_condition)
                     {
-                        _regs.float_reg(arg1, _regs.float_reg(arg2) / farg1);
+                        _regs.float_reg(arg1, _regs.float_reg(arg2) / farg3);
                     }
                     break;
                 case Opcode::DIVF_R_I:
@@ -1029,22 +1032,22 @@ namespace moss
                 case Opcode::IO_SEND_I_I:
                     // peripheral[arg1](arg2)
                     arg1 = next_pc_uint();
-                    arg2 = next_pc_uint();
+                    iarg2 = next_pc_int();
                     if (meets_condition && arg1 < _peripherals.size())
                     {
-                        _peripherals[arg1]->send_command(arg2);
+                        _peripherals[arg1]->send_command(iarg2);
                     }
                     break;
                 case Opcode::IO_SEND_R_I:
                     // peripheral[reg[arg1]](arg2)
                     arg1 = next_pc_uint();
-                    arg2 = next_pc_uint();
+                    iarg2 = next_pc_int();
                     if (meets_condition)
                     {
                         arg3 = _regs.uint_reg(arg1);
                         if (arg3 < _peripherals.size())
                         {
-                            _peripherals[arg3]->send_command(arg2);
+                            _peripherals[arg3]->send_command(iarg2);
                         }
                     }
                     break;
@@ -1054,7 +1057,7 @@ namespace moss
                     arg2 = next_pc_uint();
                     if (meets_condition && arg1 < _peripherals.size())
                     {
-                        _peripherals[arg1]->send_command(_regs.uint_reg(arg2));
+                        _peripherals[arg1]->send_command(_regs.int_reg(arg2));
                     }
                     break;
                 case Opcode::IO_SEND_R_R:
@@ -1066,7 +1069,7 @@ namespace moss
                         arg3 = _regs.uint_reg(arg1);
                         if (arg3 < _peripherals.size())
                         {
-                            _peripherals[arg3]->send_command(_regs.uint_reg(arg2));
+                            _peripherals[arg3]->send_command(_regs.int_reg(arg2));
                         }
                     }
                     break;
@@ -1075,20 +1078,20 @@ namespace moss
                     // reg[arg1] = peripheral[arg2](arg3)
                     arg1 = next_pc_uint();
                     arg2 = next_pc_uint();
-                    arg3 = next_pc_uint();
+                    iarg3 = next_pc_int();
                     if (meets_condition)
                     {
-                        io_send(arg1, arg2, arg3);
+                        io_send(arg1, arg2, iarg3);
                     }
                     break;
                 case Opcode::IO_SEND_R_R_I:
                     // reg[arg1] = peripheral[reg[arg2]](arg3)
                     arg1 = next_pc_uint();
                     arg2 = next_pc_uint();
-                    arg3 = next_pc_uint();
+                    iarg3 = next_pc_uint();
                     if (meets_condition)
                     {
-                        io_send(arg1, _regs.uint_reg(arg2), arg3);
+                        io_send(arg1, _regs.uint_reg(arg2), iarg3);
                     }
                     break;
                 case Opcode::IO_SEND_R_I_R:
@@ -1098,7 +1101,7 @@ namespace moss
                     arg3 = next_pc_uint();
                     if (meets_condition)
                     {
-                        io_send(arg1, arg2, _regs.uint_reg(arg3));
+                        io_send(arg1, arg2, _regs.int_reg(arg3));
                     }
                     break;
                 case Opcode::IO_SEND_R_R_R:
@@ -1108,7 +1111,7 @@ namespace moss
                     arg3 = next_pc_uint();
                     if (meets_condition)
                     {
-                        io_send(arg1, _regs.uint_reg(arg2), _regs.uint_reg(arg3));
+                        io_send(arg1, _regs.uint_reg(arg2), _regs.int_reg(arg3));
                     }
                     break;
 
@@ -1286,11 +1289,11 @@ namespace moss
                     arg1 = next_pc_uint();
                     if (meets_condition)
                     {
-                        std::cout << _regs.uint_reg(arg1);
+                        std::cout << _regs.int_reg(arg1);
                     }
                     break;
                 case Opcode::PRINT_I:
-                    arg1 = next_pc_uint();
+                    arg1 = next_pc_int();
                     if (meets_condition)
                     {
                         std::cout << arg1;
@@ -1348,8 +1351,8 @@ namespace moss
                     arg1 = next_pc_uint();
                     if (meets_condition)
                     {
-                        std::cin >> arg2;
-                        _regs.uint_reg(arg1, arg2);
+                        std::cin >> iarg2;
+                        _regs.int_reg(arg1, iarg2);
                     }
                     break;
                 case Opcode::INPUTF_R:
