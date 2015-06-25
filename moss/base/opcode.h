@@ -78,11 +78,13 @@ namespace moss
                 // ADD/ADDF {{{
                 ADD_R_R,
                 ADD_R_R_R,
+                ADD_R_I_R,
                 ADD_R_R_I,
                 ADD_R_I,
 
                 ADDF_R_R,
                 ADDF_R_R_R,
+                ADDF_R_I_R,
                 ADDF_R_R_I,
                 ADDF_R_I,
                 // }}}
@@ -111,11 +113,13 @@ namespace moss
                 // MUL/MULF {{{
                 MUL_R_R,
                 MUL_R_R_R,
+                MUL_R_I_R,
                 MUL_R_R_I,
                 MUL_R_I,
 
                 MULF_R_R,
                 MULF_R_R_R,
+                MULF_R_I_R,
                 MULF_R_R_I,
                 MULF_R_I,
                 // }}}

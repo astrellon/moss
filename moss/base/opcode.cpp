@@ -141,11 +141,13 @@ namespace moss
 		// ADD/ADDF {{{
 		{ std::string("ADD_R_R"),   Opcode::ADD_R_R },
 		{ std::string("ADD_R_R_R"), Opcode::ADD_R_R_R },
+		{ std::string("ADD_R_I_R"), Opcode::ADD_R_I_R },
 		{ std::string("ADD_R_R_I"), Opcode::ADD_R_R_I },
 		{ std::string("ADD_R_I"),   Opcode::ADD_R_I },
 
 		{ std::string("ADDF_R_R"),   Opcode::ADDF_R_R },
 		{ std::string("ADDF_R_R_R"), Opcode::ADDF_R_R_R },
+		{ std::string("ADDF_R_I_R"), Opcode::ADDF_R_I_R },
 		{ std::string("ADDF_R_R_I"), Opcode::ADDF_R_R_I },
 		{ std::string("ADDF_R_I"),   Opcode::ADDF_R_I },
 		// }}}
@@ -174,11 +176,13 @@ namespace moss
 		// MUL/MULF {{{
 		{ std::string("MUL_R_R"),   Opcode::MUL_R_R },
 		{ std::string("MUL_R_R_R"), Opcode::MUL_R_R_R },
+		{ std::string("MUL_R_I_R"), Opcode::MUL_R_I_R },
 		{ std::string("MUL_R_R_I"), Opcode::MUL_R_R_I },
 		{ std::string("MUL_R_I"),   Opcode::MUL_R_I },
 
 		{ std::string("MULF_R_R"),   Opcode::MULF_R_R },
 		{ std::string("MULF_R_R_R"), Opcode::MULF_R_R_R },
+		{ std::string("MULF_R_I_R"), Opcode::MULF_R_I_R },
 		{ std::string("MULF_R_R_I"), Opcode::MULF_R_R_I },
 		{ std::string("MULF_R_I"),   Opcode::MULF_R_I },
 		// }}}
@@ -441,6 +445,7 @@ namespace moss
          */
         { Opcode::ADD_R_R,    { "ADD", { Opcode::REGISTER, Opcode::REGISTER } } },
         { Opcode::ADD_R_R_R,  { "ADD", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
+        { Opcode::ADD_R_I_R,  { "ADD", { Opcode::REGISTER, Opcode::INT_NUMBER, Opcode::REGISTER } } },
         { Opcode::ADD_R_R_I,  { "ADD", { Opcode::REGISTER, Opcode::REGISTER, Opcode::INT_NUMBER } } },
         { Opcode::ADD_R_I,    { "ADD", { Opcode::REGISTER, Opcode::INT_NUMBER } } },
         
@@ -460,6 +465,7 @@ namespace moss
          */
         { Opcode::ADDF_R_R,   { "ADDF", { Opcode::REGISTER, Opcode::REGISTER } } },
         { Opcode::ADDF_R_R_R, { "ADDF", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
+        { Opcode::ADDF_R_I_R, { "ADDF", { Opcode::REGISTER, Opcode::FLOAT_NUMBER, Opcode::REGISTER } } },
         { Opcode::ADDF_R_R_I, { "ADDF", { Opcode::REGISTER, Opcode::REGISTER, Opcode::FLOAT_NUMBER } } },
         { Opcode::ADDF_R_I,   { "ADDF", { Opcode::REGISTER, Opcode::FLOAT_NUMBER } } },
         // }}}
@@ -563,6 +569,7 @@ namespace moss
          */
         { Opcode::MUL_R_R,    { "MUL", { Opcode::REGISTER, Opcode::REGISTER } } },
         { Opcode::MUL_R_R_R,  { "MUL", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
+        { Opcode::MUL_R_I_R,  { "MUL", { Opcode::REGISTER, Opcode::INT_NUMBER, Opcode::REGISTER } } },
         { Opcode::MUL_R_R_I,  { "MUL", { Opcode::REGISTER, Opcode::REGISTER, Opcode::INT_NUMBER } } },
         { Opcode::MUL_R_I,    { "MUL", { Opcode::REGISTER, Opcode::INT_NUMBER } } },
         
@@ -580,6 +587,7 @@ namespace moss
          */
         { Opcode::MULF_R_R,   { "MULF", { Opcode::REGISTER, Opcode::REGISTER } } },
         { Opcode::MULF_R_R_R, { "MULF", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
+        { Opcode::MULF_R_I_R, { "MULF", { Opcode::REGISTER, Opcode::FLOAT_NUMBER, Opcode::REGISTER } } },
         { Opcode::MULF_R_R_I, { "MULF", { Opcode::REGISTER, Opcode::REGISTER, Opcode::FLOAT_NUMBER } } },
         { Opcode::MULF_R_I,   { "MULF", { Opcode::REGISTER, Opcode::FLOAT_NUMBER } } },
         // }}}
@@ -587,6 +595,15 @@ namespace moss
         // DIV/DIVF {{{
         /**
          * Divide two integers.
+         *
+         * <div>For example:
+         * <pre>MOV r0 8
+         * DIV r0 2
+         * INFO r0      ; Prints 4
+         * DIV r1 r0 3  
+         * INFO r0      ; Prints 4
+         * INFO r1      ; Prints 1, due to integer rounding.</pre>
+         * </div>
          */
         { Opcode::DIV_R_R,    { "DIV", { Opcode::REGISTER, Opcode::REGISTER } } },
         { Opcode::DIV_R_R_R,  { "DIV", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
@@ -596,6 +613,15 @@ namespace moss
         
         /**
          * Divide two floats.
+         *
+         * <div>For example:
+         * <pre>MOV r0 6.6
+         * DIVF r0 2.0
+         * INFO r0      ; Prints 3.3
+         * DIVF r1 r0 3.0
+         * INFO r0      ; Prints 3.3
+         * INFO r1      ; Prints 1.1</pre>
+         * </div>
          */
         { Opcode::DIVF_R_R,   { "DIVF", { Opcode::REGISTER, Opcode::REGISTER } } },
         { Opcode::DIVF_R_R_R, { "DIVF", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
@@ -607,12 +633,26 @@ namespace moss
         // ROR/ROL {{{
         /**
          * Bit shift rotate right.
+         * Rotate shiting basically pushes all the bits in a number one over to the right. If the right most
+         * bit is 'pushed off' the edge it comes back to the start of the number. So if you were to rotate 
+         * right 32 times you'd come back to the same number you started off with.
+         *
+         * <div>For example:
+         * <pre>MOV r0 0x10020005    ; In binary this should be 0001 0000 0000 0010 0000 0000 0101 or 268435459 in decimal.
+         * ROR r0
+         * INFO r0          ; Prints 2281766914 decimal, which is 1000 1000 0000 0001 0000 0000 0010 in binary.
+         * ROR r1 r0        
+         * INFO r1          ; Prints 1140883457 decimal, which is 0100 0100 0000 0000 1000 0000 0001 in binary.
+         * INFO r0          ; Prints 2281766914.<pre>
+         * </div>
          */
         { Opcode::ROR_R,   { "ROR", { Opcode::REGISTER } } },
         { Opcode::ROR_R_R, { "ROR", { Opcode::REGISTER, Opcode::REGISTER } } },
         
         /**
          * Bit shift rotate left.
+         * <pre>MOV r0 0xC0000000    ; In binary this should be 1100 0000 0000 0000
+         * ROR r0
          */
         { Opcode::ROL_R,   { "ROL", { Opcode::REGISTER } } },
         { Opcode::ROL_R_R, { "ROL", { Opcode::REGISTER, Opcode::REGISTER } } },

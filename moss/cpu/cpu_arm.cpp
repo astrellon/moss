@@ -573,6 +573,16 @@ namespace moss
                         _regs.int_reg(arg1, _regs.int_reg(arg2) + _regs.int_reg(arg3));
                     }
                     break;
+                case Opcode::ADD_R_I_R:
+                    // reg[arg1] = arg2 + reg[arg3]
+                    arg1 = next_pc_uint();
+                    iarg2 = next_pc_int();
+                    arg3 = next_pc_uint();
+                    if (meets_condition)
+                    {
+                        _regs.int_reg(arg1, iarg2 + _regs.int_reg(arg3));
+                    }
+                    break;
                 case Opcode::ADD_R_R_I:
                     // reg[arg1] = reg[arg2] + arg3
                     arg1 = next_pc_uint();
@@ -612,6 +622,16 @@ namespace moss
                     if (meets_condition)
                     {
                         _regs.float_reg(arg1, _regs.float_reg(arg2) + _regs.float_reg(arg3));
+                    }
+                    break;
+                case Opcode::ADDF_R_I_R:
+                    // reg[arg1] = arg2 + reg[arg3]
+                    arg1 = next_pc_uint();
+                    farg2 = next_pc_float();
+                    arg3 = next_pc_uint();
+                    if (meets_condition)
+                    {
+                        _regs.float_reg(arg1, farg2 + _regs.float_reg(arg3));
                     }
                     break;
                 case Opcode::ADDF_R_R_I:
@@ -792,6 +812,16 @@ namespace moss
                         _regs.int_reg(arg1, _regs.int_reg(arg2) * _regs.int_reg(arg3));
                     }
                     break;
+                case Opcode::MUL_R_I_R:
+                    // reg[arg1] = arg2 * reg[arg3]
+                    arg1 = next_pc_uint();
+                    iarg2 = next_pc_int();
+                    arg3 = next_pc_uint();
+                    if (meets_condition)
+                    {
+                        _regs.int_reg(arg1, iarg2 * _regs.int_reg(arg3));
+                    }
+                    break;
                 case Opcode::MUL_R_R_I:
                     // reg[arg1] = reg[arg2] * arg3
                     arg1 = next_pc_uint();
@@ -831,6 +861,16 @@ namespace moss
                     if (meets_condition)
                     {
                         _regs.float_reg(arg1, _regs.float_reg(arg2) * _regs.float_reg(arg3));
+                    }
+                    break;
+                case Opcode::MULF_R_I_R:
+                    // reg[arg1] = arg2 * reg[arg3]
+                    arg1 = next_pc_uint();
+                    farg2 = next_pc_float();
+                    arg3 = next_pc_uint();
+                    if (meets_condition)
+                    {
+                        _regs.float_reg(arg1, farg2 * _regs.float_reg(arg3));
                     }
                     break;
                 case Opcode::MULF_R_R_I:
@@ -962,7 +1002,7 @@ namespace moss
                     arg2 = _regs.uint_reg(arg1);
                     if (meets_condition)
                     {
-                        _regs.uint_reg(arg1, (arg2 << 1) | (arg2 >> s_int_bit_shift));
+                        _regs.uint_reg(arg1, (arg2 >> 1) | (arg2 << s_int_bit_shift));
                     }
                     break;
                 case Opcode::ROR_R_R:
@@ -971,7 +1011,7 @@ namespace moss
                     arg3 = _regs.uint_reg(arg2);
                     if (meets_condition)
                     {
-                        _regs.uint_reg(arg1, (arg3 << 1) | (arg3 >> s_int_bit_shift));
+                        _regs.uint_reg(arg1, (arg3 >> 1) | (arg3 << s_int_bit_shift));
                     }
                     break;
                 case Opcode::ROL_R:
@@ -979,7 +1019,7 @@ namespace moss
                     arg2 = _regs.uint_reg(arg1);
                     if (meets_condition)
                     {
-                        _regs.uint_reg(arg1, (arg2 >> 1) | (arg2 << s_int_bit_shift));
+                        _regs.uint_reg(arg1, (arg2 << 1) | (arg2 >> s_int_bit_shift));
                     }
                     break;
                 case Opcode::ROL_R_R:
@@ -988,7 +1028,7 @@ namespace moss
                     arg3 = _regs.uint_reg(arg2);
                     if (meets_condition)
                     {
-                        _regs.uint_reg(arg1, (arg3 >> 1) | (arg3 << s_int_bit_shift));
+                        _regs.uint_reg(arg1, (arg3 << 1) | (arg3 >> s_int_bit_shift));
                     }
                     break;
                 // }}}
