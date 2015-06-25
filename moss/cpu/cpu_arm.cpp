@@ -706,21 +706,21 @@ namespace moss
                 case Opcode::SUBF_R_I_R:
                     // reg[arg1] = arg2 - reg[arg3]
                     arg1 = next_pc_uint();
-                    arg2 = next_pc_uint();
+                    farg1 = next_pc_float();
                     arg3 = next_pc_uint();
                     if (meets_condition)
                     {
-                        _regs.float_reg(arg1, arg2 - _regs.float_reg(arg3));
+                        _regs.float_reg(arg1, farg1 - _regs.float_reg(arg3));
                     }
                     break;
                 case Opcode::SUBF_R_R_I:
                     // reg[arg1] = reg[arg2] - arg3
                     arg1 = next_pc_uint();
                     arg2 = next_pc_uint();
-                    arg3 = next_pc_uint();
+                    farg1 = next_pc_float();
                     if (meets_condition)
                     {
-                        _regs.float_reg(arg1, _regs.float_reg(arg2) - arg3);
+                        _regs.float_reg(arg1, _regs.float_reg(arg2) - farg1);
                     }
                     break;
                 case Opcode::SUBF_R_I:
@@ -729,7 +729,7 @@ namespace moss
                     farg2 = next_pc_float();
                     if (meets_condition)
                     {
-                        _regs.float_reg(arg1, _regs.float_reg(arg1) - arg2);
+                        _regs.float_reg(arg1, _regs.float_reg(arg1) - farg2);
                     }
                     break;
                 // }}}
@@ -834,10 +834,10 @@ namespace moss
                     // reg[arg1] = reg[arg2] * arg3
                     arg1 = next_pc_uint();
                     arg2 = next_pc_uint();
-                    arg3 = next_pc_uint();
+                    farg1 = next_pc_float();
                     if (meets_condition)
                     {
-                        _regs.float_reg(arg1, _regs.float_reg(arg2) * arg3);
+                        _regs.float_reg(arg1, _regs.float_reg(arg2) * farg1);
                     }
                     break;
                 case Opcode::MULF_R_I:
@@ -846,7 +846,7 @@ namespace moss
                     farg2 = next_pc_float();
                     if (meets_condition)
                     {
-                        _regs.float_reg(arg1, _regs.float_reg(arg1) * arg2);
+                        _regs.float_reg(arg1, _regs.float_reg(arg1) * farg2);
                     }
                     break;
                 // }}}
@@ -925,21 +925,21 @@ namespace moss
                 case Opcode::DIVF_R_I_R:
                     // reg[arg1] = arg2 / reg[arg3]
                     arg1 = next_pc_uint();
-                    arg2 = next_pc_uint();
+                    farg2 = next_pc_uint();
                     arg3 = next_pc_uint();
                     if (meets_condition)
                     {
-                        _regs.float_reg(arg1, arg2 / _regs.float_reg(arg3));
+                        _regs.float_reg(arg1, farg2 / _regs.float_reg(arg3));
                     }
                     break;
                 case Opcode::DIVF_R_R_I:
                     // reg[arg1] = reg[arg2] / arg3
                     arg1 = next_pc_uint();
                     arg2 = next_pc_uint();
-                    arg3 = next_pc_uint();
+                    farg1 = next_pc_uint();
                     if (meets_condition)
                     {
-                        _regs.float_reg(arg1, _regs.float_reg(arg2) / arg3);
+                        _regs.float_reg(arg1, _regs.float_reg(arg2) / farg1);
                     }
                     break;
                 case Opcode::DIVF_R_I:
@@ -948,7 +948,7 @@ namespace moss
                     farg2 = next_pc_float();
                     if (meets_condition)
                     {
-                        _regs.float_reg(arg1, _regs.float_reg(arg1) / arg2);
+                        _regs.float_reg(arg1, _regs.float_reg(arg1) / farg2);
                     }
                     break;
                 // }}}
@@ -1333,9 +1333,12 @@ namespace moss
                     arg1 = next_pc_uint();
                     if (meets_condition)
                     {
+                        iarg1 = _regs.int_reg(arg1);
                         arg2 = _regs.uint_reg(arg1);
                         farg1 = _regs.float_reg(arg1);
-                        std::cout << "Register " << arg1 << ": uint = " << arg2 << ", float = " << farg1 << "\n"; 
+                        std::cout << "Register " << arg1 << ": uint = " << arg2 << 
+                            ", int = " << iarg1 << 
+                            ", float = " << farg1 << "\n"; 
                     }
                     break;
                 // }}}

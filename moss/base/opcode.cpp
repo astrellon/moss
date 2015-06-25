@@ -455,7 +455,7 @@ namespace moss
          * INFO r0      ; Prints 10.1, as the two values have been added together and stored back into register 0.
          * ADDF r1 r0 7.5
          * INFO r0      ; Prints 10.1
-         * INFO r1      ;
+         * INFO r1      ; Prints 17.6
          * </div>
          */
         { Opcode::ADDF_R_R,   { "ADDF", { Opcode::REGISTER, Opcode::REGISTER } } },
@@ -468,6 +468,15 @@ namespace moss
         /**
          * Subtract two ints from each other.
          * Either storing the result into the first register, or storing the result in another register.
+         *
+         * <div>For example:
+         * <pre>MOV r0 8
+         * SUB r0 5
+         * INFO r0      ; Prints 3
+         * SUB r1 r0 10
+         * INFO r0      ; Prints 3
+         * INFO r1      ; Prints -7</pre>
+         * </div>
          */
         { Opcode::SUB_R_R,    { "SUB", { Opcode::REGISTER, Opcode::REGISTER } } },
         { Opcode::SUB_R_R_R,  { "SUB", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
@@ -477,6 +486,16 @@ namespace moss
         
         /**
          * Subtract two floats from each other.
+         * Either storing the result into the first register, or storing the result in another register.
+         *
+         * <div>For example:
+         * <pre>MOV r0 8.7
+         * SUBF r0 3.3
+         * INFO r0      ; Prints 5.3
+         * SUBF r1 r0 7.4
+         * INFO r0      ; Prints 5.3
+         * INFO r1      ; Prints -2</pre>
+         * </div>
          */
         { Opcode::SUBF_R_R,   { "SUBF", { Opcode::REGISTER, Opcode::REGISTER } } },
         { Opcode::SUBF_R_R_R, { "SUBF", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
@@ -488,18 +507,43 @@ namespace moss
         // INC/DEC {{{
         /**
          * Increment an integer register by one.
+         *
+         * <div>For example:
+         * <pre>MOV r0 9
+         * INC r0
+         * INFO r0      ; Prints 10</pre>
+         * </div>
          */
         { Opcode::INC_R,  { "INC",  { Opcode::REGISTER } } },
         /**
          * Increment a float register by one.
+         *
+         * <div>For example:
+         * <pre>MOV r0 5.4
+         * INCF r0
+         * INFO r0      ; Prints 6.4</pre>
+         * </div>
          */
         { Opcode::INCF_R, { "INCF", { Opcode::REGISTER } } },
         /**
          * Decrements an integer register by one.
+         *
+         * <div>For example:
+         * <pre>
+         * MOV r0 4
+         * DEC r0
+         * INFO r0      ; Prints 3</pre>
+         * </div>
          */
         { Opcode::DEC_R,  { "DEC",  { Opcode::REGISTER } } },
         /**
          * Decrements a float register by one.
+         *
+         * <div>For example:
+         * <pre>MOV r0 2.3
+         * DECF r0
+         * INFO r0      ; Prints 1.3</pre>
+         * </div>
          */
         { Opcode::DECF_R, { "DECF", { Opcode::REGISTER } } },
         // }}}
@@ -507,6 +551,15 @@ namespace moss
         // MUL/MULF {{{
         /**
          * Multiply two integers together.
+         *
+         * <div>For example:
+         * <pre>MOV r0 4
+         * MUL r0 5
+         * INFO r0      ; Prints 20
+         * MUL r1 r0 2
+         * INFO r0      ; Prints 20
+         * INFO r1      ; Prints 40</pre>
+         * </div>
          */
         { Opcode::MUL_R_R,    { "MUL", { Opcode::REGISTER, Opcode::REGISTER } } },
         { Opcode::MUL_R_R_R,  { "MUL", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
@@ -515,6 +568,15 @@ namespace moss
         
         /**
          * Multiply two floats together.
+         * 
+         * <div>For example:
+         * <pre>MOV r0 10.0
+         * MULF r0 2.5
+         * INFO r0      ; Prints 25.0
+         * MULF r1 r0 0.5
+         * INFO r0      ; Prints 25.0
+         * INFO r1      ; Prints 12.5</pre>
+         * </div>
          */
         { Opcode::MULF_R_R,   { "MULF", { Opcode::REGISTER, Opcode::REGISTER } } },
         { Opcode::MULF_R_R_R, { "MULF", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
