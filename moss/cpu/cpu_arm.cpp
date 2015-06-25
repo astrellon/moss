@@ -1328,6 +1328,16 @@ namespace moss
                         std::cout << farg1;
                     }
                     break;
+
+                case Opcode::INFO_R:
+                    arg1 = next_pc_uint();
+                    if (meets_condition)
+                    {
+                        arg2 = _regs.uint_reg(arg1);
+                        farg1 = _regs.float_reg(arg1);
+                        std::cout << "Register " << arg1 << ": uint = " << arg2 << ", float = " << farg1 << "\n"; 
+                    }
+                    break;
                 // }}}
                 
                 // Input from keyboard {{{ 

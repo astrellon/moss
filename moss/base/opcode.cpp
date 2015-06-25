@@ -261,6 +261,8 @@ namespace moss
         
         { std::string("PRINTF_R"),  Opcode::PRINTF_R },
         { std::string("PRINTF_I"),  Opcode::PRINTF_I },
+
+        { std::string("INFO_R"), Opcode::INFO_R },
         
         { std::string("INPUT_R"),  Opcode::INPUT_R },
         { std::string("INPUTF_R"),  Opcode::INPUTF_R },
@@ -274,15 +276,20 @@ namespace moss
     // into the original command name with the expected arguments. 
     std::map<Opcode::Command, std::pair<std::string, std::vector<Opcode::Type> > > Opcode::s_commands_to_types = {
         // Halt
+        /**
+         * Stops the CPU from running completely.
+         */
         { Opcode::HALT, { "HALT", {} } },
 
         // MOV {{{
         /** 
          * The MOV command is used to move data around between registers and memory.
          * It can also be used to set registers and memory to a hardcoded value.
-         * For example:
-         * MOV r0 5
-         * This will set register 0 to 5.
+         *
+         * <div>For example:
+         * <pre>MOV r0 5    ; Sets register 0 to 5.
+         * MOV r1 r0        ; Sets reigster 1 to register 0</pre>
+         * </div>
          */
         { Opcode::MOV_R_R, { "MOV", { Opcode::REGISTER, Opcode::REGISTER } } },
         { Opcode::MOV_R_I, { "MOV", { Opcode::REGISTER, Opcode::NUMBER } } },
@@ -305,12 +312,27 @@ namespace moss
         /**
          * Converts a int register value into a float value.
          * Either storing the result in the same register or in another register.
+         *
+         * <div>For example:
+         * <pre>MOV r0 6
+         * INFO r0          ; The value in register 0 is gibberish as a float.
+         * INT_FLOAT r0     ; Convert the integer to a float
+         * INFO r0          ; The value in register 0 is now what you'd expect it to be.</pre>
+         * </div>
          */
         { Opcode::INT_FLOAT_R,   { "INT_FLOAT", { Opcode::REGISTER } } },
         { Opcode::INT_FLOAT_R_R, { "INT_FLOAT", { Opcode::REGISTER, Opcode::REGISTER } } },
         /**
          * Converts a float register value into a int value.
          * Either storing the result in the same register or in another register.
+         * <div>This can be used as a way to round down a float.</div>
+         *
+         * <div>For example:
+         * <pre>MOV r0 4.5
+         * INFO r0          ; The value in register 0 is gibberish as an integer.
+         * FLOAT_INT r0     ; Convert the float to a integer
+         * INFO r0          ; The value in register 0 is now 4.</pre>
+         * </div>
          */
         { Opcode::FLOAT_INT_R,   { "FLOAT_INT", { Opcode::REGISTER } } },
         { Opcode::FLOAT_INT_R_R, { "FLOAT_INT", { Opcode::REGISTER, Opcode::REGISTER } } },
@@ -320,11 +342,24 @@ namespace moss
         /**
          * Pushes either a number or a register value onto the stack.
          * It doesn't matter what kind of value it is.
+         *
+         * <div>For example:
+         * <pre>MOV r0 8
+         * PUSH r0      ; There is now one item on the stack.
+         * PUSH 4       ; Now there are two items on the stack
+         * POP r1       ; Take the top most item and put it into register 1
+         * POP r2       ; Take the next item and put it into register 2
+         * &nbsp;            ; The stack is now empty at this point.
+         *
+         * INFO r1      ; Prints 4
+         * INFO r2      ; Prints 8</pre>
+         * </div>
          */
         { Opcode::PUSH_R, { "PUSH", { Opcode::REGISTER } } },
         { Opcode::PUSH_I, { "PUSH", { Opcode::NUMBER } } },
         /**
          * Pops the top most value off the stack into a register.
+         * <div>See PUSH command</div>
          */
         { Opcode::POP_R,  { "POP",  { Opcode::REGISTER } } },
         // }}}
@@ -335,15 +370,17 @@ namespace moss
          * an integer number, conditional operators can be used to either execute or 
          * ignore subsequent commands.
          *
+         * <div>
          * For example:
-         * MOV r0 5
+         * <pre>MOV r0 5
          * CMP r0 10
          * > INC r0     ; Won't run because 5 is not greater than 10
          * < DEC r0     ; Will run because 5 is less than 10
          * == INC r0    ; Won't run because 5 does not equal 10
          * != DEC r0    ; Will run because 5 does not equal 10
          *
-         * PRINT r0     ; Will output 3 because the two DEC commands executed.
+         * INFO r0      ; Will output 3 because the two DEC commands executed.</pre>
+         * </div>
          */
         { Opcode::CMP_R_R, { "CMP", { Opcode::REGISTER, Opcode::REGISTER } } },
         { Opcode::CMP_R_I, { "CMP", { Opcode::REGISTER, Opcode::INT_NUMBER } } }, 
@@ -354,15 +391,17 @@ namespace moss
          * a float number, conditional operators can be used to either execute or
          * ignore subsequent commands.
          *
+         * <div>
          * For example:
-         * MOV r0 5.5
+         * <pre>MOV r0 5.5
          * CMPF r0 10.2
          * > ADDF r0 1.5    ; Won't run because 5.5 is not greater than 10.2
          * < SUBF r0 1.5    ; Will run because 5.5 is less than 10.2
          * == ADDF r0 1.5   ; Won't run because 5.5 does not equal 10.2
          * != SUBF r0 1.5   ; Will run because 5.5 does not equal 10.2
          *
-         * PRINTF r0        ; Will output 2.5 because the two SUBF commands executed.
+         * INFO r0          ; Will output 2.5 because the two SUBF commands executed.</pre>
+         * </div>
          */
         { Opcode::CMPF_R_R, { "CMPF", { Opcode::REGISTER, Opcode::REGISTER } } },
         { Opcode::CMPF_R_I, { "CMPF", { Opcode::REGISTER, Opcode::FLOAT_NUMBER } } },
@@ -375,11 +414,11 @@ namespace moss
          * Usually used to jump to a label, but can be used to just to any number.
          *
          * For example:
-         * MOV r0 5
+         * <pre>MOV r0 5
          * JMP skip     ; Jumps to the skip label
          * MOV r0 10    ; Will be jumped over
          * skip:
-         * PRINT r0     ; Will print 5
+         * INFO r0      ; Will print 5 </pre>
          */
         { Opcode::JMP_R, { "JMP", { Opcode::REGISTER } } },
         { Opcode::JMP_I, { "JMP", { Opcode::INT_NUMBER } } },
@@ -390,6 +429,15 @@ namespace moss
          * Add two integer values together.
          * Either storing the result in the first register, or storing the result in 
          * another register.
+         *
+         * <div>For example:
+         * <pre>MOV r0 6
+         * ADD r0 4
+         * INFO r0      ; Prints 10, as 4 has been added to the register.
+         * ADD r1 r0 6  
+         * INFO r0      ; Still prints 10 as the result of the add wasn't put back into the same register.
+         * INFO r1      ; Prints 16 as the result was stored into a different register.</pre>
+         * </div>
          */
         { Opcode::ADD_R_R,    { "ADD", { Opcode::REGISTER, Opcode::REGISTER } } },
         { Opcode::ADD_R_R_R,  { "ADD", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
@@ -400,6 +448,15 @@ namespace moss
          * Add two floats values together.
          * Either storing the result in the first register, or storing the result in 
          * another register.
+         *
+         * <div>For example:
+         * <pre>MOV r0 7.6
+         * ADDF r0 3.4
+         * INFO r0      ; Prints 10.1, as the two values have been added together and stored back into register 0.
+         * ADDF r1 r0 7.5
+         * INFO r0      ; Prints 10.1
+         * INFO r1      ;
+         * </div>
          */
         { Opcode::ADDF_R_R,   { "ADDF", { Opcode::REGISTER, Opcode::REGISTER } } },
         { Opcode::ADDF_R_R_R, { "ADDF", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
@@ -410,6 +467,7 @@ namespace moss
         // SUB/SUBF {{{
         /**
          * Subtract two ints from each other.
+         * Either storing the result into the first register, or storing the result in another register.
          */
         { Opcode::SUB_R_R,    { "SUB", { Opcode::REGISTER, Opcode::REGISTER } } },
         { Opcode::SUB_R_R_R,  { "SUB", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
@@ -595,6 +653,11 @@ namespace moss
         { Opcode::PRINTF_R, { "PRINTF", { Opcode::REGISTER } } },
         { Opcode::PRINTF_I, { "PRINTF", { Opcode::FLOAT_NUMBER } } },
         
+        /**
+         * Displays the register number, its value as an integer and as a float.
+         */
+        { Opcode::INFO_R, { "INFO", { Opcode::REGISTER } } },
+
         /**
          * Get integer from keyboard.
          */

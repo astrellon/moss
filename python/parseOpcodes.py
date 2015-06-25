@@ -1,17 +1,17 @@
 import re;
 import collections;
 
-class OpCodeParser:
+class OpcodeParser:
 
     def __init__(self):
         self.fileContents = "";
         self.commandContents = "";
         self.commands = []
-        self.opcodeFamilies = dict()
+        self.opcodeFamilies = collections.OrderedDict()
 
-    def getOpCodeFamily(self, name):
+    def getOpcodeFamily(self, name):
         if not (name in self.opcodeFamilies):
-            self.opcodeFamilies[name] = OpCodeFamily(name)
+            self.opcodeFamilies[name] = OpcodeFamily(name)
 
         return self.opcodeFamilies[name]
 
@@ -24,39 +24,35 @@ class OpCodeParser:
         self.commandContents = self.fileContents[bracketStart + 1:bracketEnd];
 
         inComment = False
-        lastComment = None
+        lastComment = []
 
         for line in self.commandContents.splitlines():
-            if not inComment and OpCode.opcodeRegex.match(line) is not None:
+            if not inComment and Opcode.opcodeRegex.match(line) is not None:
                 opcode = self.parseOpcodeLine(line)
-                family = self.getOpCodeFamily(opcode.name)
+                family = self.getOpcodeFamily(opcode.name)
                 family.opcodes.append(opcode)
 
-                if lastComment is not None:
+                if len(lastComment) > 0:
                     family.comment = lastComment
-                    lastComment = None
+                    lastComment = []
 
             else:
                 if not inComment and line.find("/*") >= 0:
                     inComment = True
                     print("Now in comment: ", line)
-                    lastComment = line
+                    lastComment.append(line)
 
                     if line.find("*/") >= 0:
                         print("Also ending comment")
                         inComment = False
 
                 elif inComment:
-                    lastComment += line
+                    lastComment.append(line)
                     print("More comment: ", line)
 
                     if line.find("*/") >= 0:
                         print("End comment")
                         inComment = False
-
-        for key in self.opcodeFamilies:
-            f = self.opcodeFamilies[key]
-            print(f.name, f.comment)
 
     def parseOpcodeLine(self, line):
         startQuote = line.find('"')
@@ -69,18 +65,33 @@ class OpCodeParser:
         arguments_raw = line[startBracket + 1 : endBracket].split(',')
         arguments = []
         for i in arguments_raw:
-            arguments.append(OpCode.get_arg_type(i)) 
+            arguments.append(Opcode.get_arg_type(i)) 
 
-        return OpCode(commandName, arguments)
+        return Opcode(commandName, arguments)
 
-class OpCodeFamily:
+class OpcodeFamily:
+    commentRegex = re.compile("(^\s*/\*+\s*)|(\s*\*/\s*)|(^\s*\*+)")
 
     def __init__(self, name):
         self.name = name
         self.opcodes = []
-        self.comment = ""
+        self.comment = []
 
-class OpCode:
+    def cleanComment(self):
+        for i in range(0, len(self.comment)):
+            self.comment[i] = self.cleanCommentLine(self.comment[i])
+
+        start = len(self.comment) - 1
+        if start >= 0:
+            for i in range(start, 0):
+                print(i)
+                if len(self.comment[i]) == 0:
+                    self.comment.remove(i)
+
+    def cleanCommentLine(self, line):
+        return re.sub(OpcodeFamily.commentRegex, "", line).strip()
+
+class Opcode:
     opcodeRegex = re.compile('^\s+{')
 
     arg_types = dict({
@@ -115,6 +126,32 @@ class OpCode:
         self.name = name
         self.args = args
 
-test = OpCodeParser()
-test.parseFile("../moss/base/opcode.cpp")
+class HtmlOutput:
 
+    def __init__(self, opcodeParser):
+        self.opcodeParser = opcodeParser
+
+    def writeToFile(self, filename):
+        output = open(filename, "w")
+
+        output.write("<html>\n<body>\n")
+        lineTemplate = "<h3>{command}</h3>\n<div>{comment}</div>\n"
+
+        for key in self.opcodeParser.opcodeFamilies:
+            f = self.opcodeParser.opcodeFamilies[key]
+            f.cleanComment()
+
+            commentLine = ""
+            for i in f.comment:
+                commentLine += i + "\n" # + "<br>\n"
+
+            output.write(lineTemplate.format(command=f.name, comment=commentLine))
+            #print(f.name, f.comment)
+
+        output.write("</body>\n</html>")
+
+fileParser = OpcodeParser()
+fileParser.parseFile("../moss/base/opcode.cpp")
+
+htmlOutput = HtmlOutput(fileParser)
+htmlOutput.writeToFile("testout.html")

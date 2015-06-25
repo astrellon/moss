@@ -199,6 +199,8 @@ namespace moss
                 
                 PRINTF_R,
                 PRINTF_I,
+
+                INFO_R,
                 // }}}
 
                 // Get input from keyboad {{{

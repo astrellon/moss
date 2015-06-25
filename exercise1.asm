@@ -7,7 +7,5 @@ main:
     ADD r2 r0 r1
 
     ; Outputting result to screen
-    PRINT "Register 2 = "
-    PRINT r2
-    PRINT "\n"
+    INFO r2
 
