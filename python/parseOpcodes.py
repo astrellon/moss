@@ -134,8 +134,15 @@ class HtmlOutput:
     def writeToFile(self, filename):
         output = open(filename, "w")
 
-        output.write("<html>\n<body>\n")
-        lineTemplate = "<h3>{command}</h3>\n<div>{comment}</div>\n"
+        output.write("""<html>
+        <head>
+            <title>MOSS Assembly Reference</title>
+            <link rel="stylesheet" href="styles.css"/>
+        <body>""")
+        lineTemplate = """<div class="command-block">
+        <h3>{command}</h3>
+        <div>{comment}</div>
+        </div>"""
 
         for key in self.opcodeParser.opcodeFamilies:
             f = self.opcodeParser.opcodeFamilies[key]

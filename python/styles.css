@@ -1,0 +1,29 @@
+body {
+    font-family: sans-serif;
+}
+
+.command-block {
+    border: 1px dashed #a5a5a5;
+    border-radius: 1em;
+    margin: 1em;
+    padding: 0.5em;
+}
+
+.command-block div {
+    margin-top: 0.4em;
+    margin-bottom: 0.4em;
+}
+
+.command-block pre {
+    border-radius: 0.9em;
+    border: 1px dashed rgba(255, 255, 255, 0.2);
+    background: #c9c9c9;
+    margin-bottom: 0;
+
+    padding: 0.8em;
+    white-space: pre-wrap;
+}
+
+h3 {
+    margin-top: 0;
+}

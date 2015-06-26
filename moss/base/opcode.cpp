@@ -291,7 +291,7 @@ namespace moss
          * It can also be used to set registers and memory to a hardcoded value.
          *
          * <div>For example:
-         * <pre>MOV r0 5    ; Sets register 0 to 5.
+         * <pre>MOV r0 5         ; Sets register 0 to 5.
          * MOV r1 r0        ; Sets reigster 1 to register 0</pre>
          * </div>
          */
@@ -633,17 +633,17 @@ namespace moss
         // ROR/ROL {{{
         /**
          * Bit shift rotate right.
-         * Rotate shiting basically pushes all the bits in a number one over to the right. If the right most
-         * bit is 'pushed off' the edge it comes back to the start of the number. So if you were to rotate 
+         * Right rotate shifting basically pushes all the bits in a number one over to the right. If the right most
+         * bit is 'pushed off' the edge it comes back to the left side of the number. So if you were to rotate 
          * right 32 times you'd come back to the same number you started off with.
          *
          * <div>For example:
-         * <pre>MOV r0 0x10020005    ; In binary this should be 0001 0000 0000 0010 0000 0000 0101 or 268435459 in decimal.
-         * ROR r0
-         * INFO r0          ; Prints 2281766914 decimal, which is 1000 1000 0000 0001 0000 0000 0010 in binary.
-         * ROR r1 r0        
-         * INFO r1          ; Prints 1140883457 decimal, which is 0100 0100 0000 0000 1000 0000 0001 in binary.
-         * INFO r0          ; Prints 2281766914.<pre>
+         * <pre>MOV r0 1342185477         ; In binary this should be   0101 0000 0000 0000  0010 0000 0000 0101.
+         * ROR r0           ;                                    &gt;  \ \                   \             \ &lt; Went to the other side
+         * INFO r0          ; Prints 2818576386 decimal, which is 1010 1000 0000 0000  0001 0000 0000 0010 in binary.
+         * ROR r1 r0        ;                                     \ \  \                   \             \
+         * INFO r1          ; Prints 1409288193 decimal, which is 0101 0100 0000 0000  0000 1000 0000 0001 in binary.
+         * INFO r0          ; Prints 2818576386.<pre>
          * </div>
          */
         { Opcode::ROR_R,   { "ROR", { Opcode::REGISTER } } },
@@ -651,8 +651,18 @@ namespace moss
         
         /**
          * Bit shift rotate left.
-         * <pre>MOV r0 0xC0000000    ; In binary this should be 1100 0000 0000 0000
-         * ROR r0
+         * Left rotate shifting basically pushes all the bits in a number one over to the left. If the left most
+         * bit is 'pushed off' the edge it comes back to the right side of the number. So if you were to rotate 
+         * left 32 times you'd come back to the same number you started off with.
+         *
+         * <div>For example:
+         * <pre>MOV r0 1342185477         ; In binary this should be   0101 0000 0000 0000  0010 0000 0000 0101.
+         * ROL r0           ;                                     / /                   /             / /
+         * INFO r0          ; Prints 2684370954 decimal, which is 1010 0000 0000 0000  0100 0000 0000 1010 in binary.
+         * ROL r1 r0        ;             Went to the other side &gt; /                   /             / /  &lt;
+         * INFO r1          ; Prints 1073774613 decimal, which is 0100 0000 0000 0000  1000 0000 0001 0101 in binary.
+         * INFO r0          ; Prints 2684370954.<pre>
+         * </div>
          */
         { Opcode::ROL_R,   { "ROL", { Opcode::REGISTER } } },
         { Opcode::ROL_R_R, { "ROL", { Opcode::REGISTER, Opcode::REGISTER } } },
@@ -661,12 +671,36 @@ namespace moss
         // SHR/SHL {{{
         /**
          * Bit shift right.
+         * Shift right basically pushes a zero in from the left and pushes all the bits in a number one over to the right. If the right most
+         * bit is 'pushed off' is it gone. So if you were to shift right 32 times the number would be entirely made of zeroes.
+         * Shifting right essentially divids a number by 2 as long as the number is even. If the number is odd then precision is lost.
+         *
+         * <div>For example:
+         * <pre>MOV r0 1342185477         ; In binary this should be 0101 0000 0000 0000  0010 0000 0000 0101.
+         * SHR r0       ;                                        \  \                  \             \  &gt; Gone
+         * INFO r0      ; Prints 671092738 decimal, which is    0010 1000 0000 0000  0001 0000 0000 0010.
+         * SHR r1 r0
+         * INFO r1      ; Prints 335546369 decimal, which is    0001 0100 0000 0000  0000 1000 0000 0001.
+         * INFO r0      ; Prints 671092738.</pre> 
+         * </div>
          */
         { Opcode::SHR_R,   { "SHR", { Opcode::REGISTER } } },
         { Opcode::SHR_R_R, { "SHR", { Opcode::REGISTER, Opcode::REGISTER } } },
         
         /**
          * Bit shift left.
+         * Shift left basically pushes a zero in from the right and pushes all the bits in a number one over to the left. If the left most
+         * bit is 'pushed off' is it gone. So if you were to shift left 32 times the number would be entirely made of zeroes.
+         * Shifting left essentially multiplies a number by 2 as long as a bit isn't 'pushed off'.
+         *
+         * <div>For example:
+         * <pre>MOV r0 1342185477         ; In binary this should be  0101 0000 0000 0000  0010 0000 0000 0101.
+         * SHL r0       ;                                        / /                   /             /  /
+         * INFO r0      ; Prints 2684370954 decimal, which is    1010 0000 0000 0000  0100 0000 0000 1010.
+         * SHL r1 r0    ;                                  Gone &lt; /                   /             /  /
+         * INFO r1      ; Prints 1073774612 decimal, which is    0100 0000 0000 0000  1000 0000 0001 0100.
+         * INFO r0      ; Prints 2684370954.</pre> 
+         * </div>
          */
         { Opcode::SHL_R,   { "SHL", { Opcode::REGISTER } } },
         { Opcode::SHL_R_R, { "SHL", { Opcode::REGISTER, Opcode::REGISTER } } },
@@ -709,13 +743,45 @@ namespace moss
 
         // Function commands {{{
         /**
-         * Function call
+         * Function call.
+         * Like the JMP command it changes where the program is running, however it also keeps track of the current location. 
+         * When used with the RETURN command the program will return to the same spot and continue running.
+         *
+         * <div>Typically functions have arguments that you can pass to them. Arguments are usually communicated via the stack (PUSH command).</div>
+         * <div>CALL can be used multiple times if a function calls another function, as long as there is a RETURN for ever CALL everything will work out.</div>
+         *
+         * <div>For example:<br>
+         * Lets make a function that multiplies a number by 2 and subtracts 1, because why not.
+         * <pre>
+         * PUSH 5       ; Put our argument onto the stack
+         * CALL my_func ; This will jump to the my_func label and continue executing from there.
+         * POP r0       ; Store the result of the function into register 0
+         * INFO r0      ; Prints 9, which is 5 * 2 - 1
+         *
+         * ; Lets call the function again!
+         * PUSH 20      ; Put our argument onto the stack
+         * CALL my_func
+         * POP r1       ; Store the result of the function into register 1
+         * INFO r1      ; Prints 39, which is 20 * 2 - 1
+         *
+         * HALT         ; If we don't halt here, the CPU will happily keep executing the function below.
+         *
+         *
+         * my_func:
+         * POP r10       ; Take the argument off the stack and put it into put it into register 10 (chosen at random).
+         * MUL r10 2
+         * DEC r10
+         *
+         * PUSH r10     ; Now that we've calculated our result, we put it onto the stack
+         * RETURN       ; The function has finished so go back to where we started.</pre>
+         * </div>
          */
         { Opcode::CALL_I, { "CALL", { Opcode::INT_NUMBER } } },
         { Opcode::CALL_R, { "CALL", { Opcode::REGISTER } } },
 
         /**
          * Function return
+         * Return to the original point from where a function was called. For a more complete example see the CALL command.
          */
         { Opcode::RETURN, { "RETURN", { } } },
         // }}}
@@ -743,14 +809,35 @@ namespace moss
         
         // Debugging commands {{{
         /**
-         * Print ints and strings command
+         * Print ints and strings command. Prints either a specific value, the value of a register, or an inline string to the screen.
+         * <div><strong>NOTE:</strong> No other formatting is applied. If you want to print something like "The value of register 0 = 6" 
+         * on its own line you'll need 3 PRINT commands.</div>
+         *
+         * <div>For example:
+         * <pre>MOV r0 9
+         * PRINT r0
+         * PRINT 7
+         * PRINT "Hi there"     ; At this point the screen will have 
+         * &nbsp;                    ; 97Hi there
+         *
+         * PRINT "The result is "
+         * PRINT r0
+         * PRINT "\nYay"        ; This will print to the screen
+         * &nbsp;                    ; The result is 9
+         * &nbsp;                    ; Yay</pre>
+         * </div>
          */
         { Opcode::PRINT_R, { "PRINT", { Opcode::REGISTER } } },
         { Opcode::PRINT_I, { "PRINT", { Opcode::INT_NUMBER } } },
         { Opcode::PRINT_S, { "PRINT", { Opcode::STRING } } },
         
         /**
-         * Print floats
+         * Print floats. Like the PRINT command however it supports printing floating values.
+         *
+         * <div>For example:
+         * <pre>MOV r0 5.6
+         * PRINT r0         ; Prints 5.6</pre>
+         * </div>
          */
         { Opcode::PRINTF_R, { "PRINTF", { Opcode::REGISTER } } },
         { Opcode::PRINTF_I, { "PRINTF", { Opcode::FLOAT_NUMBER } } },
@@ -761,11 +848,11 @@ namespace moss
         { Opcode::INFO_R, { "INFO", { Opcode::REGISTER } } },
 
         /**
-         * Get integer from keyboard.
+         * Get integer from keyboard and stores the result in a register.
          */
         { Opcode::INPUT_R, { "INPUT", { Opcode::REGISTER } } },
         /**
-         * Get float from keyboard.
+         * Get float from keyboard and stores the result in a register.
          */
         { Opcode::INPUTF_R, { "INPUTF", { Opcode::REGISTER } } },
         
