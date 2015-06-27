@@ -20,11 +20,19 @@ namespace moss
                 // MOV {{{
                 MOV_R_R,
                 MOV_R_I,
-                MOV_M_R,
                 
+                MOV_M_R,
                 MOV_R_M,
                 MOV_M_I,
                 MOV_M_M,
+
+                MOV_IM_R,
+                MOV_R_IM,
+                MOV_IM_I,
+                MOV_IM_IM,
+
+                MOV_IM_M,
+                MOV_M_IM,
 
                 MOV_R_F,
                 MOV_F_R,
@@ -229,6 +237,7 @@ namespace moss
                 FLOAT_NUMBER,
                 REGISTER,
                 MEMORY,
+                INT_MEMORY,
                 LABEL,
                 NUMBER,
                 CONDITION,

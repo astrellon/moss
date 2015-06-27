@@ -325,6 +325,9 @@ namespace moss
             {
                 switch (types[i - type_index - 1])
                 {
+                    case Opcode::INT_MEMORY:
+                        writeU(get_memory_int(line[i]));
+                        break;
                     case Opcode::INT_NUMBER:
                         writeU(parse_int(line[i]));
                         break;
@@ -422,40 +425,10 @@ namespace moss
 
 
         // Is a number
-        if (Utils::is_int_digit(token[0]) ||
-            Utils::is_float_digit(token[0], true))
+        auto number = is_number(token, 0);
+        if (number.is_number())
         {
-            bool is_float = false;
-            bool is_hex = false;
-            for (auto i = 1u; i < token.size(); ++i)
-            {
-                if (i == 1u && token[1u] == 'x')
-                {
-                    if (token[0] == '0')
-                    {
-                        is_hex = true;
-                        continue;
-                    }
-                    return Opcode::UNKNOWN_TYPE;
-                }
-                if (!Utils::is_int_digit(token[i]) &&
-                    !Utils::is_float_digit(token[i], false) &&
-                    !Utils::is_hex_digit(token[i]))
-                {
-                    return Opcode::UNKNOWN_TYPE;
-                }
-                if (token[i] == '.' || token[i] == 'f')
-                {
-                    is_float = true;
-                }
-            }
-            
-            if (is_float && is_hex)
-            {
-                return Opcode::UNKNOWN_TYPE;
-            }
-
-            return is_float ? Opcode::FLOAT_NUMBER : Opcode::INT_NUMBER;
+            return number.is_float() ? Opcode::FLOAT_NUMBER : Opcode::INT_NUMBER;
         }
 
         // Is register
@@ -473,6 +446,14 @@ namespace moss
             if (is_register(token, 1))
             {
                 return Opcode::MEMORY;
+            }
+            else 
+            {
+                number = is_number(token, 1);
+                if (number.is_number() && !number.is_float())
+                {
+                    return Opcode::INT_MEMORY;
+                }
             }
             return Opcode::UNKNOWN_TYPE;
         }
@@ -504,17 +485,67 @@ namespace moss
             return false;
         }
 
-        for (auto i = index + 1; i < token.size(); ++i)
+        auto number = is_number(token, index + 1);
+        return number.is_number() && !number.is_float();
+    }
+
+    Assembler::NumberResult Assembler::is_number(const std::string &token, std::size_t index)
+    {
+        if (Utils::is_int_digit(token[index]) ||
+            Utils::is_float_digit(token[index], true))
         {
-            if (!Utils::is_int_digit(token[i]))
+            auto is_float = false;
+            auto is_hex = false;
+            for (auto i = index + 1; i < token.size(); ++i)
             {
-                return false;
+                if (i == 1u && token[index + 1] == 'x')
+                {
+                    if (token[index] == '0')
+                    {
+                        is_hex = true;
+                        continue;
+                    }
+                    return NumberResult(false, false, true, true);
+                }
+                if (!Utils::is_int_digit(token[i]) &&
+                    !Utils::is_float_digit(token[i], false) &&
+                    !Utils::is_hex_digit(token[i]))
+                {
+                    return NumberResult(false, false, true, true);
+                }
+                if (token[i] == '.' || token[i] == 'f')
+                {
+                    is_float = true;
+                }
             }
+            
+            if (is_float && is_hex)
+            {
+                return NumberResult(false, false, true, true);
+            }
+
+            return NumberResult(is_float, is_hex, true, false);
         }
-        return true;
+
+        return NumberResult(false, false, false, false);
     }
 
     uint32_t Assembler::get_register_value(const std::string &value)
+    {
+        auto index = 0u;
+        while (!Utils::is_int_digit(value[index]))
+        {
+            ++index;
+        }
+        if (index >= value.size())
+        {
+            return -1;
+        }
+
+        return parse_int(value.substr(index));
+    }
+
+    uint32_t Assembler::get_memory_int(const std::string &value)
     {
         auto index = 0u;
         while (!Utils::is_int_digit(value[index]))

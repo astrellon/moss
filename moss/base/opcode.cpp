@@ -96,11 +96,19 @@ namespace moss
 		// MOV {{{
 		{ std::string("MOV_R_R"), Opcode::MOV_R_R },
 		{ std::string("MOV_R_I"), Opcode::MOV_R_I },
-		{ std::string("MOV_M_R"), Opcode::MOV_M_R },
 
+		{ std::string("MOV_M_R"), Opcode::MOV_M_R },
 		{ std::string("MOV_R_M"), Opcode::MOV_R_M },
 		{ std::string("MOV_M_I"), Opcode::MOV_M_I },
 		{ std::string("MOV_M_M"), Opcode::MOV_M_M },
+
+		{ std::string("MOV_IM_R"), Opcode::MOV_IM_R },
+		{ std::string("MOV_R_IM"), Opcode::MOV_R_IM },
+		{ std::string("MOV_IM_I"), Opcode::MOV_IM_I },
+		{ std::string("MOV_IM_IM"), Opcode::MOV_IM_IM },
+		
+        { std::string("MOV_M_IM"), Opcode::MOV_M_IM },
+        { std::string("MOV_IM_M"), Opcode::MOV_IM_M },
 
 		{ std::string("MOV_R_F"), Opcode::MOV_R_F },
 		{ std::string("MOV_F_R"), Opcode::MOV_F_R },
@@ -292,16 +300,60 @@ namespace moss
          *
          * <div>For example:
          * <pre>MOV r0 5         ; Sets register 0 to 5.
-         * MOV r1 r0        ; Sets reigster 1 to register 0</pre>
+         * MOV r1 r0        ; Sets reigster 1 to register 0
+         *
+         * MOV @r0 r1       ; Set the memory at the position in register 0 
+         * &nbsp;                ; to the value in register 1
+         * MOV r1 @r0       ; Set the value of register 1 to the value in
+         * &nbsp;                ; memory in the position in register 0.
+         *
+         * MOV @r1 3        ; Set the memory at the position in register 1
+         * &nbsp;                ; to the integer 3.
+         * MOV @r0 @r1      ; Set the memory at the position in register 0
+         * &nbsp;                ; to the value in memory at the position in
+         * &nbsp;                ; register 1.
+         *
+         * MOV @10 r1       ; Set the memory at position 10 to the value of
+         * &nbsp;                ; register 1.
+         * MOV r2 @10       ; Set register 2 to the memory at position 10.
+         *
+         * MOV @11 7.8      ; Set the memory at position 11 to the float 7.8.
+         * MOV @12 @11      ; Set the memory at position 12 to the memory
+         * &nbsp;                ; at position 11.
+         *
+         * MOV @r0 @10      ; Set the memory at the position in register 0
+         * &nbsp;                ; to the memory in position 10.
+         * MOV @12 @r0      ; Set the memory in position 12 to the memory
+         * &nbsp;                ; in the position in register 0.
+         *
+         * MOV r5 CODE_STACK_POINTER    ; Set register 5 to the value of the
+         * &nbsp;                            ; code stack pointer.
+         * MOV CODE_STACK_POINTER 234   ; Change the code stack pointer to
+         * &nbsp;                            ; start at memory location 234.
+         * MOV CODE_STACK_POINTER r5    ; Set the code stack pointer back
+         * &nbsp;                            ; to what it was before.
+         *
+         * MOV r6 ZERO      ; Set register 6 to the current ZERO flag value.
+         * MOV ZERO 1       ; Set the ZERO flag to true.
+         * MOV ZERO r6      ; Set the ZERO flag back to what it was before.</pre>
+         *
          * </div>
          */
         { Opcode::MOV_R_R, { "MOV", { Opcode::REGISTER, Opcode::REGISTER } } },
         { Opcode::MOV_R_I, { "MOV", { Opcode::REGISTER, Opcode::NUMBER } } },
+
         { Opcode::MOV_M_R, { "MOV", { Opcode::MEMORY, Opcode::REGISTER } } },
-       
         { Opcode::MOV_R_M, { "MOV", { Opcode::REGISTER, Opcode::MEMORY } } },
         { Opcode::MOV_M_I, { "MOV", { Opcode::MEMORY, Opcode::NUMBER } } },
         { Opcode::MOV_M_M, { "MOV", { Opcode::MEMORY, Opcode::MEMORY } } },
+        
+        { Opcode::MOV_IM_R,  { "MOV", { Opcode::INT_MEMORY, Opcode::REGISTER } } },
+        { Opcode::MOV_R_IM,  { "MOV", { Opcode::REGISTER, Opcode::INT_MEMORY } } },
+        { Opcode::MOV_IM_I,  { "MOV", { Opcode::INT_MEMORY, Opcode::NUMBER } } },
+        { Opcode::MOV_IM_IM, { "MOV", { Opcode::INT_MEMORY, Opcode::INT_MEMORY } } },
+        
+        { Opcode::MOV_M_IM, { "MOV", { Opcode::MEMORY, Opcode::INT_MEMORY } } },
+        { Opcode::MOV_IM_M, { "MOV", { Opcode::INT_MEMORY, Opcode::MEMORY } } },
         
         { Opcode::MOV_R_F, { "MOV", { Opcode::REGISTER, Opcode::FLAG } } },
         { Opcode::MOV_F_R, { "MOV", { Opcode::FLAG, Opcode::REGISTER } } },
@@ -378,8 +430,8 @@ namespace moss
          * For example:
          * <pre>MOV r0 5
          * CMP r0 10
-         * > INC r0     ; Won't run because 5 is not greater than 10
-         * < DEC r0     ; Will run because 5 is less than 10
+         * &gt; INC r0     ; Won't run because 5 is not greater than 10
+         * &lt; DEC r0     ; Will run because 5 is less than 10
          * == INC r0    ; Won't run because 5 does not equal 10
          * != DEC r0    ; Will run because 5 does not equal 10
          *
@@ -399,8 +451,8 @@ namespace moss
          * For example:
          * <pre>MOV r0 5.5
          * CMPF r0 10.2
-         * > ADDF r0 1.5    ; Won't run because 5.5 is not greater than 10.2
-         * < SUBF r0 1.5    ; Will run because 5.5 is less than 10.2
+         * &gt; ADDF r0 1.5    ; Won't run because 5.5 is not greater than 10.2
+         * &lt; SUBF r0 1.5    ; Will run because 5.5 is less than 10.2
          * == ADDF r0 1.5   ; Won't run because 5.5 does not equal 10.2
          * != SUBF r0 1.5   ; Will run because 5.5 does not equal 10.2
          *
@@ -639,11 +691,11 @@ namespace moss
          *
          * <div>For example:
          * <pre>MOV r0 1342185477         ; In binary this should be   0101 0000 0000 0000  0010 0000 0000 0101.
-         * ROR r0           ;                                    &gt;  \ \                   \             \ &lt; Went to the other side
+         * ROR r0           ;                                    &gt;  \ \                   \             \ &lt; Other side
          * INFO r0          ; Prints 2818576386 decimal, which is 1010 1000 0000 0000  0001 0000 0000 0010 in binary.
          * ROR r1 r0        ;                                     \ \  \                   \             \
          * INFO r1          ; Prints 1409288193 decimal, which is 0101 0100 0000 0000  0000 1000 0000 0001 in binary.
-         * INFO r0          ; Prints 2818576386.<pre>
+         * INFO r0          ; Prints 2818576386.</pre>
          * </div>
          */
         { Opcode::ROR_R,   { "ROR", { Opcode::REGISTER } } },
@@ -659,9 +711,9 @@ namespace moss
          * <pre>MOV r0 1342185477         ; In binary this should be   0101 0000 0000 0000  0010 0000 0000 0101.
          * ROL r0           ;                                     / /                   /             / /
          * INFO r0          ; Prints 2684370954 decimal, which is 1010 0000 0000 0000  0100 0000 0000 1010 in binary.
-         * ROL r1 r0        ;             Went to the other side &gt; /                   /             / /  &lt;
+         * ROL r1 r0        ;                         Other side &gt; /                   /             / /  &lt;
          * INFO r1          ; Prints 1073774613 decimal, which is 0100 0000 0000 0000  1000 0000 0001 0101 in binary.
-         * INFO r0          ; Prints 2684370954.<pre>
+         * INFO r0          ; Prints 2684370954.</pre>
          * </div>
          */
         { Opcode::ROL_R,   { "ROL", { Opcode::REGISTER } } },
@@ -872,6 +924,7 @@ namespace moss
         { Opcode::FLOAT_NUMBER,   std::string("float_number") },
         { Opcode::REGISTER,       std::string("register") },
         { Opcode::MEMORY,         std::string("memory") },
+        { Opcode::INT_MEMORY,     std::string("int_memory") },
         { Opcode::LABEL,          std::string("label") },
         { Opcode::NUMBER,         std::string("number") },
         { Opcode::CONDITION,      std::string("condition") },
@@ -907,6 +960,7 @@ namespace moss
         { Opcode::FLOAT_NUMBER,   std::string("I") },
         { Opcode::REGISTER,       std::string("R") },
         { Opcode::MEMORY,         std::string("M") },
+        { Opcode::INT_MEMORY,     std::string("IM") },
         { Opcode::LABEL,          std::string("I") },
         { Opcode::NUMBER,         std::string("I") },
         { Opcode::CONDITION,      std::string("Condition") },
@@ -942,7 +996,7 @@ namespace moss
     std::map<std::string, Opcode::NamedRegister> Opcode::s_names_to_named_reg = {
         { "PROGRAM_COUNTER",    Opcode::PROGRAM_COUNTER },
         { "STACK_POINTER",      Opcode::STACK_POINTER },
-        { "CODE_STACK_POINTER",      Opcode::CODE_STACK_POINTER },
+        { "CODE_STACK_POINTER", Opcode::CODE_STACK_POINTER },
         { "PAGE_TABLE_POINTER", Opcode::PAGE_TABLE_POINTER }
     };
     // }}}

@@ -90,10 +90,35 @@ namespace moss
             void writeS(const std::string &str);
 
             void write_setup_code();
+
+            class NumberResult
+            {
+                public:
+                    inline NumberResult(bool is_float, bool is_hex, bool is_number, bool is_error) :
+                        _is_float(is_float),
+                        _is_hex(is_hex),
+                        _is_number(is_number),
+                        _is_error(is_error)
+                    {
+                    }
+
+                    inline bool is_float() const { return _is_float; }
+                    inline bool is_hex() const { return _is_hex; }
+                    inline bool is_number() const { return _is_number; }
+                    inline bool is_error() const { return _is_error; }
+
+                private:
+                    bool _is_float;
+                    bool _is_hex;
+                    bool _is_number;
+                    bool _is_error;
+            };
             
             static Opcode::Type get_token_type(const std::string &token, bool is_first_token);
             static bool is_register(const std::string &token, std::size_t index);
+            static NumberResult is_number(const std::string &token, std::size_t index);
             static uint32_t get_register_value(const std::string &value);
+            static uint32_t get_memory_int(const std::string &value);
             static std::string process_label(const std::string &token);
 
             static std::string process_string_value(const std::string &str);

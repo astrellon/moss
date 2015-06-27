@@ -312,7 +312,7 @@ namespace moss
                     iarg2 = next_pc_int();
                     if (meets_condition)
                     {
-                        _regs.uint_reg(arg1, iarg2);
+                        _regs.int_reg(arg1, iarg2);
                     }
                     break;
 
@@ -331,7 +331,7 @@ namespace moss
                     arg2 = next_pc_uint();
                     if (meets_condition)
                     {
-                        _regs.uint_reg(arg1, _mmu.uint_data(_regs.int_reg(arg2)));
+                        _regs.int_reg(arg1, _mmu.int_data(_regs.uint_reg(arg2)));
                     }
                     break;
                 case Opcode::MOV_M_I:
@@ -340,7 +340,7 @@ namespace moss
                     iarg2 = next_pc_int();
                     if (meets_condition)
                     {
-                        _mmu.uint_data(_regs.uint_reg(arg1), iarg2);
+                        _mmu.int_data(_regs.uint_reg(arg1), iarg2);
                     }
                     break;
                 case Opcode::MOV_M_M:
@@ -349,7 +349,64 @@ namespace moss
                     arg2 = next_pc_uint();
                     if (meets_condition)
                     {
-                        _mmu.uint_data(_regs.uint_reg(arg1), _mmu.uint_data(_regs.int_reg(arg2)));
+                        _mmu.int_data(_regs.uint_reg(arg1), _mmu.int_data(_regs.uint_reg(arg2)));
+                    }
+                    break;
+
+                    // Int memory
+                case Opcode::MOV_IM_R:
+                    // mem[arg1] = reg[arg2]
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    if (meets_condition)
+                    {
+                        _mmu.int_data(arg1, _regs.uint_reg(arg2));
+                    }
+                    break;
+                case Opcode::MOV_R_IM:
+                    // reg[arg1] = mem[arg2]
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    if (meets_condition)
+                    {
+                        _regs.int_reg(arg1, _mmu.int_data(arg2));
+                    }
+                    break;
+                case Opcode::MOV_IM_I:
+                    // mem[arg1] = arg2
+                    arg1 = next_pc_uint();
+                    iarg2 = next_pc_int();
+                    if (meets_condition)
+                    {
+                        _mmu.int_data(arg1, iarg2);
+                    }
+                    break;
+                case Opcode::MOV_IM_IM:
+                    // mem[arg1] = mem[arg2]
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    if (meets_condition)
+                    {
+                        _mmu.int_data(arg1, _mmu.int_data(arg2));
+                    }
+                    break;
+
+                case Opcode::MOV_M_IM:
+                    // mem[reg[arg1]] = mem[arg2]
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    if (meets_condition)
+                    {
+                        _mmu.int_data(_regs.uint_reg(arg1), _mmu.int_data(arg2));
+                    }
+                    break;
+                case Opcode::MOV_IM_M:
+                    // mem[arg1] = mem[reg[arg2]]
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    if (meets_condition)
+                    {
+                        _mmu.int_data(arg1, _mmu.int_data(_regs.uint_reg(arg2)));
                     }
                     break;
 
