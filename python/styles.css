@@ -28,6 +28,13 @@ body {
     margin: 0 1em 0 1em;
 }
 
+.command {
+    color: #83A598;
+}
+.comment {
+    color: #738e1d;
+}
+
 h1 {
     text-shadow: 0 2px 3px #aaa;
 }

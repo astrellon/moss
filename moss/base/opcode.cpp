@@ -491,7 +491,8 @@ namespace moss
          * ADD r0 4
          * INFO r0      ; Prints 10, as 4 has been added to the register.
          * ADD r1 r0 6  
-         * INFO r0      ; Still prints 10 as the result of the add wasn't put back into the same register.
+         * INFO r0      ; Still prints 10 as the result of the add wasn't 
+         * &nbsp;            ; put back into the same register.
          * INFO r1      ; Prints 16 as the result was stored into a different register.</pre>
          * </div>
          */
@@ -509,7 +510,8 @@ namespace moss
          * <div>For example:
          * <pre>MOV r0 7.6
          * ADDF r0 3.4
-         * INFO r0      ; Prints 10.1, as the two values have been added together and stored back into register 0.
+         * INFO r0      ; Prints 10.1, as the two values have been added together 
+         * &nbsp;            ; and stored back into register 0.
          * ADDF r1 r0 7.5
          * INFO r0      ; Prints 10.1
          * INFO r1      ; Prints 17.6
@@ -862,7 +864,7 @@ namespace moss
         // Debugging commands {{{
         /**
          * Print ints and strings command. Prints either a specific value, the value of a register, or an inline string to the screen.
-         * <div><strong>NOTE:</strong> No other formatting is applied. If you want to print something like "The value of register 0 = 6" 
+         * <div><strong>Note:</strong> No other formatting is applied. If you want to print something like "The value of register 0 = 6" 
          * on its own line you'll need 3 PRINT commands.</div>
          *
          * <div>For example:

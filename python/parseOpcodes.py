@@ -1,5 +1,6 @@
 import re;
 import collections;
+import io;
 
 class OpcodeParser:
 
@@ -137,11 +138,23 @@ class Opcode:
 
 class HtmlOutput:
 
+    ignore = dict({
+        "MOSS": 1,
+        "CPU": 1,
+        "PROGRAM_COUNTER": 1,
+        "STACK_POINTER": 1,
+        "CODE_STACK_POINTER": 1,
+        "MMU": 1,
+        "NEGATIVE": 1,
+        "ZERO": 1
+    })
+
     def __init__(self, opcodeParser):
         self.opcodeParser = opcodeParser
 
     def writeToFile(self, filename):
-        output = open(filename, "w")
+        #output = open(filename, "w")
+        output = io.StringIO()
 
         output.write("""<html>
         <head>
@@ -156,10 +169,19 @@ class HtmlOutput:
                 This document outlines all the commands available for use in MOSS along with each form 
                 of each command and some information about the command.
             </p>
+        </div>
 
+        <div class="command-block">
+            <h3>Command Argument Types</h3>
             <p>
-                First some explaination about each of the different form types:
-            </p>
+                Each command has a list of acceptable arguments that can be used (including no arguments).
+                The types must match a valid form of a command otherwise the code is invalid.
+
+                <div>For example:
+<pre>
+</pre>
+</div>
+                
             <div class="table-block">
                 <table>
                     <thead>
@@ -429,7 +451,7 @@ INFO r2     ; Tells you what the code stack pointer was at the start.</pre>
 
         """)
         
-        lineTemplate = """<div class="command-block">
+        lineTemplate = """<div id="tag_{command}" class="command-block">
             <h3>{command}</h3>
             Forms:
             <ul>
@@ -466,6 +488,28 @@ INFO r2     ; Tells you what the code stack pointer was at the start.</pre>
 
         output.write("""</body>
         </html>""")
+
+        fileOutput = open(filename, "w")
+        result = re.sub(r'((<h\d.*?\>)|(tag_))?([A-Z][A-Z_]+)', HtmlOutput.commandMatch, output.getvalue())
+
+        result = re.sub(r'[^&\w+](;[^\n]+?)\n', HtmlOutput.commentMatch, result)
+        fileOutput.write(result)
+
+    def commandMatch(matchObj):
+        m = matchObj.group(0)
+        matches = matchObj.groups()[0:3]
+        for check in matches:
+            if check is not None:
+                return m
+
+        m = matchObj.group(4)
+        if m in HtmlOutput.ignore:
+            return m
+
+        return '<a href="#tag_' + m + '" class="command">' + m + '</a>'
+
+    def commentMatch(matchObj):
+        return '<span class="comment">' + matchObj.group(0) + '</span>'
 
 fileParser = OpcodeParser()
 fileParser.parseFile("../moss/base/opcode.cpp")
