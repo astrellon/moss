@@ -223,6 +223,35 @@ namespace moss
 		{ std::string("SHL_R_R"), Opcode::SHL_R_R },
 		// }}}
 
+        // AND {{{
+        { std::string("AND_R_R"),   Opcode::AND_R_R },
+		{ std::string("AND_R_R_R"), Opcode::AND_R_R_R },
+		{ std::string("AND_R_I_R"), Opcode::AND_R_I_R },
+		{ std::string("AND_R_R_I"), Opcode::AND_R_R_I },
+		{ std::string("AND_R_I"),   Opcode::AND_R_I },
+        // }}}
+
+        // OR {{{
+        { std::string("OR_R_R"),   Opcode::OR_R_R },
+		{ std::string("OR_R_R_R"), Opcode::OR_R_R_R },
+		{ std::string("OR_R_I_R"), Opcode::OR_R_I_R },
+		{ std::string("OR_R_R_I"), Opcode::OR_R_R_I },
+		{ std::string("OR_R_I"),   Opcode::OR_R_I },
+        // }}}
+
+        // XOR {{{
+        { std::string("XOR_R_R"),   Opcode::XOR_R_R },
+		{ std::string("XOR_R_R_R"), Opcode::XOR_R_R_R },
+		{ std::string("XOR_R_I_R"), Opcode::XOR_R_I_R },
+		{ std::string("XOR_R_R_I"), Opcode::XOR_R_R_I },
+		{ std::string("XOR_R_I"),   Opcode::XOR_R_I },
+        // }}}
+
+        // NOT {{{
+        { std::string("NOT_R"),   Opcode::NOT_R },
+        { std::string("NOT_R_R"), Opcode::NOT_R_R },
+        // }}}
+
 		// Peripherals {{{
 		// SEND {{{
 		{ std::string("IO_SEND_I_I"), Opcode::IO_SEND_I_I },
@@ -289,12 +318,15 @@ namespace moss
     std::map<Opcode::Command, std::pair<std::string, std::vector<Opcode::Type> > > Opcode::s_commands_to_types = {
         // Halt
         /**
+         * @short Stops the CPU.
          * Stops the CPU from running completely.
          */
         { Opcode::HALT, { "HALT", {} } },
 
         // MOV {{{
         /** 
+         * @group Setting Data
+         * @short Move data around.
          * The MOV command is used to move data around between registers and memory.
          * It can also be used to set registers and memory to a hardcoded value.
          *
@@ -366,6 +398,8 @@ namespace moss
         
         // Unit conversion {{{
         /**
+         * @group Type Conversions
+         * @short Change ints to floats.
          * Converts a int register value into a float value.
          * Either storing the result in the same register or in another register.
          *
@@ -379,6 +413,8 @@ namespace moss
         { Opcode::INT_FLOAT_R,   { "INT_FLOAT", { Opcode::REGISTER } } },
         { Opcode::INT_FLOAT_R_R, { "INT_FLOAT", { Opcode::REGISTER, Opcode::REGISTER } } },
         /**
+         * @group Type Conversions
+         * @short Change floats to ints.
          * Converts a float register value into a int value.
          * Either storing the result in the same register or in another register.
          * <div>This can be used as a way to round down a float.</div>
@@ -396,6 +432,8 @@ namespace moss
         
         // Stack {{{
         /**
+         * @group Program Flow
+         * @short Add to stack.
          * Pushes either a number or a register value onto the stack.
          * It doesn't matter what kind of value it is.
          *
@@ -414,6 +452,8 @@ namespace moss
         { Opcode::PUSH_R, { "PUSH", { Opcode::REGISTER } } },
         { Opcode::PUSH_I, { "PUSH", { Opcode::NUMBER } } },
         /**
+         * @group Program Flow
+         * @short Take from stack.
          * Pops the top most value off the stack into a register.
          * <div>See PUSH command</div>
          */
@@ -422,6 +462,8 @@ namespace moss
         
         // CMP/CMPF {{{
         /**
+         * @group Program Flow
+         * @short Compare register and int.
          * Compare operation. Once this has been performed between a register and/or
          * an integer number, conditional operators can be used to either execute or 
          * ignore subsequent commands.
@@ -443,6 +485,8 @@ namespace moss
         { Opcode::CMP_I_R, { "CMP", { Opcode::INT_NUMBER, Opcode::REGISTER } } },
         
         /**
+         * @group Program Flow
+         * @short Compare register and float.
          * Compare operation. Once this has been performed between a register and/or
          * a float number, conditional operators can be used to either execute or
          * ignore subsequent commands.
@@ -466,6 +510,8 @@ namespace moss
         
         // Branching {{{
         /**
+         * @group Program Flow
+         * @short Change program location.
          * Changes the location of the instruction pointer.
          * Usually used to jump to a label, but can be used to just to any number.
          *
@@ -482,6 +528,8 @@ namespace moss
         
         // ADD/ADDF {{{
         /**
+         * @group Arithmetic
+         * @short Add register and register or int together.
          * Add two integer values together.
          * Either storing the result in the first register, or storing the result in 
          * another register.
@@ -503,6 +551,8 @@ namespace moss
         { Opcode::ADD_R_I,    { "ADD", { Opcode::REGISTER, Opcode::INT_NUMBER } } },
         
         /**
+         * @group Arithmetic
+         * @short Add register and register or float together.
          * Add two floats values together.
          * Either storing the result in the first register, or storing the result in 
          * another register.
@@ -526,6 +576,8 @@ namespace moss
         
         // SUB/SUBF {{{
         /**
+         * @group Arithmetic
+         * @short Subtract register from register or int.
          * Subtract two ints from each other.
          * Either storing the result into the first register, or storing the result in another register.
          *
@@ -545,6 +597,8 @@ namespace moss
         { Opcode::SUB_R_I,    { "SUB", { Opcode::REGISTER, Opcode::INT_NUMBER } } },
         
         /**
+         * @group Arithmetic
+         * @short Subtract register from register or float.
          * Subtract two floats from each other.
          * Either storing the result into the first register, or storing the result in another register.
          *
@@ -566,6 +620,8 @@ namespace moss
 
         // INC/DEC {{{
         /**
+         * @group Arithmetic
+         * @short Add one to int register.
          * Increment an integer register by one.
          *
          * <div>For example:
@@ -576,6 +632,8 @@ namespace moss
          */
         { Opcode::INC_R,  { "INC",  { Opcode::REGISTER } } },
         /**
+         * @group Arithmetic
+         * @short Add one to float register.
          * Increment a float register by one.
          *
          * <div>For example:
@@ -586,6 +644,8 @@ namespace moss
          */
         { Opcode::INCF_R, { "INCF", { Opcode::REGISTER } } },
         /**
+         * @group Arithmetic
+         * @short Take one from an int register.
          * Decrements an integer register by one.
          *
          * <div>For example:
@@ -597,6 +657,8 @@ namespace moss
          */
         { Opcode::DEC_R,  { "DEC",  { Opcode::REGISTER } } },
         /**
+         * @group Arithmetic
+         * @short Take one from a float register.
          * Decrements a float register by one.
          *
          * <div>For example:
@@ -610,6 +672,8 @@ namespace moss
         
         // MUL/MULF {{{
         /**
+         * @group Arithmetic
+         * @short Multiply register by register or int.
          * Multiply two integers together.
          *
          * <div>For example:
@@ -628,6 +692,8 @@ namespace moss
         { Opcode::MUL_R_I,    { "MUL", { Opcode::REGISTER, Opcode::INT_NUMBER } } },
         
         /**
+         * @group Arithmetic
+         * @short Multiply register by register or float.
          * Multiply two floats together.
          * 
          * <div>For example:
@@ -648,6 +714,8 @@ namespace moss
         
         // DIV/DIVF {{{
         /**
+         * @group Arithmetic
+         * @short Divide register by register or int.
          * Divide two integers.
          *
          * <div>For example:
@@ -666,6 +734,8 @@ namespace moss
         { Opcode::DIV_R_I,    { "DIV", { Opcode::REGISTER, Opcode::INT_NUMBER } } },
         
         /**
+         * @group Arithmetic
+         * @short Divide register by register or float.
          * Divide two floats.
          *
          * <div>For example:
@@ -686,6 +756,8 @@ namespace moss
         
         // ROR/ROL {{{
         /**
+         * @group Bit Manipulation
+         * @short Bit rotate to the right.
          * Bit shift rotate right.
          * Right rotate shifting basically pushes all the bits in a number one over to the right. If the right most
          * bit is 'pushed off' the edge it comes back to the left side of the number. So if you were to rotate 
@@ -704,6 +776,8 @@ namespace moss
         { Opcode::ROR_R_R, { "ROR", { Opcode::REGISTER, Opcode::REGISTER } } },
         
         /**
+         * @group Bit Manipulation
+         * @short Bit rotate to the left.
          * Bit shift rotate left.
          * Left rotate shifting basically pushes all the bits in a number one over to the left. If the left most
          * bit is 'pushed off' the edge it comes back to the right side of the number. So if you were to rotate 
@@ -724,6 +798,8 @@ namespace moss
         
         // SHR/SHL {{{
         /**
+         * @group Bit Manipulation
+         * @short Bit shift to the right.
          * Bit shift right.
          * Shift right basically pushes a zero in from the left and pushes all the bits in a number one over to the right. If the right most
          * bit is 'pushed off' is it gone. So if you were to shift right 32 times the number would be entirely made of zeroes.
@@ -742,6 +818,8 @@ namespace moss
         { Opcode::SHR_R_R, { "SHR", { Opcode::REGISTER, Opcode::REGISTER } } },
         
         /**
+         * @group Bit Manipulation
+         * @short Bit shift to the left.
          * Bit shift left.
          * Shift left basically pushes a zero in from the right and pushes all the bits in a number one over to the left. If the left most
          * bit is 'pushed off' is it gone. So if you were to shift left 32 times the number would be entirely made of zeroes.
@@ -758,45 +836,120 @@ namespace moss
          */
         { Opcode::SHL_R,   { "SHL", { Opcode::REGISTER } } },
         { Opcode::SHL_R_R, { "SHL", { Opcode::REGISTER, Opcode::REGISTER } } },
-        // }}}
-
-        // Peripherals {{{
-
-        // SEND {{{
+        
         /**
-         * Send data to a port.
-         * Alternatively send data to a port and save the response to a register.
+         * @group Bit Manipulation
+         * @short And bits of register together.
+         * To 'and' two bit together is to require that both bits be 1 for the output to be 1.
+         * <table>
+         *    <thead>
+         *        <th>First</th>
+         *        <th>Second</th>
+         *        <th>Result</th>
+         *    </thead>
+         *     <tbody>
+         *         <tr> <td> 0 </td> <td> 0 </td> <td> 0 </td> </tr>
+         *         <tr> <td> 0 </td> <td> 1 </td> <td> 0 </td> </tr>
+         *         <tr> <td> 1 </td> <td> 0 </td> <td> 0 </td> </tr>
+         *         <tr> <td> 1 </td> <td> 1 </td> <td> 1 </td> </tr>
+         *     </tbody>
+         * </table>
+         *
+         * <div>For example:
+         * <pre>MOV r0 5             ;  5 = 0101 in binary
+         * AND r1 r0 12         ; 12 = 1100 in binary
+         * INFO r1              ; Prints 4. Which is 0100 in binary.</pre>
+         * </div>
          */
-        { Opcode::IO_SEND_I_I, { "IO_SEND", { Opcode::INT_NUMBER, Opcode::NUMBER } } },
-        { Opcode::IO_SEND_R_I, { "IO_SEND", { Opcode::REGISTER, Opcode::NUMBER } } },
-        { Opcode::IO_SEND_I_R, { "IO_SEND", { Opcode::INT_NUMBER, Opcode::REGISTER } } },
-        { Opcode::IO_SEND_R_R, { "IO_SEND", { Opcode::REGISTER, Opcode::REGISTER } } },
+        { Opcode::AND_R_R,    { "AND", { Opcode::REGISTER, Opcode::REGISTER } } },
+        { Opcode::AND_R_R_R,  { "AND", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
+        { Opcode::AND_R_I_R,  { "AND", { Opcode::REGISTER, Opcode::INT_NUMBER, Opcode::REGISTER } } },
+        { Opcode::AND_R_R_I,  { "AND", { Opcode::REGISTER, Opcode::REGISTER, Opcode::INT_NUMBER } } },
+        { Opcode::AND_R_I,    { "AND", { Opcode::REGISTER, Opcode::INT_NUMBER } } },
         
-        { Opcode::IO_SEND_R_I_I, { "IO_SEND", { Opcode::REGISTER, Opcode::INT_NUMBER, Opcode::NUMBER } } },
-        { Opcode::IO_SEND_R_R_I, { "IO_SEND", { Opcode::REGISTER, Opcode::REGISTER, Opcode::NUMBER } } },
-        { Opcode::IO_SEND_R_I_R, { "IO_SEND", { Opcode::REGISTER, Opcode::INT_NUMBER, Opcode::REGISTER } } },
-        { Opcode::IO_SEND_R_R_R, { "IO_SEND", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
-        // }}}
-        
-        // ASSIGN {{{
         /**
-         * Assigning memory to a port.
+         * @group Bit Manipulation
+         * @short Or bits of register together.
+         * To 'or' two bits together is to require that either bits be 1 for the output to be 1.
+         * <div class="table-block">
+         * <table class="truth-table">
+         *    <thead>
+         *        <th>First</th>
+         *        <th>Second</th>
+         *        <th>Result</th>
+         *    </thead>
+         *     <tbody>
+         *         <tr> <td> 0 </td> <td> 0 </td> <td> 0 </td> </tr>
+         *         <tr> <td> 0 </td> <td> 1 </td> <td> 1 </td> </tr>
+         *         <tr> <td> 1 </td> <td> 0 </td> <td> 1 </td> </tr>
+         *         <tr> <td> 1 </td> <td> 1 </td> <td> 1 </td> </tr>
+         *     </tbody>
+         * </table>
+         * </div>
+         *
+         * <div>For example:
+         * <pre>MOV r0 5             ;  5 = 0101 in binary
+         * OR r1 r0 12          ; 12 = 1100 in binary
+         * INFO r1              ; Prints 13. Which is 1101 in binary.</pre>
+         * </div>
          */
-        { Opcode::IO_ASSIGN_R_R_R, { "IO_ASSIGN", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
-        { Opcode::IO_ASSIGN_R_R_I, { "IO_ASSIGN", { Opcode::REGISTER, Opcode::REGISTER, Opcode::NUMBER } } },
-        { Opcode::IO_ASSIGN_R_I_R, { "IO_ASSIGN", { Opcode::REGISTER, Opcode::NUMBER, Opcode::REGISTER } } },
-        { Opcode::IO_ASSIGN_R_I_I, { "IO_ASSIGN", { Opcode::REGISTER, Opcode::NUMBER, Opcode::NUMBER } } },
-        
-        { Opcode::IO_ASSIGN_I_R_R, { "IO_ASSIGN", { Opcode::NUMBER, Opcode::REGISTER, Opcode::REGISTER } } },
-        { Opcode::IO_ASSIGN_I_R_I, { "IO_ASSIGN", { Opcode::NUMBER, Opcode::REGISTER, Opcode::NUMBER } } },
-        { Opcode::IO_ASSIGN_I_I_R, { "IO_ASSIGN", { Opcode::NUMBER, Opcode::NUMBER, Opcode::REGISTER } } },
-        { Opcode::IO_ASSIGN_I_I_I, { "IO_ASSIGN", { Opcode::NUMBER, Opcode::NUMBER, Opcode::NUMBER } } },
-        // }}}
+        { Opcode::OR_R_R,    { "OR", { Opcode::REGISTER, Opcode::REGISTER } } },
+        { Opcode::OR_R_R_R,  { "OR", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
+        { Opcode::OR_R_I_R,  { "OR", { Opcode::REGISTER, Opcode::INT_NUMBER, Opcode::REGISTER } } },
+        { Opcode::OR_R_R_I,  { "OR", { Opcode::REGISTER, Opcode::REGISTER, Opcode::INT_NUMBER } } },
+        { Opcode::OR_R_I,    { "OR", { Opcode::REGISTER, Opcode::INT_NUMBER } } },
+
+        /**
+         * @group Bit Manipulation
+         * @short XOR bits of register together.
+         * To 'xor' two bits together is to require that only one (not both) of the bits be 1 
+         * for the output to be 1.
+         * <table>
+         *    <thead>
+         *        <th>First</th>
+         *        <th>Second</th>
+         *        <th>Result</th>
+         *    </thead>
+         *     <tbody>
+         *         <tr> <td> 0 </td> <td> 0 </td> <td> 0 </td> </tr>
+         *         <tr> <td> 0 </td> <td> 1 </td> <td> 1 </td> </tr>
+         *         <tr> <td> 1 </td> <td> 0 </td> <td> 1 </td> </tr>
+         *         <tr> <td> 1 </td> <td> 1 </td> <td> 0 </td> </tr>
+         *     </tbody>
+         * </table>
+         *
+         * <div>For example:
+         * <pre>MOV r0 5             ;  5 = 0101 in binary
+         * XOR r1 r0 12         ; 12 = 1100 in binary
+         * INFO r1              ; Prints 9. Which is 1001 in binary.</pre>
+         * </div>
+         */
+        { Opcode::XOR_R_R,    { "XOR", { Opcode::REGISTER, Opcode::REGISTER } } },
+        { Opcode::XOR_R_R_R,  { "XOR", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
+        { Opcode::XOR_R_I_R,  { "XOR", { Opcode::REGISTER, Opcode::INT_NUMBER, Opcode::REGISTER } } },
+        { Opcode::XOR_R_R_I,  { "XOR", { Opcode::REGISTER, Opcode::REGISTER, Opcode::INT_NUMBER } } },
+        { Opcode::XOR_R_I,    { "XOR", { Opcode::REGISTER, Opcode::INT_NUMBER } } },
+
+        /**
+         * @group Bit Manipulation
+         * @short Not bits of register.
+         * To 'not' a number means to flip all the 1s to 0s and the 0s to 1s.
+         *
+         * <div>For example:
+         * <pre>MOV r0 5             ;  6 = 0110 in binary
+         * NOT r1 r0            ; 
+         * INFO r1              ; Prints 9. Which is 1001 in binary.</pre>
+         * </div>
+         */
+        { Opcode::NOT_R,      { "NOT", { Opcode::REGISTER } } },
+        { Opcode::NOT_R_R,    { "NOT", { Opcode::REGISTER, Opcode::REGISTER } } },
         
         // }}}
 
         // Function commands {{{
         /**
+         * @group Program Flow
+         * @short Call function.
          * Function call.
          * Like the JMP command it changes where the program is running, however it also keeps track of the current location. 
          * When used with the RETURN command the program will return to the same spot and continue running.
@@ -834,15 +987,58 @@ namespace moss
         { Opcode::CALL_R, { "CALL", { Opcode::REGISTER } } },
 
         /**
+         * @group Program Flow
+         * @short End function.
          * Function return
          * Return to the original point from where a function was called. For a more complete example see the CALL command.
          */
         { Opcode::RETURN, { "RETURN", { } } },
         // }}}
         
+        // Peripherals {{{
+
+        // SEND {{{
+        /**
+         * @group Hardware
+         * @short Send data to a port.
+         * Send data to a port.
+         * Alternatively send data to a port and save the response to a register.
+         */
+        { Opcode::IO_SEND_I_I, { "IO_SEND", { Opcode::INT_NUMBER, Opcode::NUMBER } } },
+        { Opcode::IO_SEND_R_I, { "IO_SEND", { Opcode::REGISTER, Opcode::NUMBER } } },
+        { Opcode::IO_SEND_I_R, { "IO_SEND", { Opcode::INT_NUMBER, Opcode::REGISTER } } },
+        { Opcode::IO_SEND_R_R, { "IO_SEND", { Opcode::REGISTER, Opcode::REGISTER } } },
+        
+        { Opcode::IO_SEND_R_I_I, { "IO_SEND", { Opcode::REGISTER, Opcode::INT_NUMBER, Opcode::NUMBER } } },
+        { Opcode::IO_SEND_R_R_I, { "IO_SEND", { Opcode::REGISTER, Opcode::REGISTER, Opcode::NUMBER } } },
+        { Opcode::IO_SEND_R_I_R, { "IO_SEND", { Opcode::REGISTER, Opcode::INT_NUMBER, Opcode::REGISTER } } },
+        { Opcode::IO_SEND_R_R_R, { "IO_SEND", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
+        // }}}
+        
+        // ASSIGN {{{
+        /**
+         * @group Hardware
+         * @short Assign port a memory space.
+         * Assigning memory to a port.
+         */
+        { Opcode::IO_ASSIGN_R_R_R, { "IO_ASSIGN", { Opcode::REGISTER, Opcode::REGISTER, Opcode::REGISTER } } },
+        { Opcode::IO_ASSIGN_R_R_I, { "IO_ASSIGN", { Opcode::REGISTER, Opcode::REGISTER, Opcode::NUMBER } } },
+        { Opcode::IO_ASSIGN_R_I_R, { "IO_ASSIGN", { Opcode::REGISTER, Opcode::NUMBER, Opcode::REGISTER } } },
+        { Opcode::IO_ASSIGN_R_I_I, { "IO_ASSIGN", { Opcode::REGISTER, Opcode::NUMBER, Opcode::NUMBER } } },
+        
+        { Opcode::IO_ASSIGN_I_R_R, { "IO_ASSIGN", { Opcode::NUMBER, Opcode::REGISTER, Opcode::REGISTER } } },
+        { Opcode::IO_ASSIGN_I_R_I, { "IO_ASSIGN", { Opcode::NUMBER, Opcode::REGISTER, Opcode::NUMBER } } },
+        { Opcode::IO_ASSIGN_I_I_R, { "IO_ASSIGN", { Opcode::NUMBER, Opcode::NUMBER, Opcode::REGISTER } } },
+        { Opcode::IO_ASSIGN_I_I_I, { "IO_ASSIGN", { Opcode::NUMBER, Opcode::NUMBER, Opcode::NUMBER } } },
+        // }}}
+        
+        // }}}
+        
         // Interrupt commands {{{
         /**
-         * Register interrupt
+         * @group Hardware
+         * @short Register interrupt handler.
+         * Register interrupt handler.
          */
         { Opcode::REGI_I_I, { "REGI", { Opcode::INT_NUMBER, Opcode::INT_NUMBER } } },
         { Opcode::REGI_I_R, { "REGI", { Opcode::INT_NUMBER, Opcode::REGISTER } } },
@@ -850,19 +1046,25 @@ namespace moss
         { Opcode::REGI_R_R, { "REGI", { Opcode::REGISTER, Opcode::REGISTER } } },
 
         /**
-         * Trigger int
+         * @group Hardware
+         * @short Trigger interrupt.
+         * Trigger interrupt.
          */
         { Opcode::INT_I, { "INT", { Opcode::INT_NUMBER } } },
         { Opcode::INT_R, { "INT", { Opcode::REGISTER } } },
 
         /**
-         * Return from interrupt.
+         * @group Hardware
+         * @short End interrupt handler.
+         * Return from interrupt handler.
          */
         { Opcode::RETI,  { "RETI", { } } },
         // }}}
         
         // Debugging commands {{{
         /**
+         * @group Debugging
+         * @short Print int register, value or string to screen.
          * Print ints and strings command. Prints either a specific value, the value of a register, or an inline string to the screen.
          * <div><strong>Note:</strong> No other formatting is applied. If you want to print something like "The value of register 0 = 6" 
          * on its own line you'll need 3 PRINT commands.</div>
@@ -886,6 +1088,8 @@ namespace moss
         { Opcode::PRINT_S, { "PRINT", { Opcode::STRING } } },
         
         /**
+         * @group Debugging
+         * @short Print float register or value to screen.
          * Print floats. Like the PRINT command however it supports printing floating values.
          *
          * <div>For example:
@@ -897,20 +1101,28 @@ namespace moss
         { Opcode::PRINTF_I, { "PRINTF", { Opcode::FLOAT_NUMBER } } },
         
         /**
+         * @group Debugging
+         * @short Print all information about a register to screen.
          * Displays the register number, its value as an integer and as a float.
          */
         { Opcode::INFO_R, { "INFO", { Opcode::REGISTER } } },
 
         /**
+         * @group Debugging
+         * @short Get integer from keyboard.
          * Get integer from keyboard and stores the result in a register.
          */
         { Opcode::INPUT_R, { "INPUT", { Opcode::REGISTER } } },
         /**
+         * @group Debugging
+         * @short Get float from keyboard.
          * Get float from keyboard and stores the result in a register.
          */
         { Opcode::INPUTF_R, { "INPUTF", { Opcode::REGISTER } } },
         
         /**
+         * @group Debugging
+         * @short Store current time in register.
          * Get the current time as a uint and store it in a register.
          */
         { Opcode::TIME_R, { "TIME", { Opcode::REGISTER } } },

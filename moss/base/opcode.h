@@ -160,6 +160,33 @@ namespace moss
                 SHL_R_R,
                 // }}}
                 
+                // AND {{{
+                AND_R_R,
+                AND_R_R_R,
+                AND_R_I_R,
+                AND_R_R_I,
+                AND_R_I,
+                // }}}
+                
+                // OR {{{
+                OR_R_R,
+                OR_R_R_R,
+                OR_R_I_R,
+                OR_R_R_I,
+                OR_R_I,
+                // }}}
+                
+                // XOR {{{
+                XOR_R_R,
+                XOR_R_R_R,
+                XOR_R_I_R,
+                XOR_R_R_I,
+                XOR_R_I,
+                // }}}
+                
+                // NOT {{{
+                NOT_R,
+                NOT_R_R,
                 // }}}
 
                 // Peripherals {{{

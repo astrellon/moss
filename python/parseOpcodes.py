@@ -9,12 +9,19 @@ class OpcodeParser:
         self.commandContents = "";
         self.commands = []
         self.opcodeFamilies = collections.OrderedDict()
+        self.groupedFamilies = collections.OrderedDict()
 
     def getOpcodeFamily(self, name):
         if not (name in self.opcodeFamilies):
             self.opcodeFamilies[name] = OpcodeFamily(name)
 
         return self.opcodeFamilies[name]
+
+    def addFamilyGroup(self, family):
+        if not (family.group in self.groupedFamilies):
+            self.groupedFamilies[family.group] = collections.OrderedDict()
+
+        self.groupedFamilies[family.group][family.name] = family
 
     def parseFile(self, filename):
         file = open(filename);
@@ -26,6 +33,10 @@ class OpcodeParser:
 
         inComment = False
         lastComment = []
+        lastGroup = None
+        lastShort = None
+
+        metaRegex = re.compile('@([A-Za-z]+)\s+([^\\n]+)')
 
         for line in self.commandContents.splitlines():
             if not inComment and Opcode.opcodeRegex.match(line) is not None:
@@ -33,27 +44,37 @@ class OpcodeParser:
                 family = self.getOpcodeFamily(opcode.name)
                 family.opcodes.append(opcode)
 
+                if lastShort is not None:
+                    family.shortComment = lastShort
+                lastShort = None
+
+                if lastGroup is not None:
+                    family.group = lastGroup
+                    lastGroup = None
+
+                self.addFamilyGroup(family)
+
                 if len(lastComment) > 0:
                     family.comment = lastComment
                     lastComment = []
 
             else:
-                if not inComment and line.find("/*") >= 0:
+                if (not inComment and line.find("/*") >= 0) or inComment:
                     inComment = True
-                    print("Now in comment: ", line)
-                    lastComment.append(line)
+
+                    match = metaRegex.search(line)
+                    if match is not None:
+                        if match.group(1) == "group":
+                            lastGroup = match.group(2)
+                        elif match.group(1) == "short":
+                            lastShort = match.group(2)
+
+                    else:
+                        lastComment.append(line)
 
                     if line.find("*/") >= 0:
-                        print("Also ending comment")
                         inComment = False
 
-                elif inComment:
-                    lastComment.append(line)
-                    print("More comment: ", line)
-
-                    if line.find("*/") >= 0:
-                        print("End comment")
-                        inComment = False
 
     def parseOpcodeLine(self, line):
         startQuote = line.find('"')
@@ -80,6 +101,8 @@ class OpcodeFamily:
         self.name = name
         self.opcodes = []
         self.comment = []
+        self.group = "Misc"
+        self.shortComment = None
 
     def cleanComment(self):
         for i in range(0, len(self.comment)):
@@ -450,9 +473,28 @@ INFO r2     ; Tells you what the code stack pointer was at the start.</pre>
         </div>
 
         """)
+
+        output.write("""<div class="command-block">
+        <h3>List of commands</h3>""")
+
+        for key in self.opcodeParser.groupedFamilies:
+            families = self.opcodeParser.groupedFamilies[key]
+            output.write("<div>" + key + "</div><ul>")
+
+            for name in families:
+                line = name
+                f = families[name]
+                if f.shortComment is not None and len(f.shortComment) > 0:
+                    line += " - " + f.shortComment
+
+                output.write("<li>" + line + "</li>")
+
+            output.write("</ul>")
+
+        output.write("</div>")
         
         lineTemplate = """<div id="tag_{command}" class="command-block">
-            <h3>{command}</h3>
+            <h3>{group} - {command}</h3>
             Forms:
             <ul>
             {forms}
@@ -484,13 +526,13 @@ INFO r2     ; Tells you what the code stack pointer was at the start.</pre>
 
                 forms += argTemplate.format(args=line, argsLong=lineLong)
 
-            output.write(lineTemplate.format(command=f.name, comment=commentLine, forms=forms))
+            output.write(lineTemplate.format(group=f.group, command=f.name, comment=commentLine, forms=forms))
 
         output.write("""</body>
         </html>""")
 
         fileOutput = open(filename, "w")
-        result = re.sub(r'((<h\d.*?\>)|(tag_))?([A-Z][A-Z_]+)', HtmlOutput.commandMatch, output.getvalue())
+        result = re.sub(r'((<h\d.*?\>.*?)|(tag_))?([A-Z][A-Z_]+)', HtmlOutput.commandMatch, output.getvalue())
 
         result = re.sub(r'[^&\w+](;[^\n]+?)\n', HtmlOutput.commentMatch, result)
         fileOutput.write(result)

@@ -1122,6 +1122,180 @@ namespace moss
                     }
                     break;
                 // }}}
+                
+                // AND Commands {{{
+                case Opcode::AND_R_R:
+                    // reg[arg1] &= reg[arg2]
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    if (meets_condition)
+                    {
+                        _regs.int_reg(arg1, _regs.int_reg(arg1) & _regs.int_reg(arg2));
+                    }
+                    break;
+                case Opcode::AND_R_R_R:
+                    // reg[arg1] = reg[arg2] & reg[arg3]
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    arg3 = next_pc_uint();
+                    if (meets_condition)
+                    {
+                        _regs.int_reg(arg1, _regs.int_reg(arg2) & _regs.int_reg(arg3));
+                    }
+                    break;
+                case Opcode::AND_R_I_R:
+                    // reg[arg1] = arg2 & reg[arg3]
+                    arg1 = next_pc_uint();
+                    iarg2 = next_pc_int();
+                    arg3 = next_pc_uint();
+                    if (meets_condition)
+                    {
+                        _regs.int_reg(arg1, iarg2 & _regs.int_reg(arg3));
+                    }
+                    break;
+                case Opcode::AND_R_R_I:
+                    // reg[arg1] = reg[arg2] & arg3
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    iarg3 = next_pc_int();
+                    if (meets_condition)
+                    {
+                        _regs.int_reg(arg1, _regs.int_reg(arg2) & iarg3);
+                    }
+                    break;
+                case Opcode::AND_R_I:
+                    // reg[arg1] &= arg2
+                    arg1 = next_pc_uint();
+                    iarg2 = next_pc_int();
+                    if (meets_condition)
+                    {
+                        _regs.int_reg(arg1, _regs.int_reg(arg1) & iarg2);
+                    }
+                    break;
+                // }}}
+                
+                // OR Commands {{{
+                case Opcode::OR_R_R:
+                    // reg[arg1] |= reg[arg2]
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    if (meets_condition)
+                    {
+                        _regs.int_reg(arg1, _regs.int_reg(arg1) | _regs.int_reg(arg2));
+                    }
+                    break;
+                case Opcode::OR_R_R_R:
+                    // reg[arg1] = reg[arg2] | reg[arg3]
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    arg3 = next_pc_uint();
+                    if (meets_condition)
+                    {
+                        _regs.int_reg(arg1, _regs.int_reg(arg2) | _regs.int_reg(arg3));
+                    }
+                    break;
+                case Opcode::OR_R_I_R:
+                    // reg[arg1] = arg2 | reg[arg3]
+                    arg1 = next_pc_uint();
+                    iarg2 = next_pc_int();
+                    arg3 = next_pc_uint();
+                    if (meets_condition)
+                    {
+                        _regs.int_reg(arg1, iarg2 | _regs.int_reg(arg3));
+                    }
+                    break;
+                case Opcode::OR_R_R_I:
+                    // reg[arg1] = reg[arg2] | arg3
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    iarg3 = next_pc_int();
+                    if (meets_condition)
+                    {
+                        _regs.int_reg(arg1, _regs.int_reg(arg2) | iarg3);
+                    }
+                    break;
+                case Opcode::OR_R_I:
+                    // reg[arg1] |= arg2
+                    arg1 = next_pc_uint();
+                    iarg2 = next_pc_int();
+                    if (meets_condition)
+                    {
+                        _regs.int_reg(arg1, _regs.int_reg(arg1) | iarg2);
+                    }
+                    break;
+                // }}}
+                
+                // XOR Commands {{{
+                case Opcode::XOR_R_R:
+                    // reg[arg1] ^= reg[arg2]
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    if (meets_condition)
+                    {
+                        _regs.int_reg(arg1, _regs.int_reg(arg1) ^ _regs.int_reg(arg2));
+                    }
+                    break;
+                case Opcode::XOR_R_R_R:
+                    // reg[arg1] = reg[arg2] ^ reg[arg3]
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    arg3 = next_pc_uint();
+                    if (meets_condition)
+                    {
+                        _regs.int_reg(arg1, _regs.int_reg(arg2) ^ _regs.int_reg(arg3));
+                    }
+                    break;
+                case Opcode::XOR_R_I_R:
+                    // reg[arg1] = arg2 ^ reg[arg3]
+                    arg1 = next_pc_uint();
+                    iarg2 = next_pc_int();
+                    arg3 = next_pc_uint();
+                    if (meets_condition)
+                    {
+                        _regs.int_reg(arg1, iarg2 ^ _regs.int_reg(arg3));
+                    }
+                    break;
+                case Opcode::XOR_R_R_I:
+                    // reg[arg1] = reg[arg2] ^ arg3
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    iarg3 = next_pc_int();
+                    if (meets_condition)
+                    {
+                        _regs.int_reg(arg1, _regs.int_reg(arg2) ^ iarg3);
+                    }
+                    break;
+                case Opcode::XOR_R_I:
+                    // reg[arg1] ^= arg2
+                    arg1 = next_pc_uint();
+                    iarg2 = next_pc_int();
+                    if (meets_condition)
+                    {
+                        _regs.int_reg(arg1, _regs.int_reg(arg1) ^ iarg2);
+                    }
+                    break;
+                // }}}
+                
+                // NOT Commands {{{
+                case Opcode::NOT_R:
+                    // reg[arg1] ~= reg[arg1]
+                    arg1 = next_pc_uint();
+                    if (meets_condition)
+                    {
+                        _regs.int_reg(arg1, ~_regs.int_reg(arg1));
+                    }
+                    break;
+                case Opcode::NOT_R_R:
+                    // reg[arg1] = ~reg[arg2]
+                    arg1 = next_pc_uint();
+                    arg2 = next_pc_uint();
+                    if (meets_condition)
+                    {
+                        _regs.int_reg(arg1, ~_regs.int_reg(arg2));
+                    }
+                    break;
+                // }}}
+                
 
                 // Peripherals commands {{{
                 
