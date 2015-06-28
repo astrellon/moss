@@ -475,7 +475,8 @@ INFO r2     ; Tells you what the code stack pointer was at the start.</pre>
         """)
 
         output.write("""<div class="command-block">
-        <h3>List of commands</h3>""")
+        <h3>List of commands</h3>
+        """)
 
         for key in self.opcodeParser.groupedFamilies:
             families = self.opcodeParser.groupedFamilies[key]
