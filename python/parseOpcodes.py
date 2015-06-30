@@ -179,12 +179,15 @@ class HtmlOutput:
         #output = open(filename, "w")
         output = io.StringIO()
 
+        # Head tag {{{
         output.write("""<html>
         <head>
             <title>MOSS Assembly Reference</title>
             <link rel="stylesheet" href="styles.css"/>
         <body>""")
+        # }}}
 
+        # Heading {{{
         output.write("""
         <div class="command-block">
             <h1>MOSS Assembly Reference Documentation</h1>
@@ -192,18 +195,29 @@ class HtmlOutput:
                 This document outlines all the commands available for use in MOSS along with each form 
                 of each command and some information about the command.
             </p>
-        </div>
+        </div>""")
+        # }}}
 
-        <div class="command-block">
+        # Argument types description {{{
+        output.write("""<div class="command-block">
             <h3>Command Argument Types</h3>
-            <p>
+            <div>
                 Each command has a list of acceptable arguments that can be used (including no arguments).
                 The types must match a valid form of a command otherwise the code is invalid.
 
+                <div>
+                    Each line is split into tokens, a valid command must look something like this:
+                    <pre>[optional conditional] [command] [any number of arguments]</pre>
+                </div>
+
                 <div>For example:
-<pre>
-</pre>
+<pre>MOV r0 4        ; Is split into ['MOV', 'r0' '4']
+MOV r1 6.7      ; Is split into ['MOV', 'r0', '6.7']
+CMPF r1 10.0    ; Is split into ['CMPF', 'r1', '10.0']
+> INCF r1       ; Is split into ['>', 'INCF', 'r1']
+< DECF r1       ; Is split into ['<', 'DECF', 'r1']</pre>
 </div>
+            </div>
                 
             <div class="table-block">
                 <table>
@@ -473,6 +487,67 @@ INFO r2     ; Tells you what the code stack pointer was at the start.</pre>
         </div>
 
         """)
+        # }}}
+
+        # Description about conditionals {{{
+        output.write("""<div class="command-block">
+        <h3>Conditionals</h3>
+            <div>
+                By default all commands are executed when the CPU encounters the command. However there are times when we want to do different things depending
+                on some state that the program is in. Basically you need conditionals to make if statements, loops and switch cases work.
+            </div>
+            <div>
+                A conditional is an operator at the start of a command line. The thing that determins if a conditional is true or not is based on the last time
+                either the CMP or CMPF commands were executed. 
+            </div>
+            
+            <div>For example:
+<pre>MOV r0 8
+CMP r0 10
+== PRINT "8 == 10"      ; Will <strong>not</strong> print as 8 equals 10 is false.
+!= PRINT "8 != 10"      ; Will print as 8 does not equal 10 is true.
+>  PRINT "8 >  10"      ; Will <strong>not</strong> print as 8 is greater than 10 is false.
+>= PRINT "8 >= 10"      ; Will <strong>not</strong> print as 8 is greater than or equal to 10 is false.
+<  PRINT "8 <  10"      ; Will print as 8 is less than 10 is true.
+<= PRINT "8 <= 10"      ; Will print as 8 is less than or equal to 10 is true.</pre>
+            </div>
+            While any command can have a conditional in front of it and it can make certain logic problems somehwhat easy to solve with just a conditional infront 
+            of several different commands, the main use will still be with the JMP command.
+
+            <div>For example, this snippet of Javascript:
+<pre>var age = 20;
+if (age > 30) {
+    console.log("Older than 30")
+}
+else if (age > 15) {
+    console.log("Older than 15")
+}
+else {
+    console.log("Younger than or equal to 15");
+}</pre>
+            <div>
+                While this is a somewhat contrived example as it would be prime for simply adding conditionals to each PRINT command, here we are trying to show the link between if statements and JMP commands:
+            </div>
+<pre>    MOV r0 20      ; We'll assume r0 to be the age variable.
+    CMP r0 30
+    > JMP older_than_30
+    > JMP older_than 15
+    PRINT "Younger than or equal to 15\\n"
+    JMP end
+
+older_than_30:
+    PRINT "Older than 30\\n"
+    JMP end
+
+older_than_15:
+    PRINT "Older than 15\\n"
+    JMP end
+
+end:<pre>
+            </div>
+        </div>
+        """)
+        # }}}
 
         output.write("""<div class="command-block">
         <h3>List of commands</h3>
