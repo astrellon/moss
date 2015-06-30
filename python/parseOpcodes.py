@@ -198,8 +198,41 @@ class HtmlOutput:
         </div>""")
         # }}}
 
-        # Argument types description {{{
+        # List of commands {{{
         output.write("""<div class="command-block">
+        <h3>Table of contents</h3>
+        <div>
+            <a href="#argument-types">Argument Types</a>
+        </div>
+        <div>
+            <a href="#labels">Labels</a>
+        </div>
+        <div>
+            <a href="#conditionals">Conditionals</a>
+        </div>
+        <hr class="spacing"/>
+        <h3>List of commands</h3>
+        """)
+
+        for key in self.opcodeParser.groupedFamilies:
+            families = self.opcodeParser.groupedFamilies[key]
+            output.write("<div>" + key + "</div><ul>")
+
+            for name in families:
+                line = name
+                f = families[name]
+                if f.shortComment is not None and len(f.shortComment) > 0:
+                    line += " - " + f.shortComment
+
+                output.write("<li>" + line + "</li>")
+
+            output.write("</ul>")
+
+        output.write("</div>")
+        # }}}
+
+        # Argument types description {{{
+        output.write("""<div id="argument-types" class="command-block">
             <h3>Command Argument Types</h3>
             <div>
                 Each command has a list of acceptable arguments that can be used (including no arguments).
@@ -211,11 +244,12 @@ class HtmlOutput:
                 </div>
 
                 <div>For example:
-<pre>MOV r0 4        ; Is split into ['MOV', 'r0' '4']
-MOV r1 6.7      ; Is split into ['MOV', 'r0', '6.7']
-CMPF r1 10.0    ; Is split into ['CMPF', 'r1', '10.0']
-> INCF r1       ; Is split into ['>', 'INCF', 'r1']
-< DECF r1       ; Is split into ['<', 'DECF', 'r1']</pre>
+<pre>main:
+    MOV r0 4        ; Is split into ['MOV', 'r0' '4']
+    MOV r1 6.7      ; Is split into ['MOV', 'r0', '6.7']
+    CMPF r1 10.0    ; Is split into ['CMPF', 'r1', '10.0']
+    > INCF r1       ; Is split into ['>', 'INCF', 'r1']
+    < DECF r1       ; Is split into ['<', 'DECF', 'r1']</pre>
 </div>
             </div>
                 
@@ -489,8 +523,54 @@ INFO r2     ; Tells you what the code stack pointer was at the start.</pre>
         """)
         # }}}
 
+        # Description about labels {{{
+        output.write("""<div id="labels" class="command-block">
+            <h3>Labels</h3> 
+            <div>
+                Labels are positions in the code that are given a name. Having a label means that commands like JMP, CALL and REGI can be used to move around to differents parts of the code.
+            </div>
+            <div>
+                All labels must end with a colon (:) character to indicate that they are a label, a colon is not needed when referring to them via a command.
+            </div>
+            <div>For example:
+<pre>    MOV r0 0
+start_loop:
+    CMP r0 10
+    >= JMP end_loop
+    PRINT r0
+    PRINT "\\n"
+    INC r0
+    JMP start_loop
+
+end_loop:
+    PRINT "Loop complete\\n"</pre>
+    </div>
+        <div>
+            The <strong>main</strong> label is the only label htat is required for ever program as it indicates where in the code the program should start.
+        </div>
+        <div>For example:
+<pre>my_func1:
+    POP r0
+    MUL r0 3
+    PUSH r0
+    RETURN
+
+main:
+    PRINT "Start of program\\n"
+    PUSH 5
+    CALL my_func1
+    POP r5
+    INFO r5</pre>
+    </div>
+        <div>
+            The function <code>my_func1</code> and any of it's code is not executed on startup because the first thing that's called is the <code>PRINT</code> command.
+        </div>
+        </div>
+        """)
+        # }}}
+
         # Description about conditionals {{{
-        output.write("""<div class="command-block">
+        output.write("""<div id="conditionals" class="command-block">
         <h3>Conditionals</h3>
             <div>
                 By default all commands are executed when the CPU encounters the command. However there are times when we want to do different things depending
@@ -502,14 +582,15 @@ INFO r2     ; Tells you what the code stack pointer was at the start.</pre>
             </div>
             
             <div>For example:
-<pre>MOV r0 8
-CMP r0 10
-== PRINT "8 == 10"      ; Will <strong>not</strong> print as 8 equals 10 is false.
-!= PRINT "8 != 10"      ; Will print as 8 does not equal 10 is true.
->  PRINT "8 >  10"      ; Will <strong>not</strong> print as 8 is greater than 10 is false.
->= PRINT "8 >= 10"      ; Will <strong>not</strong> print as 8 is greater than or equal to 10 is false.
-<  PRINT "8 <  10"      ; Will print as 8 is less than 10 is true.
-<= PRINT "8 <= 10"      ; Will print as 8 is less than or equal to 10 is true.</pre>
+<pre>main:
+    MOV r0 8
+    CMP r0 10
+    == PRINT "8 == 10"      ; Will <strong>not</strong> print as 8 equals 10 is false.
+    != PRINT "8 != 10"      ; Will print as 8 does not equal 10 is true.
+    >  PRINT "8 >  10"      ; Will <strong>not</strong> print as 8 is greater than 10 is false.
+    >= PRINT "8 >= 10"      ; Will <strong>not</strong> print as 8 is greater than or equal to 10 is false.
+    <  PRINT "8 <  10"      ; Will print as 8 is less than 10 is true.
+    <= PRINT "8 <= 10"      ; Will print as 8 is less than or equal to 10 is true.</pre>
             </div>
             While any command can have a conditional in front of it and it can make certain logic problems somehwhat easy to solve with just a conditional infront 
             of several different commands, the main use will still be with the JMP command.
@@ -528,7 +609,8 @@ else {
             <div>
                 While this is a somewhat contrived example as it would be prime for simply adding conditionals to each PRINT command, here we are trying to show the link between if statements and JMP commands:
             </div>
-<pre>    MOV r0 20      ; We'll assume r0 to be the age variable.
+<pre>main:
+    MOV r0 20      ; We'll assume r0 to be the age variable.
     CMP r0 30
     > JMP older_than_30
     > JMP older_than 15
@@ -543,31 +625,11 @@ older_than_15:
     PRINT "Older than 15\\n"
     JMP end
 
-end:<pre>
+end:</pre>
             </div>
         </div>
         """)
         # }}}
-
-        output.write("""<div class="command-block">
-        <h3>List of commands</h3>
-        """)
-
-        for key in self.opcodeParser.groupedFamilies:
-            families = self.opcodeParser.groupedFamilies[key]
-            output.write("<div>" + key + "</div><ul>")
-
-            for name in families:
-                line = name
-                f = families[name]
-                if f.shortComment is not None and len(f.shortComment) > 0:
-                    line += " - " + f.shortComment
-
-                output.write("<li>" + line + "</li>")
-
-            output.write("</ul>")
-
-        output.write("</div>")
         
         lineTemplate = """<div id="tag_{command}" class="command-block">
             <h3>{group} - {command}</h3>

@@ -35,10 +35,12 @@ body {
     margin: 0 1em 0 1em;
 }
 
+a,
 .command {
     color: #83A598;
     transition: text-shadow 0.1s linear;
 }
+a:hover,
 .command:hover {
     text-shadow: 0 0 5px #83A598;
 }
@@ -90,4 +92,8 @@ table td {
 }
 td.first {
     text-align: center;
+}
+
+hr.spacing {
+    margin: 1em;
 }
