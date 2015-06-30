@@ -695,4 +695,4 @@ fileParser = OpcodeParser()
 fileParser.parseFile("../moss/base/opcode.cpp")
 
 htmlOutput = HtmlOutput(fileParser)
-htmlOutput.writeToFile("reference.html")
+htmlOutput.writeToFile("../docs/reference.html")
