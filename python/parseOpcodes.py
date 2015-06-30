@@ -184,12 +184,13 @@ class HtmlOutput:
         <head>
             <title>MOSS Assembly Reference</title>
             <link rel="stylesheet" href="styles.css"/>
+        </head>
         <body>""")
         # }}}
 
         # Heading {{{
         output.write("""
-        <div class="command-block">
+        <div class="section">
             <h1>MOSS Assembly Reference Documentation</h1>
             <p>
                 This document outlines all the commands available for use in MOSS along with each form 
@@ -199,7 +200,7 @@ class HtmlOutput:
         # }}}
 
         # List of commands {{{
-        output.write("""<div class="command-block">
+        output.write("""<div class="section">
         <h3>Table of contents</h3>
         <div>
             <a href="#argument-types">Argument Types</a>
@@ -232,7 +233,7 @@ class HtmlOutput:
         # }}}
 
         # Argument types description {{{
-        output.write("""<div id="argument-types" class="command-block">
+        output.write("""<div id="argument-types" class="section">
             <h3>Command Argument Types</h3>
             <div>
                 Each command has a list of acceptable arguments that can be used (including no arguments).
@@ -524,7 +525,7 @@ INFO r2     ; Tells you what the code stack pointer was at the start.</pre>
         # }}}
 
         # Description about labels {{{
-        output.write("""<div id="labels" class="command-block">
+        output.write("""<div id="labels" class="section">
             <h3>Labels</h3> 
             <div>
                 Labels are positions in the code that are given a name. Having a label means that commands like JMP, CALL and REGI can be used to move around to differents parts of the code.
@@ -570,7 +571,7 @@ main:
         # }}}
 
         # Description about conditionals {{{
-        output.write("""<div id="conditionals" class="command-block">
+        output.write("""<div id="conditionals" class="section">
         <h3>Conditionals</h3>
             <div>
                 By default all commands are executed when the CPU encounters the command. However there are times when we want to do different things depending
@@ -631,7 +632,7 @@ end:</pre>
         """)
         # }}}
         
-        lineTemplate = """<div id="tag_{command}" class="command-block">
+        lineTemplate = """<div id="tag_{command}" class="section">
             <h3>{group} - {command}</h3>
             Forms:
             <ul>

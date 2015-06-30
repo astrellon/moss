@@ -12,7 +12,7 @@ body {
     text-align: center;
 }
 
-.command-block {
+.section {
     border: 1px solid #c5c5c5;
     padding: 0.75em;
     box-shadow: 0px 10px 16px 0px #888;
@@ -20,16 +20,16 @@ body {
     background: #f9f9f9;
 }
 
-.command-block div {
+.section div {
     margin-top: 0.4em;
     margin-bottom: 0.4em;
 }
 
-.command-block ul {
+.section ul {
     list-style: none;
     font-family: monospace;
 }
-.command-block hr {
+.section hr {
     border: none;
     border-top: 1px solid #c5c5c5;
     margin: 0 1em 0 1em;
@@ -55,7 +55,7 @@ h3 {
     text-shadow: 0 2px 3px #aaa;
 }
 
-.command-block pre {
+.section pre {
     border: 1px solid #c5c5c5;
     background: #e9e9e9;
     margin-bottom: 0;
