@@ -25,3 +25,14 @@ Defaults to building in debug mode, to build for release:
     ./Debugger file.asm
 
 In theory should work with MSVC but hasn't been tested.
+
+Documentation
+=============
+
+Building new command reference codes should be as easy as:
+
+    cd python
+    python3 parseOpcodes.py
+
+A new docs/reference.html file will be generated from the moss/base/opcode.cpp code.
+See python/README.md for more details.
