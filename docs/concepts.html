@@ -14,6 +14,9 @@
     <div class="section">
       <h3>Table of contents</h3>
       <div>
+        <a href="#cpu">The CPU</a>
+      </div>
+      <div>
         <a href="#argument-types">Argument Types</a>
       </div>
       <div>
@@ -22,6 +25,73 @@
       <div>
         <a href="#conditionals">Conditionals</a>
       </div>
+    </div>
+
+    <div id="cpu" class="section">
+      <h3>The MOSS CPU</h3>
+      <p>
+        The MOSS CPU is made up of several different components. Most of these are the result of influences from
+        x86 and ARM based processors. 
+      </p>
+      
+      <h4>Registers</h4>
+      <p>
+        Like many CPU designs the MOSS CPU has a set of 16 general purposes registers. These registers are
+        capable of storing both 32bit integers and 32bit float numbers. This allows for swapping between the
+        different types of numbers relatively painlessly.
+      </p>
+
+      <h4>Memory</h4>
+      <p>
+        While a simple program can be exectued using only register values (and no use of the stack), 
+        sooner or later a larger amount of.  While all data for the MOSS CPU is stored in the host 
+        only the MOV command is able to move data between memory and registers (including memory to memory).
+      </p>
+
+      <p>
+        The amount of memory available to the CPU is configurable, but defaults to 128kb.
+      </p>
+
+      <h4>The Stack</h4>
+      <p>
+        What is a stack? A stack can be though of just like a physical stack of objects, like a stack of plates.
+        You can only add items to the top of the stack and only take the top most item off the stack.
+      </p>
+
+      <p>
+        In the MOSS CPU there are two stack pointers, basically areas of memory that are set aside for keeping
+        track of data on the stack.
+      </p>
+
+      <p>
+        The first stack is the data stack. This is available via the PUSH and POP commands and are useful for any
+        time you might want a global stack, most likely when calling functions.
+
+      <p>
+        The second stack is the code stack, this one keeps track of the current program counter
+        (where are you in the code) value. This is used when the CALL command jumps to a function, the current
+        program counter is pushed onto the stack. This allows the RETURN command to go back to where the CALL 
+        command was.
+      </p>
+        
+      <h4>For example:</h4>
+<pre>main:
+    PUSH 8        ; Push 8 onto the stack.
+    PUSH 4        ; PUsh 4 onto the stack.
+    CALL combine  ; Call the combine function.
+    POP r0        ; The combine function has one result, so we put that into register 0.
+    INFO r0       ; Display the result, which will be 32.
+    HALT          ; End the program.
+
+combine:
+    POP r10       ; Get the top most item which will be 4.
+    POP r11       ; Get the next top most item, which is 8.
+    MUL r10 r11   ; Combine the two values in an arbirary way.
+    ADD r10 8
+
+    PUSH r10      ; Push the result of the function onto the stack so that
+    &nbsp;             ; the code that called this function can get the value.
+    RETURN        ; Return back to the part of the code that called this function.</pre>
     </div>
 
     <div id="argument-types" class="section">
@@ -37,11 +107,11 @@
 
         <div>For example:
           <pre>main:
-MOV r0 4        ; Is split into ['MOV', 'r0' '4']
-MOV r1 6.7      ; Is split into ['MOV', 'r0', '6.7']
-CMPF r1 10.0    ; Is split into ['CMPF', 'r1', '10.0']
-&gt; INCF r1       ; Is split into ['&gt;', 'INCF', 'r1']
-&lt; DECF r1       ; Is split into ['&lt;', 'DECF', 'r1']</pre>
+    MOV r0 4        ; Is split into ['MOV', 'r0' '4']
+    MOV r1 6.7      ; Is split into ['MOV', 'r0', '6.7']
+    CMPF r1 10.0    ; Is split into ['CMPF', 'r1', '10.0']
+    &gt; INCF r1       ; Is split into ['&gt;', 'INCF', 'r1']
+    &lt; DECF r1       ; Is split into ['&lt;', 'DECF', 'r1']</pre>
         </div>
       </div>
 
@@ -154,9 +224,11 @@ PRINT "\\n"</pre>
 
               <div>For example:
                 <pre>MOV r0 5        ; Set the memory location to 5.
-MOV @r0 10      ; Set the memory at the location stored in register 0 (which is 5) to be 10.
+MOV @r0 10      ; Set the memory at the location stored in register 0 
+&nbsp;               ; (which is 5) to be 10.
 INC r0          ; Increment the memory pointer.
-MOV @r0 15      ; Set the memory at the location stored in register 0 (which is now 6) to be 15.
+MOV @r0 15      ; Set the memory at the location stored in register 0 
+&nbsp;               ; (which is now 6) to be 15.
 
 MOV r1 @5       ; Set register 1 to the memory in position 5.
 MOV r2 @6       ; Set register 2 to the memory in position 6.
