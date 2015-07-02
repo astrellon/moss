@@ -841,19 +841,21 @@ namespace moss
          * @group Bit Manipulation
          * @short And bits of register together.
          * To 'and' two bit together is to require that both bits be 1 for the output to be 1.
-         * <table>
-         *    <thead>
-         *        <th>First</th>
-         *        <th>Second</th>
-         *        <th>Result</th>
-         *    </thead>
-         *     <tbody>
-         *         <tr> <td> 0 </td> <td> 0 </td> <td> 0 </td> </tr>
-         *         <tr> <td> 0 </td> <td> 1 </td> <td> 0 </td> </tr>
-         *         <tr> <td> 1 </td> <td> 0 </td> <td> 0 </td> </tr>
-         *         <tr> <td> 1 </td> <td> 1 </td> <td> 1 </td> </tr>
-         *     </tbody>
-         * </table>
+         * <div class="table-block">
+         *     <table class="truth-table">
+         *         <thead>
+         *             <th>First</th>
+         *             <th>Second</th>
+         *             <th>Result</th>
+         *         </thead>
+         *         <tbody>
+         *             <tr> <td> 0 </td> <td> 0 </td> <td> 0 </td> </tr>
+         *             <tr> <td> 0 </td> <td> 1 </td> <td> 0 </td> </tr>
+         *             <tr> <td> 1 </td> <td> 0 </td> <td> 0 </td> </tr>
+         *             <tr> <td> 1 </td> <td> 1 </td> <td> 1 </td> </tr>
+         *         </tbody>
+         *     </table>
+         * </div>
          *
          * <div>For example:
          * <pre>MOV r0 5             ;  5 = 0101 in binary
@@ -872,19 +874,19 @@ namespace moss
          * @short Or bits of register together.
          * To 'or' two bits together is to require that either bits be 1 for the output to be 1.
          * <div class="table-block">
-         * <table class="truth-table">
-         *    <thead>
-         *        <th>First</th>
-         *        <th>Second</th>
-         *        <th>Result</th>
-         *    </thead>
-         *     <tbody>
-         *         <tr> <td> 0 </td> <td> 0 </td> <td> 0 </td> </tr>
-         *         <tr> <td> 0 </td> <td> 1 </td> <td> 1 </td> </tr>
-         *         <tr> <td> 1 </td> <td> 0 </td> <td> 1 </td> </tr>
-         *         <tr> <td> 1 </td> <td> 1 </td> <td> 1 </td> </tr>
-         *     </tbody>
-         * </table>
+         *     <table class="truth-table">
+         *         <thead>
+         *             <th>First</th>
+         *             <th>Second</th>
+         *             <th>Result</th>
+         *         </thead>
+         *         <tbody>
+         *             <tr> <td> 0 </td> <td> 0 </td> <td> 0 </td> </tr>
+         *             <tr> <td> 0 </td> <td> 1 </td> <td> 1 </td> </tr>
+         *             <tr> <td> 1 </td> <td> 0 </td> <td> 1 </td> </tr>
+         *             <tr> <td> 1 </td> <td> 1 </td> <td> 1 </td> </tr>
+         *         </tbody>
+         *     </table>
          * </div>
          *
          * <div>For example:
@@ -904,19 +906,21 @@ namespace moss
          * @short XOR bits of register together.
          * To 'xor' two bits together is to require that only one (not both) of the bits be 1 
          * for the output to be 1.
-         * <table>
-         *    <thead>
-         *        <th>First</th>
-         *        <th>Second</th>
-         *        <th>Result</th>
-         *    </thead>
-         *     <tbody>
-         *         <tr> <td> 0 </td> <td> 0 </td> <td> 0 </td> </tr>
-         *         <tr> <td> 0 </td> <td> 1 </td> <td> 1 </td> </tr>
-         *         <tr> <td> 1 </td> <td> 0 </td> <td> 1 </td> </tr>
-         *         <tr> <td> 1 </td> <td> 1 </td> <td> 0 </td> </tr>
-         *     </tbody>
-         * </table>
+         * <div class="table-block">
+         *     <table class="truth-table">
+         *         <thead>
+         *             <th>First</th>
+         *             <th>Second</th>
+         *             <th>Result</th>
+         *         </thead>
+         *         <tbody>
+         *             <tr> <td> 0 </td> <td> 0 </td> <td> 0 </td> </tr>
+         *             <tr> <td> 0 </td> <td> 1 </td> <td> 1 </td> </tr>
+         *             <tr> <td> 1 </td> <td> 0 </td> <td> 1 </td> </tr>
+         *             <tr> <td> 1 </td> <td> 1 </td> <td> 0 </td> </tr>
+         *         </tbody>
+         *     </table>
+         * </div>
          *
          * <div>For example:
          * <pre>MOV r0 5             ;  5 = 0101 in binary

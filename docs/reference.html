@@ -2,415 +2,17 @@
         <head>
             <title>MOSS Assembly Reference</title>
             <link rel="stylesheet" href="styles.css"/>
+        </head>
         <body>
-        <div class="command-block">
+        <div class="section">
             <h1>MOSS Assembly Reference Documentation</h1>
             <p>
                 This document outlines all the commands available for use in MOSS along with each form 
                 of each command and some information about the command.
             </p>
-        </div><div class="command-block">
-        <h3>Table of contents</h3>
-        <div>
-            <a href="#argument-types">Argument Types</a>
-        </div>
-        <div>
-            <a href="#labels">Labels</a>
-        </div>
-        <div>
-            <a href="#conditionals">Conditionals</a>
-        </div>
-        <hr class="spacing"/>
+        </div><div class="section">
         <h3>List of commands</h3>
-        <div>Misc</div><ul><li><a href="#tag_HALT" class="command">HALT</a> - Stops the CPU.</li></ul><div>Setting Data</div><ul><li><a href="#tag_MOV" class="command">MOV</a> - Move data around.</li></ul><div>Type Conversions</div><ul><li><a href="#tag_INT_FLOAT" class="command">INT_FLOAT</a> - Change ints to floats.</li><li><a href="#tag_FLOAT_INT" class="command">FLOAT_INT</a> - Change floats to ints.</li></ul><div>Program Flow</div><ul><li><a href="#tag_PUSH" class="command">PUSH</a> - Add to stack.</li><li><a href="#tag_POP" class="command">POP</a> - Take from stack.</li><li><a href="#tag_CMP" class="command">CMP</a> - Compare register and int.</li><li><a href="#tag_CMPF" class="command">CMPF</a> - Compare register and float.</li><li><a href="#tag_JMP" class="command">JMP</a> - Change program location.</li><li><a href="#tag_CALL" class="command">CALL</a> - Call function.</li><li><a href="#tag_RETURN" class="command">RETURN</a> - End function.</li></ul><div>Arithmetic</div><ul><li><a href="#tag_ADD" class="command">ADD</a> - Add register and register or int together.</li><li><a href="#tag_ADDF" class="command">ADDF</a> - Add register and register or float together.</li><li><a href="#tag_SUB" class="command">SUB</a> - Subtract register from register or int.</li><li><a href="#tag_SUBF" class="command">SUBF</a> - Subtract register from register or float.</li><li><a href="#tag_INC" class="command">INC</a> - Add one to int register.</li><li><a href="#tag_INCF" class="command">INCF</a> - Add one to float register.</li><li><a href="#tag_DEC" class="command">DEC</a> - Take one from an int register.</li><li><a href="#tag_DECF" class="command">DECF</a> - Take one from a float register.</li><li><a href="#tag_MUL" class="command">MUL</a> - Multiply register by register or int.</li><li><a href="#tag_MULF" class="command">MULF</a> - Multiply register by register or float.</li><li><a href="#tag_DIV" class="command">DIV</a> - Divide register by register or int.</li><li><a href="#tag_DIVF" class="command">DIVF</a> - Divide register by register or float.</li></ul><div>Bit Manipulation</div><ul><li><a href="#tag_ROR" class="command">ROR</a> - Bit rotate to the right.</li><li><a href="#tag_ROL" class="command">ROL</a> - Bit rotate to the left.</li><li><a href="#tag_SHR" class="command">SHR</a> - Bit shift to the right.</li><li><a href="#tag_SHL" class="command">SHL</a> - Bit shift to the left.</li><li><a href="#tag_AND" class="command">AND</a> - And bits of register together.</li><li><a href="#tag_OR" class="command">OR</a> - Or bits of register together.</li><li><a href="#tag_XOR" class="command">XOR</a> - <a href="#tag_XOR" class="command">XOR</a> bits of register together.</li><li><a href="#tag_NOT" class="command">NOT</a> - Not bits of register.</li></ul><div>Hardware</div><ul><li><a href="#tag_IO_SEND" class="command">IO_SEND</a> - Send data to a port.</li><li><a href="#tag_IO_ASSIGN" class="command">IO_ASSIGN</a> - Assign port a memory space.</li><li><a href="#tag_REGI" class="command">REGI</a> - Register interrupt handler.</li><li><a href="#tag_INT" class="command">INT</a> - Trigger interrupt.</li><li><a href="#tag_RETI" class="command">RETI</a> - End interrupt handler.</li></ul><div>Debugging</div><ul><li><a href="#tag_PRINT" class="command">PRINT</a> - Print int register, value or string to screen.</li><li><a href="#tag_PRINTF" class="command">PRINTF</a> - Print float register or value to screen.</li><li><a href="#tag_INFO" class="command">INFO</a> - Print all information about a register to screen.</li><li><a href="#tag_INPUT" class="command">INPUT</a> - Get integer from keyboard.</li><li><a href="#tag_INPUTF" class="command">INPUTF</a> - Get float from keyboard.</li><li><a href="#tag_TIME" class="command">TIME</a> - Store current time in register.</li></ul></div><div id="argument-types" class="command-block">
-            <h3>Command Argument Types</h3>
-            <div>
-                Each command has a list of acceptable arguments that can be used (including no arguments).
-                The types must match a valid form of a command otherwise the code is invalid.
-
-                <div>
-                    Each line is split into tokens, a valid command must look something like this:
-                    <pre>[optional conditional] [command] [any number of arguments]</pre>
-                </div>
-
-                <div>For example:
-<pre>main:
-    <a href="#tag_MOV" class="command">MOV</a> r0 4       <span class="comment"> ; Is split into ['<a href="#tag_MOV" class="command">MOV</a>', 'r0' '4']
-</span>    <a href="#tag_MOV" class="command">MOV</a> r1 6.7     <span class="comment"> ; Is split into ['<a href="#tag_MOV" class="command">MOV</a>', 'r0', '6.7']
-</span>    <a href="#tag_CMPF" class="command">CMPF</a> r1 10.0   <span class="comment"> ; Is split into ['<a href="#tag_CMPF" class="command">CMPF</a>', 'r1', '10.0']
-</span>    > <a href="#tag_INCF" class="command">INCF</a> r1      <span class="comment"> ; Is split into ['>', '<a href="#tag_INCF" class="command">INCF</a>', 'r1']
-</span>    < <a href="#tag_DECF" class="command">DECF</a> r1      <span class="comment"> ; Is split into ['<', '<a href="#tag_DECF" class="command">DECF</a>', 'r1']</pre>
-</span></div>
-            </div>
-                
-            <div class="table-block">
-                <table>
-                    <thead>
-                            <th class="first">
-                                Form Code
-                            </th>
-                            <th>
-                                Description
-                            </th>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="first">
-                                <strong>R</strong>
-                                <div>Register</div>
-                            </td>
-                            <td>
-                                A register referes to one of the registers in the CPU. 
-                                They are always referenced with a lowercase R followed by a number, 
-                                eg <code>r0</code> or <code>r12</code>. 
-                                Each register can hold one 32bit value, either a 32bit integer or 32bit float.
-                                <div>For example:
-<pre><a href="#tag_ADD" class="command">ADD</a> r0 r1          <span class="comment"> ; Add register 1 onto register 0. </pre>
-</span></div>
-                                </td>
-                        </tr>
-                        <tr>
-                            <td class="first">
-                                <strong>I</strong>
-                                <div>Interger</div>
-                            </td>
-                            <td>
-                                Integer values can only store whole numbers. They are officially called 
-                                immediate values however here I've simply called them integers. 
-                                The name immediate value comes from the fact that the value is known 'immediately' 
-                                at compile time and so will be part of the code and no further look ups are 
-                                required to get the value.
-
-                                <div>For example:
-<pre><a href="#tag_MOV" class="command">MOV</a> r0 7           <span class="comment"> ; Set register 0 to the integer 7.
-</span><a href="#tag_ADD" class="command">ADD</a> r0 6           <span class="comment"> ; Add the interger 6 to register 0.</pre>
-</span></div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="first">
-                                <strong>F</strong>
-                                <div>Float</div>
-                            </td>
-                            <td>
-                                Floating Immediate value, or simply a float value which is a value that 
-                                can hold decimal numbers.
-
-                                <div>For example:
-<pre><a href="#tag_MOV" class="command">MOV</a> r0 8.3         <span class="comment"> ; Set register 0 to the float 8.3.
-</span><a href="#tag_SUBF" class="command">SUBF</a> r0 3.3        <span class="comment"> ; Subtract the float 3.3 from register 0.</pre>
-</span></div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="first">
-                                <strong>N</strong>
-                                <div>Any Number</div>
-                            </td>
-                            <td>
-                                Number. For commands where either an integer or float value is acceptable.
-                                Such as the <a href="#tag_PUSH" class="command">PUSH</a> command which pushes a value onto the stack, it doesn't care if it's
-                                an integer or a float, they're both 32bits of information.
-
-                                <div>For example:
-<pre><a href="#tag_PUSH" class="command">PUSH</a> 4             <span class="comment"> ; Put an integer onto the stack.
-</span><a href="#tag_PUSH" class="command">PUSH</a> 8.9           <span class="comment"> ; Put a float onto the stack.
-</span><a href="#tag_POP" class="command">POP</a> r0             <span class="comment"> ; Take the top most value and store it in register 0.
-</span><a href="#tag_POP" class="command">POP</a> r1             <span class="comment"> ; Take the next top most value and store it in register 1.</pre>
-</span></div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="first">
-                                <strong>S</strong>
-                                <div>String</div>
-                            </td>
-                            <td>
-                                String value. This is a bit of a special case because strings cannot be created at
-                                run time just yet, however they can be compiled in and used for 
-                                debugging purposes. 
-                                They are a list of characters surrounded by " (double quote) characters. 
-                                The \n sequence can be used to output a new line.
-                                
-                                <div>For example:
-<pre><a href="#tag_PRINT" class="command">PRINT</a> "-- Here are the results --\n"
-<a href="#tag_PRINT" class="command">PRINT</a> "r0 = "
-<a href="#tag_PRINT" class="command">PRINT</a> r0
-<a href="#tag_PRINT" class="command">PRINT</a> "\n"</pre>
-</div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="first">
-                                <strong>M</strong>
-                                <div>Memory Location</div>
-                            </td>
-                            <td>
-                                Memory location value. If you want to store values somewhere more long lasting you
-                                should store them into memory somewhere. A memory location is just a value to
-                                somewhere in memory that is currently stored in a register.
-
-                                <div>For example:
-<pre><a href="#tag_MOV" class="command">MOV</a> r0 5       <span class="comment"> ; Set the memory location to 5.
-</span><a href="#tag_MOV" class="command">MOV</a> @r0 10     <span class="comment"> ; Set the memory at the location stored in register 0 (which is 5) to be 10.
-</span><a href="#tag_INC" class="command">INC</a> r0         <span class="comment"> ; Increment the memory pointer.
-</span><a href="#tag_MOV" class="command">MOV</a> @r0 15     <span class="comment"> ; Set the memory at the location stored in register 0 (which is now 6) to be 15.
-</span>
-<a href="#tag_MOV" class="command">MOV</a> r1 @5      <span class="comment"> ; Set register 1 to the memory in position 5.
-</span><a href="#tag_MOV" class="command">MOV</a> r2 @6      <span class="comment"> ; Set register 2 to the memory in position 6.
-</span>
-<a href="#tag_INFO" class="command">INFO</a> r1        <span class="comment"> ; Prints 10.
-</span><a href="#tag_INFO" class="command">INFO</a> r2        <span class="comment"> ; Prints 15.</pre>
-</span></div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="first">
-                                <strong>O</strong>
-                                <div>Memory Offset</div>
-                            </td>
-                            <td>
-                                Memory location offset value. Just like the memory location that used a register
-                                for the location, the offset value is just a hardcoded number.
-
-                                <div>For example:
-<pre><a href="#tag_MOV" class="command">MOV</a> @0 756     <span class="comment"> ; Set the memory in position 0 to 756.
-</span><a href="#tag_MOV" class="command">MOV</a> @1 123.345 <span class="comment"> ; Set the memory in position 1 to 123.345.
-</span>
-<a href="#tag_MOV" class="command">MOV</a> r5 @0      <span class="comment"> ; Set register 5 to the value in memory at position 0.
-</span><a href="#tag_MOV" class="command">MOV</a> r6 @1      <span class="comment"> ; Set register 6 to the value in memory at position 1.
-</span>
-<a href="#tag_INFO" class="command">INFO</a> r5        <span class="comment"> ; Print 756
-</span><a href="#tag_INFO" class="command">INFO</a> r6        <span class="comment"> ; Print 123.345.</pre>
-</span>                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="first">
-                                <strong>L</strong>
-                                <div>CPU Flag</div>
-                            </td>
-                            <td>
-                                Within the CPU there is a special register called the flags register.
-                                This one register can store up to 32 different true/false values that are can be
-                                used by the CPU and program to communicate. It is possible to set these flags
-                                manually using the <a href="#tag_MOV" class="command">MOV</a> command. However some are only intended to be viewed
-                                rather than set directly.
-
-                                <table>
-                                    <tbody>
-                                        <tr>
-                                            <td><strong>ZERO</strong></td>
-                                            <td>
-                                                This value is set when a <a href="#tag_CMP" class="command">CMP</a> or <a href="#tag_CMPF" class="command">CMPF</a> command is called.
-                                                The value of this flag will affect if a conditional operator
-                                                allows a command to execute or not.
-                                                
-                                                <div>For example:
-<pre><a href="#tag_MOV" class="command">MOV</a> r5 20
-<a href="#tag_CMP" class="command">CMP</a> r5 20      <span class="comment"> ; The <a href="#tag_CMP" class="command">CMP</a> internally subtracts 20 from r5 
-</span>&nbsp;              <span class="comment"> ; and since the result is zero then the 
-</span>&nbsp;              <span class="comment"> ; ZERO flag is set.
-</span>
-<a href="#tag_MOV" class="command">MOV</a> r4 ZERO    <span class="comment"> ; Get the value of the ZERO flag, 
-</span>&nbsp;              <span class="comment"> ; which will be 0 (false) or 1 (true).
-</span><a href="#tag_INFO" class="command">INFO</a> r4        <span class="comment"> ; Prints 1.
-</span>
-<a href="#tag_CMP" class="command">CMP</a> r5 27      <span class="comment"> ; The difference is now -7 (once you go 20 - 27)
-</span>&nbsp;              <span class="comment"> ; so the ZERO flag is not set.
-</span><a href="#tag_MOV" class="command">MOV</a> r4 ZERO    <span class="comment"> ; Get the value of the ZERO flag.
-</span><a href="#tag_INFO" class="command">INFO</a> r4        <span class="comment"> ; Prints 0.</pre>
-</span>                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>NEGATIVE</strong></td>
-                                            <td>
-                                                This value is set when a <a href="#tag_CMP" class="command">CMP</a> or <a href="#tag_CMPF" class="command">CMPF</a> command is called.
-                                                The value of this flag will affect if a conditional operator
-                                                allows a command to execute or not.
-
-                                                <div>For example:
-<pre><a href="#tag_MOV" class="command">MOV</a> r5 20
-<a href="#tag_CMP" class="command">CMP</a> r5 20      <span class="comment"> ; The <a href="#tag_CMP" class="command">CMP</a> internally subtracts 20 from r5 
-</span>&nbsp;              <span class="comment"> ; and since the result is zero and not a 
-</span>&nbsp;              <span class="comment"> ; negative number the NEGATIVE flag is not set.
-</span>
-<a href="#tag_MOV" class="command">MOV</a> r4 NEGATIVE<span class="comment"> ; Get the value of the NEGATIVE flag, 
-</span>&nbsp;              <span class="comment"> ; which will be 0 (false) or 1 (true).
-</span><a href="#tag_INFO" class="command">INFO</a> r4        <span class="comment"> ; Prints 0.
-</span>
-<a href="#tag_CMP" class="command">CMP</a> r5 27      <span class="comment"> ; The difference is now -7 (once you go 20 - 27) 
-</span>&nbsp;              <span class="comment"> ; so the NEGATIVE flag is set.
-</span><a href="#tag_MOV" class="command">MOV</a> r4 NEGATIVE<span class="comment"> ; Get the value of the NEGATIVE flag.
-</span><a href="#tag_INFO" class="command">INFO</a> r4        <span class="comment"> ; Prints 1.</pre>
-</span>                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>MMU</strong></td>
-                                            <td>
-                                                The MMU (Memory Management Unit) allows for control of 
-                                                virtual memory. This feature is incomplete.
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="first">
-                                <strong>A</strong>
-                                <div>Special Register</div>
-                            </td>
-                            <td>
-                                Within the CPU are a few special registers that affect how it works.
-                                <table>
-                                    <tbody>
-                                        <tr>
-                                            <td><strong>PROGRAM_COUNTER</strong></td>
-                                            <td>
-                                                This keeps track of where the CPU is for executing a program.
-                                                It's not really recommended to modify this, but it can be used to grab
-                                                the current program counter value.
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>STACK_POINTER</strong></td>
-                                            <td>
-                                                The stack pointer is a value for where in memory the values on the stack
-                                                are stored. As in where do the values that the <a href="#tag_PUSH" class="command">PUSH</a> and <a href="#tag_POP" class="command">POP</a> commands go.
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>CODE_STACK_POINTER</strong></td>
-                                            <td>
-                                                Just like the code stack pointer, the values for the current 
-                                                program counter have to be stored somewhere when a <a href="#tag_CALL" class="command">CALL</a> command is 
-                                                executed, and for where the <a href="#tag_RETURN" class="command">RETURN</a> command needs to look to find
-                                                where to jump back to.
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-
-                                <div>For example:
-<pre><a href="#tag_MOV" class="command">MOV</a> r0 PROGRAM_COUNTER
-<a href="#tag_MOV" class="command">MOV</a> r1 STACK_POINTER
-<a href="#tag_MOV" class="command">MOV</a> r2 CODE_STACK_POINTER
-
-<a href="#tag_INFO" class="command">INFO</a> r0    <span class="comment"> ; Tells you what the program counter was at the start.
-</span><a href="#tag_INFO" class="command">INFO</a> r1    <span class="comment"> ; Tells you what the stack pointer was at the start.
-</span><a href="#tag_INFO" class="command">INFO</a> r2    <span class="comment"> ; Tells you what the code stack pointer was at the start.</pre>
-</span></div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <div id="labels" class="command-block">
-            <h3>Labels</h3> 
-            <div>
-                Labels are positions in the code that are given a name. Having a label means that commands like <a href="#tag_JMP" class="command">JMP</a>, <a href="#tag_CALL" class="command">CALL</a> and <a href="#tag_REGI" class="command">REGI</a> can be used to move around to differents parts of the code.
-            </div>
-            <div>
-                All labels must end with a colon (:) character to indicate that they are a label, a colon is not needed when referring to them via a command.
-            </div>
-            <div>For example:
-<pre>    <a href="#tag_MOV" class="command">MOV</a> r0 0
-start_loop:
-    <a href="#tag_CMP" class="command">CMP</a> r0 10
-    >= <a href="#tag_JMP" class="command">JMP</a> end_loop
-    <a href="#tag_PRINT" class="command">PRINT</a> r0
-    <a href="#tag_PRINT" class="command">PRINT</a> "\n"
-    <a href="#tag_INC" class="command">INC</a> r0
-    <a href="#tag_JMP" class="command">JMP</a> start_loop
-
-end_loop:
-    <a href="#tag_PRINT" class="command">PRINT</a> "Loop complete\n"</pre>
-    </div>
-        <div>
-            The <strong>main</strong> label is the only label htat is required for ever program as it indicates where in the code the program should start.
-        </div>
-        <div>For example:
-<pre>my_func1:
-    <a href="#tag_POP" class="command">POP</a> r0
-    <a href="#tag_MUL" class="command">MUL</a> r0 3
-    <a href="#tag_PUSH" class="command">PUSH</a> r0
-    <a href="#tag_RETURN" class="command">RETURN</a>
-
-main:
-    <a href="#tag_PRINT" class="command">PRINT</a> "Start of program\n"
-    <a href="#tag_PUSH" class="command">PUSH</a> 5
-    <a href="#tag_CALL" class="command">CALL</a> my_func1
-    <a href="#tag_POP" class="command">POP</a> r5
-    <a href="#tag_INFO" class="command">INFO</a> r5</pre>
-    </div>
-        <div>
-            The function <code>my_func1</code> and any of it's code is not executed on startup because the first thing that's called is the <code><a href="#tag_PRINT" class="command">PRINT</a></code> command.
-        </div>
-        </div>
-        <div id="conditionals" class="command-block">
-        <h3>Conditionals</h3>
-            <div>
-                By default all commands are executed when the CPU encounters the command. However there are times when we want to do different things depending
-                on some state that the program is in. Basically you need conditionals to make if statements, loops and switch cases work.
-            </div>
-            <div>
-                A conditional is an operator at the start of a command line. The thing that determins if a conditional is true or not is based on the last time
-                either the <a href="#tag_CMP" class="command">CMP</a> or <a href="#tag_CMPF" class="command">CMPF</a> commands were executed. 
-            </div>
-            
-            <div>For example:
-<pre>main:
-    <a href="#tag_MOV" class="command">MOV</a> r0 8
-    <a href="#tag_CMP" class="command">CMP</a> r0 10
-    == <a href="#tag_PRINT" class="command">PRINT</a> "8 == 10"     <span class="comment"> ; Will <strong>not</strong> print as 8 equals 10 is false.
-</span>    != <a href="#tag_PRINT" class="command">PRINT</a> "8 != 10"     <span class="comment"> ; Will print as 8 does not equal 10 is true.
-</span>    >  <a href="#tag_PRINT" class="command">PRINT</a> "8 >  10"     <span class="comment"> ; Will <strong>not</strong> print as 8 is greater than 10 is false.
-</span>    >= <a href="#tag_PRINT" class="command">PRINT</a> "8 >= 10"     <span class="comment"> ; Will <strong>not</strong> print as 8 is greater than or equal to 10 is false.
-</span>    <  <a href="#tag_PRINT" class="command">PRINT</a> "8 <  10"     <span class="comment"> ; Will print as 8 is less than 10 is true.
-</span>    <= <a href="#tag_PRINT" class="command">PRINT</a> "8 <= 10"     <span class="comment"> ; Will print as 8 is less than or equal to 10 is true.</pre>
-</span>            </div>
-            While any command can have a conditional in front of it and it can make certain logic problems somehwhat easy to solve with just a conditional infront 
-            of several different commands, the main use will still be with the <a href="#tag_JMP" class="command">JMP</a> command.
-
-            <div>For example, this snippet of Javascript:
-<pre>var age = 20;
-if (age > 30) {
-    console.log("Older than 30")
-}
-else if (age > 15) {
-    console.log("Older than 15")
-}
-else {
-    console.log("Younger than or equal to 15");
-}</pre>
-            <div>
-                While this is a somewhat contrived example as it would be prime for simply adding conditionals to each <a href="#tag_PRINT" class="command">PRINT</a> command, here we are trying to show the link between if statements and <a href="#tag_JMP" class="command">JMP</a> commands:
-            </div>
-<pre>main:
-    <a href="#tag_MOV" class="command">MOV</a> r0 20     <span class="comment"> ; We'll assume r0 to be the age variable.
-</span>    <a href="#tag_CMP" class="command">CMP</a> r0 30
-    > <a href="#tag_JMP" class="command">JMP</a> older_than_30
-    > <a href="#tag_JMP" class="command">JMP</a> older_than 15
-    <a href="#tag_PRINT" class="command">PRINT</a> "Younger than or equal to 15\n"
-    <a href="#tag_JMP" class="command">JMP</a> end
-
-older_than_30:
-    <a href="#tag_PRINT" class="command">PRINT</a> "Older than 30\n"
-    <a href="#tag_JMP" class="command">JMP</a> end
-
-older_than_15:
-    <a href="#tag_PRINT" class="command">PRINT</a> "Older than 15\n"
-    <a href="#tag_JMP" class="command">JMP</a> end
-
-end:</pre>
-            </div>
-        </div>
-        <div id="tag_HALT" class="command-block">
+        <div>Misc</div><ul><li><a href="#tag_HALT" class="command">HALT</a> - Stops the CPU.</li></ul><div>Setting Data</div><ul><li><a href="#tag_MOV" class="command">MOV</a> - Move data around.</li></ul><div>Type Conversions</div><ul><li><a href="#tag_INT_FLOAT" class="command">INT_FLOAT</a> - Change ints to floats.</li><li><a href="#tag_FLOAT_INT" class="command">FLOAT_INT</a> - Change floats to ints.</li></ul><div>Program Flow</div><ul><li><a href="#tag_PUSH" class="command">PUSH</a> - Add to stack.</li><li><a href="#tag_POP" class="command">POP</a> - Take from stack.</li><li><a href="#tag_CMP" class="command">CMP</a> - Compare register and int.</li><li><a href="#tag_CMPF" class="command">CMPF</a> - Compare register and float.</li><li><a href="#tag_JMP" class="command">JMP</a> - Change program location.</li><li><a href="#tag_CALL" class="command">CALL</a> - Call function.</li><li><a href="#tag_RETURN" class="command">RETURN</a> - End function.</li></ul><div>Arithmetic</div><ul><li><a href="#tag_ADD" class="command">ADD</a> - Add register and register or int together.</li><li><a href="#tag_ADDF" class="command">ADDF</a> - Add register and register or float together.</li><li><a href="#tag_SUB" class="command">SUB</a> - Subtract register from register or int.</li><li><a href="#tag_SUBF" class="command">SUBF</a> - Subtract register from register or float.</li><li><a href="#tag_INC" class="command">INC</a> - Add one to int register.</li><li><a href="#tag_INCF" class="command">INCF</a> - Add one to float register.</li><li><a href="#tag_DEC" class="command">DEC</a> - Take one from an int register.</li><li><a href="#tag_DECF" class="command">DECF</a> - Take one from a float register.</li><li><a href="#tag_MUL" class="command">MUL</a> - Multiply register by register or int.</li><li><a href="#tag_MULF" class="command">MULF</a> - Multiply register by register or float.</li><li><a href="#tag_DIV" class="command">DIV</a> - Divide register by register or int.</li><li><a href="#tag_DIVF" class="command">DIVF</a> - Divide register by register or float.</li></ul><div>Bit Manipulation</div><ul><li><a href="#tag_ROR" class="command">ROR</a> - Bit rotate to the right.</li><li><a href="#tag_ROL" class="command">ROL</a> - Bit rotate to the left.</li><li><a href="#tag_SHR" class="command">SHR</a> - Bit shift to the right.</li><li><a href="#tag_SHL" class="command">SHL</a> - Bit shift to the left.</li><li><a href="#tag_AND" class="command">AND</a> - And bits of register together.</li><li><a href="#tag_OR" class="command">OR</a> - Or bits of register together.</li><li><a href="#tag_XOR" class="command">XOR</a> - <a href="#tag_XOR" class="command">XOR</a> bits of register together.</li><li><a href="#tag_NOT" class="command">NOT</a> - Not bits of register.</li></ul><div>Hardware</div><ul><li><a href="#tag_IO_SEND" class="command">IO_SEND</a> - Send data to a port.</li><li><a href="#tag_IO_ASSIGN" class="command">IO_ASSIGN</a> - Assign port a memory space.</li><li><a href="#tag_REGI" class="command">REGI</a> - Register interrupt handler.</li><li><a href="#tag_INT" class="command">INT</a> - Trigger interrupt.</li><li><a href="#tag_RETI" class="command">RETI</a> - End interrupt handler.</li></ul><div>Debugging</div><ul><li><a href="#tag_PRINT" class="command">PRINT</a> - Print int register, value or string to screen.</li><li><a href="#tag_PRINTF" class="command">PRINTF</a> - Print float register or value to screen.</li><li><a href="#tag_INFO" class="command">INFO</a> - Print all information about a register to screen.</li><li><a href="#tag_INPUT" class="command">INPUT</a> - Get integer from keyboard.</li><li><a href="#tag_INPUTF" class="command">INPUTF</a> - Get float from keyboard.</li><li><a href="#tag_TIME" class="command">TIME</a> - Store current time in register.</li></ul></div><div id="tag_HALT" class="section">
             <h3>Misc - HALT</h3>
             Forms:
             <ul>
@@ -424,7 +26,7 @@ Stops the CPU from running completely.
 
 
             </div>
-        </div><div id="tag_MOV" class="command-block">
+        </div><div id="tag_MOV" class="section">
             <h3>Setting Data - MOV</h3>
             Forms:
             <ul>
@@ -497,7 +99,7 @@ It can also be used to set registers and memory to a hardcoded value.
 
 
             </div>
-        </div><div id="tag_INT_FLOAT" class="command-block">
+        </div><div id="tag_INT_FLOAT" class="section">
             <h3>Type Conversions - INT_FLOAT</h3>
             Forms:
             <ul>
@@ -520,7 +122,7 @@ Either storing the result in the same register or in another register.
 
 
             </div>
-        </div><div id="tag_FLOAT_INT" class="command-block">
+        </div><div id="tag_FLOAT_INT" class="section">
             <h3>Type Conversions - FLOAT_INT</h3>
             Forms:
             <ul>
@@ -544,7 +146,7 @@ Either storing the result in the same register or in another register.
 
 
             </div>
-        </div><div id="tag_PUSH" class="command-block">
+        </div><div id="tag_PUSH" class="section">
             <h3>Program Flow - PUSH</h3>
             Forms:
             <ul>
@@ -572,7 +174,7 @@ It doesn't matter what kind of value it is.
 
 
             </div>
-        </div><div id="tag_POP" class="command-block">
+        </div><div id="tag_POP" class="section">
             <h3>Program Flow - POP</h3>
             Forms:
             <ul>
@@ -587,7 +189,7 @@ Pops the top most value off the stack into a register.
 
 
             </div>
-        </div><div id="tag_CMP" class="command-block">
+        </div><div id="tag_CMP" class="section">
             <h3>Program Flow - CMP</h3>
             Forms:
             <ul>
@@ -617,7 +219,7 @@ For example:
 
 
             </div>
-        </div><div id="tag_CMPF" class="command-block">
+        </div><div id="tag_CMPF" class="section">
             <h3>Program Flow - CMPF</h3>
             Forms:
             <ul>
@@ -647,7 +249,7 @@ For example:
 
 
             </div>
-        </div><div id="tag_JMP" class="command-block">
+        </div><div id="tag_JMP" class="section">
             <h3>Program Flow - JMP</h3>
             Forms:
             <ul>
@@ -670,7 +272,7 @@ For example:
 </span>
 
             </div>
-        </div><div id="tag_ADD" class="command-block">
+        </div><div id="tag_ADD" class="section">
             <h3>Arithmetic - ADD</h3>
             Forms:
             <ul>
@@ -700,7 +302,7 @@ another register.
 
 
             </div>
-        </div><div id="tag_ADDF" class="command-block">
+        </div><div id="tag_ADDF" class="section">
             <h3>Arithmetic - ADDF</h3>
             Forms:
             <ul>
@@ -730,7 +332,7 @@ another register.
 
 
             </div>
-        </div><div id="tag_SUB" class="command-block">
+        </div><div id="tag_SUB" class="section">
             <h3>Arithmetic - SUB</h3>
             Forms:
             <ul>
@@ -758,7 +360,7 @@ Either storing the result into the first register, or storing the result in anot
 
 
             </div>
-        </div><div id="tag_SUBF" class="command-block">
+        </div><div id="tag_SUBF" class="section">
             <h3>Arithmetic - SUBF</h3>
             Forms:
             <ul>
@@ -786,7 +388,7 @@ Either storing the result into the first register, or storing the result in anot
 
 
             </div>
-        </div><div id="tag_INC" class="command-block">
+        </div><div id="tag_INC" class="section">
             <h3>Arithmetic - INC</h3>
             Forms:
             <ul>
@@ -806,7 +408,7 @@ Increment an integer register by one.
 
 
             </div>
-        </div><div id="tag_INCF" class="command-block">
+        </div><div id="tag_INCF" class="section">
             <h3>Arithmetic - INCF</h3>
             Forms:
             <ul>
@@ -826,7 +428,7 @@ Increment a float register by one.
 
 
             </div>
-        </div><div id="tag_DEC" class="command-block">
+        </div><div id="tag_DEC" class="section">
             <h3>Arithmetic - DEC</h3>
             Forms:
             <ul>
@@ -847,7 +449,7 @@ Decrements an integer register by one.
 
 
             </div>
-        </div><div id="tag_DECF" class="command-block">
+        </div><div id="tag_DECF" class="section">
             <h3>Arithmetic - DECF</h3>
             Forms:
             <ul>
@@ -867,7 +469,7 @@ Decrements a float register by one.
 
 
             </div>
-        </div><div id="tag_MUL" class="command-block">
+        </div><div id="tag_MUL" class="section">
             <h3>Arithmetic - MUL</h3>
             Forms:
             <ul>
@@ -894,7 +496,7 @@ Multiply two integers together.
 
 
             </div>
-        </div><div id="tag_MULF" class="command-block">
+        </div><div id="tag_MULF" class="section">
             <h3>Arithmetic - MULF</h3>
             Forms:
             <ul>
@@ -921,7 +523,7 @@ Multiply two floats together.
 
 
             </div>
-        </div><div id="tag_DIV" class="command-block">
+        </div><div id="tag_DIV" class="section">
             <h3>Arithmetic - DIV</h3>
             Forms:
             <ul>
@@ -948,7 +550,7 @@ Divide two integers.
 
 
             </div>
-        </div><div id="tag_DIVF" class="command-block">
+        </div><div id="tag_DIVF" class="section">
             <h3>Arithmetic - DIVF</h3>
             Forms:
             <ul>
@@ -975,7 +577,7 @@ Divide two floats.
 
 
             </div>
-        </div><div id="tag_ROR" class="command-block">
+        </div><div id="tag_ROR" class="section">
             <h3>Bit Manipulation - ROR</h3>
             Forms:
             <ul>
@@ -1002,7 +604,7 @@ right 32 times you'd come back to the same number you started off with.
 
 
             </div>
-        </div><div id="tag_ROL" class="command-block">
+        </div><div id="tag_ROL" class="section">
             <h3>Bit Manipulation - ROL</h3>
             Forms:
             <ul>
@@ -1029,7 +631,7 @@ left 32 times you'd come back to the same number you started off with.
 
 
             </div>
-        </div><div id="tag_SHR" class="command-block">
+        </div><div id="tag_SHR" class="section">
             <h3>Bit Manipulation - SHR</h3>
             Forms:
             <ul>
@@ -1056,7 +658,7 @@ Shifting right essentially divids a number by 2 as long as the number is even. I
 
 
             </div>
-        </div><div id="tag_SHL" class="command-block">
+        </div><div id="tag_SHL" class="section">
             <h3>Bit Manipulation - SHL</h3>
             Forms:
             <ul>
@@ -1083,7 +685,7 @@ Shifting left essentially multiplies a number by 2 as long as a bit isn't 'pushe
 
 
             </div>
-        </div><div id="tag_AND" class="command-block">
+        </div><div id="tag_AND" class="section">
             <h3>Bit Manipulation - AND</h3>
             Forms:
             <ul>
@@ -1098,7 +700,8 @@ Shifting left essentially multiplies a number by 2 as long as a bit isn't 'pushe
             <div>
             
 To 'and' two bit together is to require that both bits be 1 for the output to be 1.
-<table>
+<div class="table-block">
+<table class="truth-table">
 <thead>
 <th>First</th>
 <th>Second</th>
@@ -1111,6 +714,7 @@ To 'and' two bit together is to require that both bits be 1 for the output to be
 <tr> <td> 1 </td> <td> 1 </td> <td> 1 </td> </tr>
 </tbody>
 </table>
+</div>
 
 <div>For example:
 <pre><a href="#tag_MOV" class="command">MOV</a> r0 5            <span class="comment"> ;  5 = 0101 in binary
@@ -1120,7 +724,7 @@ To 'and' two bit together is to require that both bits be 1 for the output to be
 
 
             </div>
-        </div><div id="tag_OR" class="command-block">
+        </div><div id="tag_OR" class="section">
             <h3>Bit Manipulation - OR</h3>
             Forms:
             <ul>
@@ -1159,7 +763,7 @@ To 'or' two bits together is to require that either bits be 1 for the output to 
 
 
             </div>
-        </div><div id="tag_XOR" class="command-block">
+        </div><div id="tag_XOR" class="section">
             <h3>Bit Manipulation - XOR</h3>
             Forms:
             <ul>
@@ -1175,7 +779,8 @@ To 'or' two bits together is to require that either bits be 1 for the output to 
             
 To 'xor' two bits together is to require that only one (not both) of the bits be 1
 for the output to be 1.
-<table>
+<div class="table-block">
+<table class="truth-table">
 <thead>
 <th>First</th>
 <th>Second</th>
@@ -1188,6 +793,7 @@ for the output to be 1.
 <tr> <td> 1 </td> <td> 1 </td> <td> 0 </td> </tr>
 </tbody>
 </table>
+</div>
 
 <div>For example:
 <pre><a href="#tag_MOV" class="command">MOV</a> r0 5            <span class="comment"> ;  5 = 0101 in binary
@@ -1197,7 +803,7 @@ for the output to be 1.
 
 
             </div>
-        </div><div id="tag_NOT" class="command-block">
+        </div><div id="tag_NOT" class="section">
             <h3>Bit Manipulation - NOT</h3>
             Forms:
             <ul>
@@ -1218,7 +824,7 @@ To 'not' a number means to flip all the 1s to 0s and the 0s to 1s.
 
 
             </div>
-        </div><div id="tag_CALL" class="command-block">
+        </div><div id="tag_CALL" class="section">
             <h3>Program Flow - CALL</h3>
             Forms:
             <ul>
@@ -1264,7 +870,7 @@ my_func:
 
 
             </div>
-        </div><div id="tag_RETURN" class="command-block">
+        </div><div id="tag_RETURN" class="section">
             <h3>Program Flow - RETURN</h3>
             Forms:
             <ul>
@@ -1279,7 +885,7 @@ Return to the original point from where a function was called. For a more comple
 
 
             </div>
-        </div><div id="tag_IO_SEND" class="command-block">
+        </div><div id="tag_IO_SEND" class="section">
             <h3>Hardware - IO_SEND</h3>
             Forms:
             <ul>
@@ -1301,7 +907,7 @@ Alternatively send data to a port and save the response to a register.
 
 
             </div>
-        </div><div id="tag_IO_ASSIGN" class="command-block">
+        </div><div id="tag_IO_ASSIGN" class="section">
             <h3>Hardware - IO_ASSIGN</h3>
             Forms:
             <ul>
@@ -1322,7 +928,7 @@ Assigning memory to a port.
 
 
             </div>
-        </div><div id="tag_REGI" class="command-block">
+        </div><div id="tag_REGI" class="section">
             <h3>Hardware - REGI</h3>
             Forms:
             <ul>
@@ -1339,7 +945,7 @@ Register interrupt handler.
 
 
             </div>
-        </div><div id="tag_INT" class="command-block">
+        </div><div id="tag_INT" class="section">
             <h3>Hardware - INT</h3>
             Forms:
             <ul>
@@ -1354,7 +960,7 @@ Trigger interrupt.
 
 
             </div>
-        </div><div id="tag_RETI" class="command-block">
+        </div><div id="tag_RETI" class="section">
             <h3>Hardware - RETI</h3>
             Forms:
             <ul>
@@ -1368,7 +974,7 @@ Return from interrupt handler.
 
 
             </div>
-        </div><div id="tag_PRINT" class="command-block">
+        </div><div id="tag_PRINT" class="section">
             <h3>Debugging - PRINT</h3>
             Forms:
             <ul>
@@ -1400,7 +1006,7 @@ on its own line you'll need 3 <a href="#tag_PRINT" class="command">PRINT</a> com
 
 
             </div>
-        </div><div id="tag_PRINTF" class="command-block">
+        </div><div id="tag_PRINTF" class="section">
             <h3>Debugging - PRINTF</h3>
             Forms:
             <ul>
@@ -1420,7 +1026,7 @@ Print floats. Like the <a href="#tag_PRINT" class="command">PRINT</a> command ho
 
 
             </div>
-        </div><div id="tag_INFO" class="command-block">
+        </div><div id="tag_INFO" class="section">
             <h3>Debugging - INFO</h3>
             Forms:
             <ul>
@@ -1434,7 +1040,7 @@ Displays the register number, its value as an integer and as a float.
 
 
             </div>
-        </div><div id="tag_INPUT" class="command-block">
+        </div><div id="tag_INPUT" class="section">
             <h3>Debugging - INPUT</h3>
             Forms:
             <ul>
@@ -1448,7 +1054,7 @@ Get integer from keyboard and stores the result in a register.
 
 
             </div>
-        </div><div id="tag_INPUTF" class="command-block">
+        </div><div id="tag_INPUTF" class="section">
             <h3>Debugging - INPUTF</h3>
             Forms:
             <ul>
@@ -1462,7 +1068,7 @@ Get float from keyboard and stores the result in a register.
 
 
             </div>
-        </div><div id="tag_TIME" class="command-block">
+        </div><div id="tag_TIME" class="section">
             <h3>Debugging - TIME</h3>
             Forms:
             <ul>
