@@ -30,12 +30,19 @@
       <div>
         <a href="#exercise-06">06 - Looping</a>
       </div>
+      <div>
+        <a href="#exercise-07">07 - The Stack</a>
+      </div>
+      <div>
+        <a href="#exercise-08">08 - Functions</a>
+      </div>
     </div>
 
     <div id="exercise-01" class="section">
       <h3>01 - Hello World</h3>
       <p>
-        Okay we're going to make the simplest program in MOSS assembly that produces some output. This will still go through some of the basic outlines of a program.
+        Okay we're going to make the simplest program in MOSS assembly that produces some output. 
+        This will still go through some of the basic outlines of a program.
       </p>
       <pre>main:
     PRINT "Hello world\n"</pre>
@@ -43,12 +50,13 @@
         Pretty simple, however it introduces some important parts.
       </p>
       <p>
-        <strong>First</strong> notice the <code>main:</code>, that's a label. Labels are like landmarks in the code, they allow program flow commands to move between
-        sections of the code as needed.
+        <strong>First</strong> notice the <code>main:</code>, that's a label. Labels are like landmarks in the code, 
+        they allow program flow commands to move between sections of the code as needed.
       </p>
       <p>
-        <strong>In addition</strong>, the <code>main</code> label is the entry point for your code. While in this simple example the entry point is self evident, 
-        in more complex examples with code being pulled in from other places. Such as the standard math library, if the program always started at the first 
+        <strong>In addition</strong>, the <code>main</code> label is the entry point for your code. 
+        While in this simple example the entry point is self evident, in more complex examples with code being pulled 
+        in from other places. Such as the standard math library, if the program always started at the first 
         piece of code it'd make the code a bit messier.
       </p>
       <strong>Second</strong> we have our first command. All commands are expected to be uppercase.
@@ -60,8 +68,8 @@
         So lets look at one of the basic parts of the CPU, registers.
       </p>
       <p>
-        A register is container in the CPU that can have calculations performed on it. For instance if you want to add, subtract, multiple, divide any numbers, you must perform
-        these operations on a register or hardcoded number.
+        A register is container in the CPU that can have calculations performed on it. For instance if you want to add, 
+        subtract, multiple, divide any numbers, you must perform these operations on a register or hardcoded number.
       </p>
       <pre>main:
     MOV r0 5      ; Can be read as register 0 = 5
@@ -74,8 +82,9 @@
     <div id="exercise-03" class="section">
       <h3>03 - Inputs</h3>
       <p>
-        While in a more complete solution the CPU would talk to a virtualised keyboard or file system for input. For now however there are some debugging commands for
-        getting keyboard input which will be useful for examples. The INPUT and INPUTF commands allow you to get some user input.
+        While in a more complete solution the CPU would talk to a virtualised keyboard or file system for input. 
+        For now however there are some debugging commands for getting keyboard input which will be useful for examples. 
+        The INPUT and INPUTF commands allow you to get some user input.
       </p>
       <pre>main:
     PRINT "Enter your age: "
@@ -84,15 +93,16 @@
     PRINT r0
     PRINT " years old\n"</pre>
       <p>
-        Again a fairly simple program to demonstrate that input numbers get put into registers and that the PRINT command can be used to output register values.
+        Again a fairly simple program to demonstrate that input numbers get put into registers and that the 
+        PRINT command can be used to output register values.
       </p>
     </div>
 
     <div id="exercise-04" class="section">
       <h3>04 - Program Flow</h3>
       <p>
-        So lets assume for now that you have some code that you want to skip, because it doesn't need to be run. This can be done with the JMP command which jumps to a 
-        different place in the code with a label.
+        So lets assume for now that you have some code that you want to skip, because it doesn't need to be run. 
+        This can be done with the JMP command which jumps to a different place in the code with a label.
       </p>
       <pre>main:
     PRINT "Hello there, how are you?\n"
@@ -104,18 +114,21 @@
   one_sided_conversation:
     PRINT "I'm good thank you.\n"</pre>
       <p>
-        While it is useful to be able to jump to anywhere in the code at any time, often we want to do it based on some current state of the program.
+        While it is useful to be able to jump to anywhere in the code at any time, 
+        often we want to do it based on some current state of the program.
       </p>
     </div>
 
     <div id="exercise-05" class="section">
       <h3>05 - Conditionals</h3>
       <p>
-        So we can jump to another part of the code using a label, but we want to jump to another part of the code based on some user input now.
-        We can do this using the CMP and CMPF commands, these change weather or not a conditional operator will let a command execute.
+        So we can jump to another part of the code using a label, but we want to jump to another part of the code 
+        based on some user input now.  We can do this using the CMP and CMPF commands, these change weather or not 
+        a conditional operator will let a command execute.
       </p>
       <p>
-        Lets use the scenario of checking if someone is old enough to drink (assuming a drinking age of 18) and printing different messages.
+        Lets use the scenario of checking if someone is old enough to drink (assuming a drinking age of 18) 
+        and printing different messages.
       </p>
       <pre>main:
     PRINT "Enter your age: "
@@ -127,16 +140,20 @@
         The conditional operators will only allow commands to execute if they satisfy the previous CMP or CMPF command values.
       </p>
       <p>
-        We can also pair a conditional operator with a JMP command to affect which parts of the code get executed depending on current state.
+        We can also pair a conditional operator with a JMP command to affect which parts of the code get 
+        executed depending on current state.
       </p>
     </div>
 
     <div id="exercise-06" class="section">
       <h3>06 - Looping</h3>
       <p>
-        So we can compare and perform certain actions using conditionals, so lets make a more traditional looking for loop. Lets just have one print the numbers 1 to 10.
+        So we can compare and perform certain actions using conditionals, so lets make a more traditional looking for loop. 
+        Lets just have one print the numbers 1 to 10.
       </p>
-      We can also look at this side by side with what a for loop looks like in a higher level language like Javascript.
+      <p>
+        We can also look at this side by side with what a for loop looks like in a higher level language like Javascript.
+      </p>
       <pre>main:
     MOV r0 1                ; for (var i = 0     loop setup
 start_of_loop:
@@ -153,15 +170,17 @@ start_of_loop:
 end_of_loop:
     PRINT "Loop complete\n" ; console.log("Loop complete")</pre>
       <p>
-        The MOSS assembly is a bit more verbose than a higher level language like Javascript, however it performs the same actions.
+        The MOSS assembly is a bit more verbose than a higher level language like Javascript, 
+        however it performs the same actions.
       </p>
     </div>
 
     <div class="section">
       <h3>07 - The Stack</h3>
       <p>
-        The stack is an important part of the CPU, it allows for different parts of the code to communicate without needing to know what registers each
-        part is using. In fact there are entire processors that are designed around using a stack for everything and don't use registers at all, so they are very useful.
+        The stack is an important part of the CPU, it allows for different parts of the code to communicate without needing 
+        to know what registers each part is using. In fact there are entire processors that are designed around using a 
+        stack for everything and don't use registers at all, so they are very useful.
       </p>
       <pre>main:    ; The stack starts empty.
     PUSH 1      ; The stack now contains [ 1 ]
@@ -169,7 +188,55 @@ end_of_loop:
     POP r1      ; The stack now contains [ 1 ]
     POP r2      ; The stack is now empty.
     INFO r1     ; Prints 2
-    INFO r2     ; Prints 1
+    INFO r2     ; Prints 1</pre>
+    </div>
+
+    <div class="section">
+      <h3>08 - Functions</h3>
+      <p>
+        Now let's put together use of labels and the stack to create functions! So a function is simply a block of code
+        that starts with a label and is jumped to using the CALL command (instead of a JMP command). The only difference
+        between CALL and JMP is that CALL adds the current location in code to the code stack 
+        (which is just like the data stack).
+        When the function is over they need to call the RETURN command, which is basically a jump but back to where the 
+        previous CALL command happened.
+      </p>
+      <pre>
+    ; A simple squaring function that also calls another function to 
+    ; display the result of the squaring.
+square:
+    
+    POP r10         ; Get the one and only argument.
+    MUL r10 r10     ; Square the input
+
+    PUSH r10        ; Push the result onto the stack so that the
+                    ; output function can display it.
+    CALL output
+
+    PUSH r10        ; Push the result onto the stack so that the
+                    ; code that called this function can get the reuslt.
+    RETURN
+
+output:
+    POP r11         ; Get the only and only argument.
+
+    PRINT "Output "
+    PRINT r11       ; Display "Output = " + r11 + "\n"
+    PRINT "\n"
+
+    RETURN
+
+main:
+    PUSH 5
+    CALL square     ; Call square function with the number 5.
+    POP r0          ; Store 5 squared into register 0.
+
+    PUSH 24
+    CALL square     ; Call squaure function with the number 24.
+    POP r1          ; Store 24 squared into register 1.
+
+    ADD r2 r0 r1    ; Add the two squared results just for something to do.
+    INFO r2         ; Output register 2 using the debug info command.</pre>
     </div>
   </body>
 </html>
