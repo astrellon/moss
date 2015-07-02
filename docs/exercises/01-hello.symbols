@@ -1,0 +1,10 @@
+; Debug output:
+
+; A list of filenames
+Filenames:
+docs/exercises/01-hello.asm
+
+; A list of breakpoints to set on files and line number.
+; The filename is an index to the file list above.
+Data:
+23 0 3

@@ -1,0 +1,2 @@
+main:
+    PRINT "Hello world"
