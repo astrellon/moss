@@ -155,10 +155,10 @@
         We can also look at this side by side with what a for loop looks like in a higher level language like Javascript.
       </p>
       <pre>main:
-    MOV r0 1                ; for (var i = 0     loop setup
+    MOV r0 1                ; for (var i = 1     loop setup
 start_of_loop:
-    CMP r0 10               ; i &lt; 10             loop conditional
-    &gt;= JMP end_of_loop
+    CMP r0 10               ; i &lt;= 10             loop conditional
+    &gt; JMP end_of_loop
 &nbsp;                           ; { 
     PRINT r0                ;
     PRINT "\n"              ;    console.log(i);
@@ -201,8 +201,7 @@ end_of_loop:
         When the function is over they need to call the RETURN command, which is basically a jump but back to where the 
         previous CALL command happened.
       </p>
-      <pre>
-    ; A simple squaring function that also calls another function to 
+      <pre>    ; A simple squaring function that also calls another function to 
     ; display the result of the squaring.
 square:
     
