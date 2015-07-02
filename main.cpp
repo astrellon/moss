@@ -22,12 +22,24 @@ int main(int argc, char **argv)
     std::string debug_symbols;
     std::string debug_config;
     std::string output_file;
-    for (int i = 1; i < argc; i++)
+
+    // Measured in kb.
+    auto memory = 128u;
+    std::vector<std::string> args;
+    for (auto i = 1; i < argc; i++)
     {
-        std::string arg = argv[i];
+        args.push_back(std::string(argv[i]));
+    }
+    for (auto iter = args.cbegin(); iter != args.cend(); ++iter)
+    {
+        auto arg = *iter;
         if (arg[0] == '-')
         {
-
+            if (arg == "-m")
+            {
+                arg = *(++iter);
+                memory = static_cast<uint32_t>(std::atoi(arg.c_str()));
+            }
         }
         else
         {
@@ -37,6 +49,8 @@ int main(int argc, char **argv)
             output_file = moss::Utils::replace_ext(arg, "bin");
         }
     }
+
+    std::cout << "Setting memory to " << memory << "kb\n";
 
     if (filename.empty())
     {
@@ -48,7 +62,7 @@ int main(int argc, char **argv)
         return -1;
     }
 
-    moss::Memory mem(128u * 1024u);
+    moss::Memory mem(memory * 1024u);
     mem.zero();
 
     moss::CpuArm cpu(4u);
