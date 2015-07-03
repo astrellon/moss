@@ -289,6 +289,8 @@ namespace moss
                 default:
                     std::cout << "Unknown OPCODE: " << opcode << " @ PC " << 
                         std::dec << (_regs.program_counter() - 1) << std::endl;
+
+                    meets_condition = true;
                 case Opcode::HALT:
                     if (meets_condition)
                     {

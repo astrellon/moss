@@ -29,8 +29,9 @@ namespace moss
     void Registers::to_stream(std::ostream &os) const
     {
         os << std::dec << "Register: \n"
-            "- PC: " << program_counter() << "\n"
-            "- SP: " << stack_pointer() << "\n"
+            "-  PC: " << program_counter() << "\n"
+            "- CSP: " << code_stack_pointer() << "\n"
+            "- DSP: " << stack_pointer() << "\n"
             ;
         os << std::setw(5) << "Reg:" << std::setw(15) << "INT" << std::setw(15) << "FLOAT\n";
         for (auto i = 0u; i < num_word_reg(); i++)

@@ -24,12 +24,16 @@ int main(int argc, char **argv)
     std::string output_file;
 
     // Measured in kb.
-    auto memory = 128u;
+    auto memory = 128u * 1024u;
+    auto data_stack_size = 1024u;
+    auto code_stack_size = 1024u;
+
     std::vector<std::string> args;
     for (auto i = 1; i < argc; i++)
     {
         args.push_back(std::string(argv[i]));
     }
+
     for (auto iter = args.cbegin(); iter != args.cend(); ++iter)
     {
         auto arg = *iter;
@@ -38,7 +42,24 @@ int main(int argc, char **argv)
             if (arg == "-m")
             {
                 arg = *(++iter);
-                memory = static_cast<uint32_t>(std::atoi(arg.c_str()));
+                auto multiplier = 1024u;
+                auto str = arg.c_str();
+                if (arg[0] == 'b')
+                {
+                    multiplier = 1u;
+                    str++;
+                }
+                memory = multiplier * static_cast<uint32_t>(std::atoi(str));
+            }
+            else if (arg == "-cs")
+            {
+                arg = *(++iter);
+                code_stack_size = static_cast<uint32_t>(std::atoi(arg.c_str()));
+            }
+            else if (arg == "-ds")
+            {
+                arg = *(++iter);
+                data_stack_size = static_cast<uint32_t>(std::atoi(arg.c_str()));
             }
         }
         else
