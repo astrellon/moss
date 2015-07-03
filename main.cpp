@@ -70,7 +70,7 @@ int main(int argc, char **argv)
     moss::TestPeripheral testPerf;
     cpu.install_peripheral(&testPerf);
 
-    uint32_t program_start = 128;
+    auto program_start = 128u;
     cpu.registers().program_counter(program_start);
     cpu.memory(&mem);
 
@@ -86,7 +86,7 @@ int main(int argc, char **argv)
         assembler.finalise();
         assembler.write_to_memory<moss::Memory>(&mem, program_start);
         std::ofstream output_binary(output_file);
-        //assembler.write_to_stream(output_binary);
+        assembler.write_to_stream(output_binary);
 
         auto report = assembler.report();
         moss::Disassembler::to_stream<moss::Memory>(std::cout, &mem, program_start, program_start + report.total_size);

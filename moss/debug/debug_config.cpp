@@ -76,8 +76,8 @@ namespace moss
         }
 
         ss << "\n"
-            "; The data here is made up of the index of the instruction in the program,\n"
-            "; the filename index (based on the list of filenames above) and the line number.\n"
+            "; A list of breakpoints to set on files and line number.\n"
+            "; The filename is an index to the file list above.\n"
             "Data:\n";
         for (auto file_iter : _file_breakpoints)
         {

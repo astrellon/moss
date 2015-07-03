@@ -67,6 +67,9 @@ namespace moss
     {
         _memory = memory;
         _mmu.memory(memory);
+
+        _regs.code_stack_pointer(memory->size() - 4);
+        _regs.stack_pointer(memory->size() - 1028);
     }
     
     bool CpuArm::remote_debugger() const

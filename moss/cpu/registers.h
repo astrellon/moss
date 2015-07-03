@@ -55,11 +55,11 @@ namespace moss
             }
             FORCEINLINE uint32_t stack_pointer_push()
             {
-                return _stack_pointer++;
+                return _stack_pointer--;
             }
             FORCEINLINE uint32_t stack_pointer_pop()
             {
-                return --_stack_pointer;
+                return ++_stack_pointer;
             }
             FORCEINLINE void stack_pointer(uint32_t value)
             {
@@ -72,11 +72,11 @@ namespace moss
             }
             FORCEINLINE uint32_t code_stack_pointer_push()
             {
-                return _code_stack_pointer++;
+                return _code_stack_pointer--;
             }
             FORCEINLINE uint32_t code_stack_pointer_pop()
             {
-                return --_code_stack_pointer;
+                return ++_code_stack_pointer;
             }
             FORCEINLINE void code_stack_pointer(uint32_t value)
             {

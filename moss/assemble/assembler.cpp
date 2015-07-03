@@ -71,36 +71,6 @@ namespace moss
 
     void Assembler::write_setup_code()
     {
-        writeU(Opcode::MOV_R_NR);
-        writeU(2u);
-        writeU(Opcode::PROGRAM_COUNTER);
-
-        writeU(Opcode::MOV_R_I);
-        writeU(0u);
-        _stack_pointer_index = _index;
-        writeU(0u);
-        
-        writeU(Opcode::MOV_R_I);
-        writeU(1u);
-        _code_stack_pointer_index = _index;
-        writeU(0u);
-
-        writeU(Opcode::ADD_R_R);
-        writeU(0u);
-        writeU(2u);
-        
-        writeU(Opcode::ADD_R_R);
-        writeU(1u);
-        writeU(2u);
-
-        writeU(Opcode::MOV_NR_R);
-        writeU(Opcode::STACK_POINTER);
-        writeU(0u);
-
-        writeU(Opcode::MOV_NR_R);
-        writeU(Opcode::CODE_STACK_POINTER);
-        writeU(1u);
-
         writeU(Opcode::JMP_I);
         writeL("main");
     }
@@ -245,9 +215,6 @@ namespace moss
         }
 
         _report.total_size = _index;
-
-		_data[_code_stack_pointer_index].u = _index + 4;
-		_data[_stack_pointer_index].u = _index + 1028;
 
         if (_enable_debug_symbols && !_debug_symbol_filename.empty())
         {
