@@ -485,6 +485,7 @@ else {
     MOV r0 20      ; We'll assume r0 to be the age variable.
     CMP r0 30
     &gt; JMP older_than_30
+    CMP r0 15
     &gt; JMP older_than 15
     PRINT "Younger than or equal to 15\\n"
     JMP end
