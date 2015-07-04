@@ -54,18 +54,28 @@ namespace moss
             void debug_state(DebugState state);
             DebugState debug_state() const;
 
+            void stack_size(uint32_t size);
+            uint32_t stack_size() const;
+
+            void code_stack_size(uint32_t size);
+            uint32_t code_stack_size() const;
+
         private:
             bool _running;
             bool _enable_mmu;
             
             Registers _regs;
             Mmu _mmu;
+            
             std::array<IPeripheral *, 16> _peripherals;
-            uint32_t _interrupt_return;
             std::array<uint32_t, 16> _interrupts;
+            uint32_t _interrupt_return;
+            
             bool _remote_debugger;
             DebugState _debug_state;
-            
+
+            uint32_t _stack_size;
+            uint32_t _code_stack_size;
             Memory *_memory;
 
             void io_send(uint32_t reg_index, uint32_t perf_index, int32_t command);
@@ -94,5 +104,7 @@ namespace moss
             uint32_t pop_code_stack();
 
             static uint32_t s_int_bit_shift;
+
+            void update_stack_pointers();
     };
 }

@@ -83,7 +83,7 @@ int main(int argc, char **argv)
         return -1;
     }
 
-    moss::Memory mem(memory * 1024u);
+    moss::Memory mem(memory);
     mem.zero();
 
     moss::CpuArm cpu(4u);
@@ -94,6 +94,8 @@ int main(int argc, char **argv)
     auto program_start = 128u;
     cpu.registers().program_counter(program_start);
     cpu.memory(&mem);
+    cpu.code_stack_size(code_stack_size);
+    cpu.stack_size(data_stack_size);
 
     {
         // Setup assembler

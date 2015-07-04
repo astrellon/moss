@@ -7,6 +7,7 @@
 
 #include "memory.h"
 #include "iperipheral.h"
+#include <time.h>
 
 namespace moss
 {
@@ -19,7 +20,9 @@ namespace moss
         _interrupt_return(0u),
         _remote_debugger(false),
         _debug_state(DEBUG_NONE),
-        _memory(nullptr)
+        _memory(nullptr),
+        _stack_size(1024u),
+        _code_stack_size(1024u)
     {
         _regs.zero();
         for (auto i = 0u; i < _peripherals.size(); i++)
@@ -68,8 +71,7 @@ namespace moss
         _memory = memory;
         _mmu.memory(memory);
 
-        _regs.code_stack_pointer(memory->size() - 4);
-        _regs.stack_pointer(memory->size() - 1028);
+        update_stack_pointers();
     }
     
     bool CpuArm::remote_debugger() const
@@ -142,6 +144,35 @@ namespace moss
     CpuArm::DebugState CpuArm::debug_state() const
     {
         return _debug_state;
+    }
+
+    void CpuArm::stack_size(uint32_t size)
+    {
+        _stack_size = size;
+        update_stack_pointers();
+    }
+    uint32_t CpuArm::stack_size() const
+    {
+        return _stack_size;
+    }
+
+    void CpuArm::code_stack_size(uint32_t size)
+    {
+        _code_stack_size = size;
+        update_stack_pointers();
+    }
+    uint32_t CpuArm::code_stack_size() const
+    {
+        return _code_stack_size;
+    }
+
+    void CpuArm::update_stack_pointers()
+    {
+        if (_memory != nullptr)
+        {
+            _regs.code_stack_pointer(_memory->size() - 4);
+            _regs.stack_pointer(_memory->size() - _code_stack_size - 4);
+        }
     }
 
     void CpuArm::to_stream(std::ostream &os) const
